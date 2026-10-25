@@ -62,6 +62,11 @@ object Workers {
                 .setInitialDelay(delayTo(7, 45), TimeUnit.MILLISECONDS).setConstraints(net).build(),
         )
         wm.enqueueUniquePeriodicWork(
+            "invest_reminder", ExistingPeriodicWorkPolicy.UPDATE,
+            PeriodicWorkRequestBuilder<InvestReminderWorker>(1, TimeUnit.DAYS)
+                .setInitialDelay(delayTo(9, 12), TimeUnit.MILLISECONDS).build(),
+        )
+        wm.enqueueUniquePeriodicWork(
             "refresh", ExistingPeriodicWorkPolicy.KEEP,
             PeriodicWorkRequestBuilder<RefreshWorker>(1, TimeUnit.HOURS).setConstraints(net).build(),
         )
@@ -140,6 +145,31 @@ class RefreshWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ct
         if (System.currentTimeMillis() - Store.data.weather.updatedAt > 45 * 60_000) Weather.refresh()
         CalendarRepo.cacheToday(applicationContext)
         WidgetSync.refresh(applicationContext)
+        return Result.success()
+    }
+}
+
+/** No dia escolhido (e 3 e 7 dias depois, se ainda não investiu) lembra o que comprar. */
+class InvestReminderWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, params) {
+    override suspend fun doWork(): Result {
+        Store.init(applicationContext)
+        val d = Store.data
+        val p = d.investProfile
+        if (!p.set || !p.remindersOn || p.monthly <= 0) return Result.success()
+        val today = LocalDate.now()
+        val day = p.monthlyDay.coerceAtMost(java.time.YearMonth.now().lengthOfMonth())
+        if (today.dayOfMonth !in listOf(day, day + 3, day + 7)) return Result.success()
+        val plan = com.carlos.superhuman.data.InvestPlanner.build(p, d)
+        val missing = plan.investMonthly - com.carlos.superhuman.data.InvestPlanner.investedThisMonth(d)
+        if (missing < 1) return Result.success()
+        val what = plan.monthlySplit.joinToString(" + ") { "${euro(it.second, false)} ${it.first.ticker}" } +
+            (if (plan.emergencyMonthly > 0) " + ${euro(plan.emergencyMonthly, false)} fundo de emergência" else "")
+        Workers.notify(
+            applicationContext, 104, SuperhumanApp.CHANNEL_INVEST,
+            if (today.dayOfMonth == day) "Hoje é dia de investir 💶" else "Ainda não investiste este mês",
+            "$what. Depois de comprares, regista na app.",
+            "invest",
+        )
         return Result.success()
     }
 }

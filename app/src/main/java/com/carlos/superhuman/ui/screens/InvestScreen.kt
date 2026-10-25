@@ -91,6 +91,9 @@ fun InvestScreen() {
     var tab by remember { mutableIntStateOf(0) }
     var loading by remember { mutableStateOf(false) }
     var addHolding by remember { mutableStateOf<Holding?>(null) }
+    var registerFor by remember { mutableStateOf<String?>(null) }
+    var profileSheet by remember { mutableStateOf(false) }
+    var lesson by remember { mutableStateOf<com.carlos.superhuman.data.Lesson?>(null) }
     val feed = d.investFeed
 
     fun refresh(force: Boolean) {
@@ -115,15 +118,21 @@ fun InvestScreen() {
         actions = {
             if (loading) Box(Modifier.size(42.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator(Modifier.size(22.dp), color = c.ink, strokeWidth = 2.dp) }
             else CircleIconButton(Icons.Rounded.Refresh) { refresh(false) }
-            CircleIconButton(Icons.Rounded.Add, filled = true) { addHolding = Holding(symbol = "", quantity = 0.0, avgPrice = 0.0) }
+            CircleIconButton(Icons.Rounded.Add, filled = true) { if (d.investProfile.set) registerFor = "" else profileSheet = true }
         },
     ) {
         item {
-            Segmented(listOf("Coach", "Portfólio", "Business"), tab, Modifier.fillMaxWidth()) { tab = it }
+            Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                listOf("Plano", "Aprender", "Mercado", "Notícias", "Portfólio").forEachIndexed { i, label ->
+                    com.carlos.superhuman.ui.components.SmallPill(label, i == tab) { tab = i }
+                }
+            }
             Spacer(Modifier.height(12.dp))
         }
         when (tab) {
-            0 -> {
+            0 -> planTab(d, onRegister = { registerFor = it }, onProfile = { profileSheet = true }, onLesson = { lesson = it }, onTab = { tab = it })
+            1 -> learnTab(d) { lesson = it }
+            2 -> {
                 item {
                     if (feed == null) {
                         SHCard(Modifier.fillMaxWidth()) {
@@ -195,7 +204,7 @@ fun InvestScreen() {
                     item { Text(feed.disclaimer, style = Type.tiny, color = c.ink3, modifier = Modifier.padding(vertical = 8.dp)) }
                 }
             }
-            1 -> {
+            4 -> {
                 val lines = d.portfolioLines()
                 item {
                     val value = lines.sumOf { it.value }
@@ -274,6 +283,9 @@ fun InvestScreen() {
     }
 
     addHolding?.let { HoldingSheet(it) { addHolding = null; scope.launch { Market.refreshQuotes() } } }
+    registerFor?.let { RegisterInvestSheet(it) { registerFor = null; scope.launch { Market.refreshQuotes() } } }
+    if (profileSheet) InvestProfileSheet { profileSheet = false }
+    lesson?.let { LessonSheet(it) { lesson = null } }
 }
 
 @Composable

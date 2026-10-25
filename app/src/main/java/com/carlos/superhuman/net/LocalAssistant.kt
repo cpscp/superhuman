@@ -253,7 +253,12 @@ object LocalAssistant {
                 "Portfólio: ${euro(v)} (${if (v >= inv) "+" else ""}${euro(v - inv)} desde a compra)."
             }
             val part2 = f?.let { " Mercado (${it.date}): ${it.mood}. ${it.marketSummary.take(220)}" + (it.tips.firstOrNull()?.let { tip -> " Ideia do dia: ${tip.title}." } ?: "") } ?: ""
-            return Reply(part1 + part2, true)
+            val ip = d.investProfile
+            val part3 = if (ip.set) {
+                val plan = com.carlos.superhuman.data.InvestPlanner.build(ip, d)
+                " O teu plano: " + plan.monthlySplit.joinToString(" + ") { "${euro(it.second, false)} ${it.first.ticker}" } + " por mês, no dia ${ip.monthlyDay}. Este mês já investiste ${euro(com.carlos.superhuman.data.InvestPlanner.investedThisMonth(d), false)}."
+            } else " Ainda não tens plano: abre Invest → Criar o meu plano."
+            return Reply(part1 + part3 + part2, true)
         }
 
         // ---- Resumo do dia / semana ----

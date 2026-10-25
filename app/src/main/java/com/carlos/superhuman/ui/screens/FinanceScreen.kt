@@ -169,6 +169,20 @@ fun FinanceScreen() {
                             Text("Ativa o acesso a notificações do Superhuman para captar os teus pagamentos.", style = Type.small, color = c.ink2)
                         }
                     }
+                    Spacer(Modifier.height(12.dp))
+                    InsetBox(Modifier.fillMaxWidth()) {
+                        Text("Aparece \"App was denied access\"?", style = Type.small, color = c.ink)
+                        Text("O Android bloqueia esta permissão em apps instaladas por APK. Abre a info da app → ⋮ (canto superior direito) → Allow restricted settings → confirma. Depois volta aqui e ativa.", style = Type.tiny, color = c.ink2, modifier = Modifier.padding(top = 4.dp))
+                    }
+                    Spacer(Modifier.height(10.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        SecondaryButton("1. Info da app", Modifier.weight(1f)) {
+                            ctx.startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, android.net.Uri.parse("package:" + ctx.packageName)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                        }
+                        PrimaryButton("2. Ativar", Modifier.weight(1f)) {
+                            ctx.startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                        }
+                    }
                 }
             }
         }

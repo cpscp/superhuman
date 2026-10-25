@@ -187,6 +187,32 @@ data class InvestFeed(
     val news: List<NewsItem> = emptyList(),
     val signals: List<HoldingSignal> = emptyList(),
     val disclaimer: String = "Informação e análise, não aconselhamento financeiro personalizado. Decide sempre com base na tua situação.",
+    val lessonTitle: String = "",
+    val lessonBody: String = "",
+    val beginnerNote: String = "",
+)
+
+@Serializable
+data class InvestProfile(
+    val set: Boolean = false,
+    val oneOff: Double = 0.0,            // valor para investir já
+    val monthly: Double = 0.0,           // valor por mês
+    val horizonYears: Int = 10,
+    val risk: Int = 1,                   // 0 cauteloso, 1 equilibrado, 2 dinâmico
+    val hasEmergencyFund: Boolean = false,
+    val emergencyTarget: Double = 0.0,
+    val emergencySaved: Double = 0.0,
+    val monthlyDay: Int = 1,
+    val goal: String = "",
+    val remindersOn: Boolean = true,
+)
+
+@Serializable
+data class Contribution(
+    val id: String = newId(),
+    val epochDay: Long,
+    val amount: Double,
+    val symbol: String,                  // ou "FUNDO" para o fundo de emergência
 )
 
 @Serializable
@@ -328,6 +354,9 @@ data class AppData(
     val quotes: Map<String, Quote> = emptyMap(),
     val snapshots: List<PortfolioSnapshot> = emptyList(),
     val investFeed: InvestFeed? = null,
+    val investProfile: InvestProfile = InvestProfile(),
+    val contributions: List<Contribution> = emptyList(),
+    val lessonsDone: List<String> = emptyList(),
     val habits: List<Habit> = emptyList(),
     val beers: Map<String, Int> = emptyMap(),               // epochDay (string) -> nº
     val strava: StravaAuth = StravaAuth(),

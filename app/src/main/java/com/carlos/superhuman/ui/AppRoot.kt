@@ -71,7 +71,6 @@ import com.carlos.superhuman.ui.screens.SettingsScreen
 import com.carlos.superhuman.ui.screens.SuperScreen
 import com.carlos.superhuman.ui.screens.TaskDetailScreen
 import com.carlos.superhuman.ui.screens.TasksScreen
-import com.carlos.superhuman.ui.screens.TransportScreen
 import com.carlos.superhuman.ui.theme.SH
 import com.carlos.superhuman.ui.theme.SuperhumanTheme
 
@@ -111,7 +110,6 @@ fun AppRoot() {
                     "more" -> MoreScreen()
                     "schedule" -> ScheduleScreen()
                     "super" -> SuperScreen()
-                    "transport" -> TransportScreen()
                     "health" -> HealthScreen()
                     "notes" -> NotesScreen()
                     "note" -> NoteEditScreen(r.arg)

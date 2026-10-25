@@ -100,30 +100,6 @@ data class ShoppingItem(
     val checked: Boolean = false,
 )
 
-// ---------------- Transportes ----------------
-@Serializable
-data class TransportCard(
-    val id: String = newId(),
-    val operator: String,          // "CP" ou "Carris"
-    val title: String,             // ex.: "Navegante Metropolitano"
-    val number: String = "",
-    val holder: String = "",
-    val validUntil: String = "",
-    val colorHex: String = "#1B1A19",
-)
-
-@Serializable
-data class TransportRoute(
-    val id: String = newId(),
-    val operator: String,          // "CP" ou "Carris"
-    val line: String = "",
-    val from: String,
-    val to: String,
-    val stopId: String = "",       // id de paragem (Carris Metropolitana) para tempo real, opcional
-    val departures: List<String> = emptyList(), // horários fixos "08:12"
-    val url: String = "",
-)
-
 // ---------------- Invest ----------------
 @Serializable
 data class Holding(
@@ -348,8 +324,6 @@ data class AppData(
     val superTrips: List<SuperTrip> = emptyList(),
     val shopping: List<ShoppingItem> = emptyList(),
     val stores: List<String> = listOf("Continente", "Pingo Doce", "Lidl", "Auchan", "Mercadona", "Aldi", "Minipreço"),
-    val transportCards: List<TransportCard> = TransportDefaults.cards,
-    val transportRoutes: List<TransportRoute> = TransportDefaults.routes,
     val holdings: List<Holding> = emptyList(),
     val quotes: Map<String, Quote> = emptyMap(),
     val snapshots: List<PortfolioSnapshot> = emptyList(),

@@ -1,6 +1,6 @@
 # Superhuman
 
-App Android pessoal (Kotlin + Jetpack Compose) para o dia a dia: Dashboard, Tasks, Agenda, Finanças, Supermercado, Transportes, Invest, Saúde, Notas, Casa, Objetivos, Assistente AI, Revisões e widgets.
+App Android pessoal (Kotlin + Jetpack Compose) para o dia a dia: Dashboard, Tasks, Agenda, Finanças, Supermercado, Invest, Saúde, Notas, Casa, Objetivos, Assistente AI, Revisões e widgets.
 
 ## Compilar
 
@@ -19,11 +19,9 @@ Alternativa sem Android Studio: põe o projeto num repositório GitHub. O workfl
 | Arranque | Aceita as permissões de calendário e notificações |
 | Definições → Localização | Procura a tua cidade para o tempo |
 | Definições → Calendários | Dá etiquetas ("Trabalho", "Pessoal"), escolhe o calendário padrão para slots |
-| Definições → Assistente AI | Cola a chave da Claude API (console.anthropic.com) |
 | Finanças → Ligar Google Wallet | Ativa o acesso a notificações do Superhuman |
 | Saúde → Ligar Health Connect | Passos, sono e treinos (Google Fit e Strava sincronizam para o Health Connect) |
 | Definições → Strava (opcional) | Client ID/Secret de strava.com/settings/api, *Authorization Callback Domain* = `localhost` |
-| Transportes | Edita os cartões e trajetos (ou altera `data/TransportDefaults.kt`) |
 | Supermercado → ↑ | Importa o histórico do Excel em CSV (`data;supermercado;valor`) |
 | Ecrã inicial do Android | Widgets "Superhuman · Hoje" e "Superhuman · Plafond e cervejas" |
 
@@ -31,7 +29,7 @@ Alternativa sem Android Studio: põe o projeto num repositório GitHub. O workfl
 
 A app tenta primeiro ler um feed JSON publicado todos os dias (URL nas Definições, por defeito
 `https://raw.githubusercontent.com/cpscp/superhuman-data/main/invest/latest.json`).
-Se não existir ou não for de hoje, gera a análise com a Claude API (com pesquisa web) usando a tua chave.
+O feed é gerado todas as manhãs (06:34) por uma tarefa agendada do Claude, sem custos extra.
 O formato do feed está em `feed-template/invest/latest.json`.
 
 Uma tarefa agendada da Claude pode publicar esse ficheiro todas as manhãs num repositório público `cpscp/superhuman-data`.

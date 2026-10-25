@@ -20,7 +20,6 @@ import androidx.compose.material.icons.rounded.Insights
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material.icons.rounded.StickyNote2
-import androidx.compose.material.icons.rounded.Train
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,7 +48,6 @@ fun MoreScreen() {
         Module("assistant", null, "Assistente AI", Icons.Rounded.AutoAwesome, "Pede o que precisares"),
         Module("schedule", null, "Agenda", Icons.Rounded.CalendarMonth, "${d.cachedEvents.size} eventos hoje"),
         Module("super", null, "Supermercado", Icons.Rounded.ShoppingCart, "${d.shopping.count { !it.checked }} na lista"),
-        Module("transport", null, "Transportes", Icons.Rounded.Train, "CP e Carris"),
         Module("health", null, "Saúde", Icons.Rounded.Favorite, "${d.beersThisWeek()} cervejas esta semana"),
         Module("notes", null, "Notas", Icons.Rounded.StickyNote2, "${d.notes.size} notas"),
         Module("casa", null, "Casa", Icons.Rounded.House, "${d.homeAdmin.count { !it.done }} pendentes"),

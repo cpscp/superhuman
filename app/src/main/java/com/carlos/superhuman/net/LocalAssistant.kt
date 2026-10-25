@@ -137,7 +137,7 @@ object LocalAssistant {
 
         // ---- Lista de compras ----
         val shop = Regex("""^(?:junta|adiciona|acrescenta|poe|mete|preciso de|falta|faltam|comprar)\s+(.+?)(?:\s+(?:a|na|para a)\s+lista(?: de compras)?)?$""").find(n)
-        if (shop != null && ("lista" in n || n.startsWith("comprar") || n.startsWith("preciso de") || n.startsWith("falta"))) {
+        if (shop != null && ("lista" in n || n.startsWith("comprar") || n.startsWith("falta"))) {
             val itemsRaw = Regex("""(?i)^(?:junta|adiciona|acrescenta|p[õo]e|mete|preciso de|falta|faltam|comprar)\s+""").replace(raw.trim(), "")
                 .replace(Regex("""(?i)\s+(?:à|a|na|para a)\s+lista( de compras)?\.?$"""), "")
             val items = itemsRaw.split(Regex("""\s*(?:,|\be\b|;)\s*""")).map { it.trim().trim('.') }.filter { it.isNotBlank() }

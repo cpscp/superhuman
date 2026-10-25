@@ -56,7 +56,7 @@ object Market {
         if ((stale && s.investAutoGenerate && Claude.hasKey()) || forceGenerate) {
             feed = generateFeed()
         }
-        val result = feed ?: error("Sem feed disponível. Configura a chave da Claude API ou o URL do feed.")
+        val result = feed ?: error("Ainda não há feed publicado. A análise diária aparece todas as manhãs às 06:34.")
         Store.update { it.copy(investFeed = result) }
         result
     }

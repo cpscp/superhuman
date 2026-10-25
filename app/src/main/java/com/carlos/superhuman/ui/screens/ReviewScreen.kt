@@ -48,6 +48,8 @@ import com.carlos.superhuman.data.weekKey
 import com.carlos.superhuman.data.weekStart
 import com.carlos.superhuman.data.weekStats
 import com.carlos.superhuman.net.Claude
+import com.carlos.superhuman.net.LocalAssistant
+import com.carlos.superhuman.net.Reflection
 import com.carlos.superhuman.ui.Nav
 import com.carlos.superhuman.ui.components.MiniStatRow
 import com.carlos.superhuman.ui.components.PrimaryButton
@@ -138,24 +140,32 @@ fun ReviewScreen(weekly: Boolean) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Rounded.AutoAwesome, null, tint = c.accent)
                     Spacer(Modifier.width(8.dp))
-                    Text("Reflexão da Claude", style = Type.title, color = c.ink)
+                    Text(if (Claude.hasKey()) "Reflexão da Claude" else "Reflexão", style = Type.title, color = c.ink)
                 }
                 Spacer(Modifier.height(8.dp))
                 Text(ai.ifBlank { "Gera um resumo com padrões e uma sugestão concreta para amanhã/semana." }, style = Type.body, color = if (ai.isBlank()) c.ink2 else c.ink)
                 Spacer(Modifier.height(10.dp))
-                SecondaryButton(if (aiBusy) "A pensar…" else "Gerar reflexão", Modifier.fillMaxWidth()) {
-                    if (!Claude.hasKey()) { Toast.makeText(ctx, "Configura a chave da Claude API", Toast.LENGTH_SHORT).show(); return@SecondaryButton }
-                    if (aiBusy) return@SecondaryButton
-                    aiBusy = true
-                    scope.launch {
-                        ai = runCatching {
-                            Claude.ask(
-                                "És um coach de produtividade e bem-estar, em português de Portugal. Escreve 4-6 frases: o que correu bem, um padrão que notas nos dados, e 1-2 ações concretas. Tom direto e encorajador, sem floreados.",
-                                "Revisão ${if (isWeekly) "semanal" else "diária"}. Humor ${mood}/5. Dados: $statsText\nVitórias: $wins\nMelhorar: $improve\nPróximos passos: $next",
-                                maxTokens = 500,
-                            )
-                        }.getOrElse { "Erro: ${it.message}" }
-                        aiBusy = false
+                val prompt = "Revisão ${if (isWeekly) "semanal" else "diária"}. Humor ${mood}/5. Dados: $statsText\nVitórias: $wins\nMelhorar: $improve\nPróximos passos: $next"
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    SecondaryButton(if (aiBusy) "A pensar…" else "Gerar reflexão", Modifier.weight(1f)) {
+                        if (aiBusy) return@SecondaryButton
+                        if (!Claude.hasKey()) {
+                            ai = Reflection.build(Store.data, isWeekly, mood, wins, improve, next)
+                            return@SecondaryButton
+                        }
+                        aiBusy = true
+                        scope.launch {
+                            ai = runCatching {
+                                Claude.ask(
+                                    "És um coach de produtividade e bem-estar, em português de Portugal. Escreve 4-6 frases: o que correu bem, um padrão que notas nos dados, e 1-2 ações concretas. Tom direto e encorajador, sem floreados.",
+                                    prompt, maxTokens = 500,
+                                )
+                            }.getOrElse { "Erro: ${it.message}" }
+                            aiBusy = false
+                        }
+                    }
+                    if (!Claude.hasKey()) SecondaryButton("No Claude") {
+                        LocalAssistant.openInClaude(ctx, "Faz-me uma reflexão curta (4-6 frases) sobre esta revisão: o que correu bem, um padrão e 1-2 ações concretas.\n$prompt")
                     }
                 }
             }

@@ -158,8 +158,8 @@ fun SettingsScreen() {
         }
 
         item {
-            SectionHeader("Assistente AI · Claude API")
-            Text("A chave fica guardada só neste telemóvel. Cria-a em console.anthropic.com.", style = Type.small, color = c.ink2)
+            SectionHeader("Avançado · Claude API (opcional, pago à parte)")
+            Text("Não é preciso: o assistente funciona localmente e de graça, e o Invest chega pelo feed diário. Só se quiseres respostas da Claude dentro da app (tem custos por utilização). A chave fica só neste telemóvel.", style = Type.small, color = c.ink2)
             Spacer(Modifier.height(8.dp))
             KeyField(s.claudeApiKey) { v -> setS { it.copy(claudeApiKey = v.trim()) } }
             Spacer(Modifier.height(8.dp))
@@ -172,11 +172,11 @@ fun SettingsScreen() {
 
         item {
             SectionHeader("Invest")
-            Text("URL do feed diário (publicado automaticamente). Se falhar, a app gera a análise com a tua chave.", style = Type.small, color = c.ink2)
+            Text("URL do feed diário, publicado automaticamente todas as manhãs.", style = Type.small, color = c.ink2)
             Spacer(Modifier.height(8.dp))
             SHTextField(s.investFeedUrl, { v -> setS { it.copy(investFeedUrl = v.trim()) } }, "https://raw.githubusercontent.com/…/latest.json", Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
-            ToggleRow("Gerar com a Claude se o feed não estiver atualizado", s.investAutoGenerate) { v -> setS { it.copy(investAutoGenerate = v) } }
+            ToggleRow("Com chave da API: gerar se o feed não estiver atualizado", s.investAutoGenerate) { v -> setS { it.copy(investAutoGenerate = v) } }
             Spacer(Modifier.height(8.dp))
             SHTextField(s.investProfile, { v -> setS { it.copy(investProfile = v) } }, "Perfil de investidor", Modifier.fillMaxWidth(), singleLine = false, minLines = 2)
         }

@@ -42,6 +42,7 @@ import com.carlos.superhuman.data.ChatMsg
 import com.carlos.superhuman.data.Store
 import com.carlos.superhuman.net.Agent
 import com.carlos.superhuman.net.Claude
+import com.carlos.superhuman.net.LocalAssistant
 import com.carlos.superhuman.ui.Nav
 import com.carlos.superhuman.ui.components.CircleIconButton
 import com.carlos.superhuman.ui.components.SHTextField
@@ -58,13 +59,17 @@ fun AssistantScreen(initial: String?) {
     val scope = rememberCoroutineScope()
     var input by remember { mutableStateOf("") }
     var busy by remember { mutableStateOf(false) }
+    var lastUnhandled by remember { mutableStateOf<String?>(null) }
     val listState = rememberLazyListState()
 
     fun send(text: String) {
         val t = text.trim()
         if (t.isBlank() || busy) return
         if (!Claude.hasKey()) {
-            Store.update { it.copy(chat = it.chat + ChatMsg("user", t) + ChatMsg("assistant", "Para eu funcionar, coloca a tua chave da Claude API em Definições → Assistente AI.")) }
+            val r = LocalAssistant.handle(ctx, t)
+            lastUnhandled = if (r.handled) null else t
+            Store.update { it.copy(chat = (it.chat + ChatMsg("user", t) + ChatMsg("assistant", r.text)).takeLast(80)) }
+            input = ""
             return
         }
         Store.update { it.copy(chat = (it.chat + ChatMsg("user", t)).takeLast(80)) }
@@ -85,7 +90,7 @@ fun AssistantScreen(initial: String?) {
             CircleIconButton(Icons.AutoMirrored.Rounded.ArrowBack) { Nav.back() }
             Column(Modifier.weight(1f).padding(horizontal = 12.dp)) {
                 Text("Assistente", style = Type.h2, color = c.ink)
-                Text(if (busy) "a trabalhar…" else "Claude · acesso à tua app e à web", style = Type.tiny, color = c.ink3)
+                Text(if (busy) "a trabalhar…" else if (Claude.hasKey()) "Claude API · app e web" else "Local · grátis e offline", style = Type.tiny, color = c.ink3)
             }
             CircleIconButton(Icons.Rounded.DeleteSweep) { Store.update { it.copy(chat = emptyList()) } }
         }
@@ -95,7 +100,7 @@ fun AssistantScreen(initial: String?) {
                     Column(Modifier.fillMaxWidth().padding(vertical = 30.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                         Text("Em que posso ajudar?", style = Type.h1, color = c.ink)
                         Spacer(Modifier.size(6.dp))
-                        Text("Posso criar tasks, lançar despesas, marcar eventos, gerir a lista de compras, procurar notas ou pesquisar na web.", style = Type.small, color = c.ink2)
+                        Text(if (Claude.hasKey()) "Posso criar tasks, lançar despesas, marcar eventos, gerir a lista de compras, procurar notas ou pesquisar na web." else LocalAssistant.HELP, style = Type.small, color = c.ink2)
                     }
                 }
             }
@@ -103,13 +108,17 @@ fun AssistantScreen(initial: String?) {
             if (busy) item { Bubble(ChatMsg("assistant", "…")) }
         }
         Row(Modifier.horizontalScroll(rememberScrollState()).padding(horizontal = 18.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            if (!Claude.hasKey()) SmallPill("✦ Continuar no Claude", selected = true) {
+                LocalAssistant.openInClaude(ctx, lastUnhandled ?: input.ifBlank { "Ajuda-me a organizar o meu dia com base neste contexto." })
+            }
             listOf(
                 "Como está o meu dia?",
                 "Quanto me resta do plafond?",
                 "Cria task: ligar ao cliente amanhã às 10h",
                 "Junta leite e ovos à lista",
                 "Gastei 12,50 no almoço",
-                "Resumo de mercados hoje",
+                "+1 cerveja",
+                "Vou precisar de casaco?",
             ).forEach { s -> SmallPill(s) { send(s) } }
         }
         Row(Modifier.fillMaxWidth().navigationBarsPadding().padding(18.dp), verticalAlignment = Alignment.CenterVertically) {

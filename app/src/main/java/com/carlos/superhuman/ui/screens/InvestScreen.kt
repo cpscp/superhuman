@@ -131,11 +131,12 @@ fun InvestScreen() {
                             Spacer(Modifier.height(6.dp))
                             Text(
                                 if (Claude.hasKey()) "Toca em gerar para a Claude pesquisar o mercado e preparar as dicas do dia."
-                                else "Configura a chave da Claude API nas Definições ou espera pelo feed diário.",
+                                else "A análise diária é publicada todas as manhãs às 06:34. Toca em atualizar para a ir buscar.",
                                 style = Type.small, color = c.ink2,
                             )
                             Spacer(Modifier.height(12.dp))
-                            PrimaryButton("Gerar análise agora", Modifier.fillMaxWidth(), enabled = Claude.hasKey() && !loading, icon = Icons.Rounded.AutoAwesome) { refresh(true) }
+                            if (Claude.hasKey()) PrimaryButton("Gerar análise agora", Modifier.fillMaxWidth(), enabled = !loading, icon = Icons.Rounded.AutoAwesome) { refresh(true) }
+                            else PrimaryButton("Atualizar feed", Modifier.fillMaxWidth(), enabled = !loading, icon = Icons.Rounded.Refresh) { refresh(false) }
                         }
                     } else {
                         SHCard(Modifier.fillMaxWidth()) {
@@ -160,7 +161,10 @@ fun InvestScreen() {
                                 }
                             }
                             Spacer(Modifier.height(12.dp))
-                            SecondaryButton("Gerar nova análise", Modifier.fillMaxWidth(), icon = Icons.Rounded.AutoAwesome) { refresh(true) }
+                            if (Claude.hasKey()) SecondaryButton("Gerar nova análise", Modifier.fillMaxWidth(), icon = Icons.Rounded.AutoAwesome) { refresh(true) }
+                            else SecondaryButton("Analisar o meu portfólio no Claude", Modifier.fillMaxWidth(), icon = Icons.Rounded.AutoAwesome) {
+                                com.carlos.superhuman.net.LocalAssistant.openInClaude(ctx, "Com base no meu portfólio e no mercado de hoje (" + feed.marketSummary.take(300) + "), diz-me para cada posição se devo manter, reforçar ou reduzir, e onde investir mais com potencial. Sou investidor moderado, horizonte 5-10 anos, em Portugal.")
+                            }
                         }
                     }
                 }

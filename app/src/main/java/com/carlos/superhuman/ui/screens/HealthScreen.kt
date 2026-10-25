@@ -54,6 +54,7 @@ import com.carlos.superhuman.data.weekStart
 import com.carlos.superhuman.device.HealthRepo
 import com.carlos.superhuman.device.HealthSnapshot
 import com.carlos.superhuman.net.Claude
+import com.carlos.superhuman.net.Reflection
 import com.carlos.superhuman.net.Strava
 import com.carlos.superhuman.ui.Nav
 import com.carlos.superhuman.ui.components.ChipRow
@@ -125,6 +126,7 @@ fun HealthScreen() {
             granted = HealthRepo.granted(ctx)
             if (granted) snapshot = HealthRepo.read(ctx)
         }
+        if (!Claude.hasKey()) aiTips = Reflection.healthTips(Store.data, snapshot)
         if (d.strava.refreshToken.isNotBlank()) Strava.refreshActivities()
     }
 
@@ -255,10 +257,10 @@ fun HealthScreen() {
                 }
                 Spacer(Modifier.height(8.dp))
                 if (aiTips.isNotBlank()) Text(aiTips, style = Type.body, color = c.ink)
-                else Text("A Claude analisa passos, sono, treinos, cervejas e hábitos e sugere 3 ajustes simples.", style = Type.small, color = c.ink2)
+                else Text("Analisa passos, sono, treinos, cervejas e hábitos e sugere ajustes simples.", style = Type.small, color = c.ink2)
                 Spacer(Modifier.height(10.dp))
                 SecondaryButton(if (aiLoading) "A pensar…" else "Pedir sugestões", Modifier.fillMaxWidth()) {
-                    if (!Claude.hasKey()) { Toast.makeText(ctx, "Configura a chave da Claude API nas Definições", Toast.LENGTH_SHORT).show(); return@SecondaryButton }
+                    if (!Claude.hasKey()) { aiTips = Reflection.healthTips(d, snapshot); return@SecondaryButton }
                     if (aiLoading) return@SecondaryButton
                     aiLoading = true
                     scope.launch {

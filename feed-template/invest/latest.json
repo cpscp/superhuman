@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-23",
+  "generatedBy": "Claude",
+  "marketSummary": "Exemplo: os índices americanos abriram em ligeira alta, com tecnologia a liderar. Na Europa, o Stoxx 600 manteve-se estável.",
+  "mood": "neutro",
+  "indices": [
+    { "name": "S&P 500", "change": "+0,4%" },
+    { "name": "Stoxx 600", "change": "-0,1%" }
+  ],
+  "tips": [
+    {
+      "title": "Reforço mensal num ETF global",
+      "instrument": "VWCE / IWDA",
+      "body": "Exemplo de dica com o raciocínio.",
+      "horizon": "longo",
+      "risk": "médio",
+      "suggestedAmount": "100-200 €/mês",
+      "potential": "6-8%/ano no cenário base"
+    }
+  ],
+  "news": [
+    { "title": "Exemplo de notícia", "source": "Fonte", "url": "https://example.com", "summary": "Resumo.", "relevance": "Porque importa." }
+  ],
+  "signals": [
+    { "symbol": "VUAA.L", "action": "MANTER", "reason": "Exemplo de sinal." }
+  ],
+  "disclaimer": "Informação e análise, não aconselhamento financeiro personalizado."
+}

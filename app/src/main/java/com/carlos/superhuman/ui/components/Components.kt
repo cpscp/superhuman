@@ -16,6 +16,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.layout.layout
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -317,10 +323,20 @@ fun StatTile(label: String, value: String, modifier: Modifier = Modifier, icon: 
 }
 
 @Composable
+@OptIn(ExperimentalLayoutApi::class)
 fun ChipRow(options: List<String>, selected: Set<String>, modifier: Modifier = Modifier, onToggle: (String) -> Unit) {
-    Row(modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    // Quebra de linha em vez de scroll horizontal: nada fica cortado na margem.
+    FlowRow(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         options.forEach { o -> SmallPill(o, o in selected) { onToggle(o) } }
     }
+}
+
+/** Deixa uma linha com scroll horizontal ocupar a largura toda do ecrã, mantendo a margem no início e no fim. */
+fun Modifier.bleed(horizontal: Dp): Modifier = this.layout { measurable, constraints ->
+    val px = horizontal.roundToPx()
+    val wide = if (constraints.hasBoundedWidth) constraints.maxWidth + px * 2 else constraints.maxWidth
+    val placeable = measurable.measure(constraints.copy(minWidth = wide, maxWidth = wide))
+    layout(constraints.maxWidth, placeable.height) { placeable.place(-px, 0) }
 }
 
 /** Esqueleto dos ecrãs secundários: botão voltar, título central e ações. */
@@ -334,8 +350,12 @@ fun ScreenScaffold(
 ) {
     Column(Modifier.fillMaxSize().background(SH.c.bg).statusBarsPadding()) {
         Row(Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-            if (onBack != null) CircleIconButton(Icons.AutoMirrored.Rounded.ArrowBack, onClick = onBack) else Spacer(Modifier.size(42.dp))
-            Text(title, style = Type.h2, color = SH.c.ink, modifier = Modifier.weight(1f).padding(horizontal = 10.dp), maxLines = 1, overflow = TextOverflow.Ellipsis)
+            if (onBack != null) {
+                CircleIconButton(Icons.AutoMirrored.Rounded.ArrowBack, onClick = onBack)
+                Text(title, style = Type.h2, color = SH.c.ink, modifier = Modifier.weight(1f).padding(horizontal = 10.dp), maxLines = 1, overflow = TextOverflow.Ellipsis)
+            } else {
+                Text(title, style = Type.h1, color = SH.c.ink, modifier = Modifier.weight(1f).padding(end = 10.dp), maxLines = 1, overflow = TextOverflow.Ellipsis)
+            }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp), content = actions)
         }
         LazyColumn(Modifier.fillMaxSize(), contentPadding = contentPadding, content = content)
@@ -344,7 +364,7 @@ fun ScreenScaffold(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Sheet(title: String, onDismiss: () -> Unit, content: @Composable ColumnScope.() -> Unit) {
+fun Sheet(title: String, onDismiss: () -> Unit, footer: (@Composable ColumnScope.() -> Unit)? = null, content: @Composable ColumnScope.() -> Unit) {
     val c = SH.c
     val state = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     ModalBottomSheet(
@@ -352,14 +372,29 @@ fun Sheet(title: String, onDismiss: () -> Unit, content: @Composable ColumnScope
         sheetState = state,
         containerColor = c.card,
         shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp),
+        modifier = Modifier.statusBarsPadding().padding(top = 12.dp),
         dragHandle = { Box(Modifier.padding(top = 10.dp).size(width = 38.dp, height = 4.dp).clip(RoundedCornerShape(50)).background(c.line)) },
     ) {
-        Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp).padding(bottom = 28.dp)) {
-            Row(Modifier.fillMaxWidth().padding(vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+        Column(Modifier.fillMaxWidth()) {
+            // Título fixo
+            Row(Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
                 Text(title, style = Type.h2, color = c.ink, modifier = Modifier.weight(1f))
                 CircleIconButton(Icons.Rounded.Close, size = 36.dp, onClick = onDismiss)
             }
-            content()
+            // Conteúdo com scroll, para os botões no fim estarem sempre acessíveis
+            Column(
+                Modifier.fillMaxWidth().weight(1f, fill = false)
+                    .verticalScroll(rememberScrollState())
+                    .imePadding()
+                    .padding(horizontal = 20.dp)
+                    .padding(top = 4.dp, bottom = if (footer == null) 28.dp else 12.dp)
+                    .then(if (footer == null) Modifier.navigationBarsPadding() else Modifier),
+                content = content,
+            )
+            if (footer != null) {
+                Box(Modifier.fillMaxWidth().height(1.dp).background(c.line))
+                Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp).padding(top = 12.dp, bottom = 16.dp).navigationBarsPadding().imePadding(), content = footer)
+            }
         }
     }
 }

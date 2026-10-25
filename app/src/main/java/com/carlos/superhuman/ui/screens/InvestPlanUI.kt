@@ -475,7 +475,25 @@ fun InvestProfileSheet(onDismiss: () -> Unit) {
     var reminders by remember { mutableStateOf(p0.remindersOn) }
     val cap = remember { InvestPlanner.monthlyCapacity(d) }
 
-    Sheet(if (p0.set) "Alterar plano" else "Criar o meu plano", onDismiss) {
+    val ok = (parseMoney(oneOff) ?: 0.0) + (parseMoney(monthly) ?: 0.0) > 0
+    Sheet(if (p0.set) "Alterar plano" else "Criar o meu plano", onDismiss, footer = {
+        PrimaryButton(if (p0.set) "Guardar plano" else "Ver o meu plano", Modifier.fillMaxWidth(), enabled = ok) {
+            Store.update {
+                it.copy(investProfile = InvestProfile(
+                    set = true,
+                    oneOff = parseMoney(oneOff) ?: 0.0,
+                    monthly = parseMoney(monthly) ?: 0.0,
+                    horizonYears = horizon, risk = risk,
+                    hasEmergencyFund = hasFund,
+                    emergencyTarget = if (hasFund) 0.0 else parseMoney(fundTarget) ?: 0.0,
+                    emergencySaved = if (hasFund) 0.0 else parseMoney(fundSaved) ?: 0.0,
+                    monthlyDay = day, goal = p0.goal, remindersOn = reminders,
+                ))
+            }
+            onDismiss()
+        }
+        if (!ok) Text("Escreve pelo menos um valor.", style = Type.tiny, color = c.ink3, modifier = Modifier.padding(top = 6.dp))
+    }) {
         Text("1. Quanto queres investir?", style = Type.title, color = c.ink)
         Spacer(Modifier.height(8.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -545,24 +563,6 @@ fun InvestProfileSheet(onDismiss: () -> Unit) {
             SHSwitch(reminders) { reminders = it }
         }
 
-        Spacer(Modifier.height(20.dp))
-        val ok = (parseMoney(oneOff) ?: 0.0) + (parseMoney(monthly) ?: 0.0) > 0
-        PrimaryButton(if (p0.set) "Guardar plano" else "Ver o meu plano", Modifier.fillMaxWidth(), enabled = ok) {
-            Store.update {
-                it.copy(investProfile = InvestProfile(
-                    set = true,
-                    oneOff = parseMoney(oneOff) ?: 0.0,
-                    monthly = parseMoney(monthly) ?: 0.0,
-                    horizonYears = horizon, risk = risk,
-                    hasEmergencyFund = hasFund,
-                    emergencyTarget = if (hasFund) 0.0 else parseMoney(fundTarget) ?: 0.0,
-                    emergencySaved = if (hasFund) 0.0 else parseMoney(fundSaved) ?: 0.0,
-                    monthlyDay = day, goal = p0.goal, remindersOn = reminders,
-                ))
-            }
-            onDismiss()
-        }
-        if (!ok) Text("Escreve pelo menos um valor.", style = Type.tiny, color = c.ink3, modifier = Modifier.padding(top = 6.dp))
     }
 }
 

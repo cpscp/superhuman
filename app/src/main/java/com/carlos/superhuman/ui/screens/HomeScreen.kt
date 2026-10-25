@@ -1,3 +1,5 @@
+@file:OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+
 package com.carlos.superhuman.ui.screens
 
 import androidx.compose.foundation.background
@@ -9,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -76,6 +79,7 @@ import com.carlos.superhuman.ui.components.SHCard
 import com.carlos.superhuman.ui.components.SectionHeader
 import com.carlos.superhuman.ui.components.EmptyState
 import com.carlos.superhuman.ui.components.noRippleClick
+import com.carlos.superhuman.ui.components.bleed
 import com.carlos.superhuman.ui.theme.SH
 import com.carlos.superhuman.ui.theme.Type
 import java.time.LocalDate
@@ -178,7 +182,7 @@ fun HomeScreen() {
             val beer = d.beerFeedback()
             val pl = d.portfolioLines()
             val dayChange = if (pl.isNotEmpty()) pl.sumOf { it.value * it.dayPct / 100 } else null
-            Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Row(Modifier.bleed(18.dp).horizontalScroll(rememberScrollState()).padding(horizontal = 18.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 PulseTile("Plafond restante", if (m.budget > 0) euro(m.remaining) else "Definir", if (m.budget > 0) "${((m.spent + m.fixed) / m.budget * 100).roundToInt()}% usado" else "toca para definir") { Nav.go("finance") }
                 PulseTile("Cervejas semana", "${d.beersThisWeek()} / ${d.settings.beerWeeklyLimit}", beer.title) { Nav.go("health") }
                 PulseTile("Portfólio hoje", if (dayChange != null) euro(dayChange) else "—", if (d.investFeed != null) "Coach: ${d.investFeed?.mood}" else "abrir Invest") { Nav.go("invest") }
@@ -257,7 +261,7 @@ fun WeatherCard(w: WeatherNow, place: String) {
                 Icon(Icons.Rounded.Tune, null, tint = c.ink3, modifier = Modifier.size(16.dp))
             }
             Spacer(Modifier.height(8.dp))
-            Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 clothingFor(w).forEach {
                     Box(Modifier.clip(RoundedCornerShape(50)).background(c.card).padding(horizontal = 10.dp, vertical = 6.dp)) {
                         Text(it, style = Type.small, color = c.ink)

@@ -1,3 +1,5 @@
+@file:OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+
 package com.carlos.superhuman.ui.screens
 
 import androidx.compose.foundation.background
@@ -8,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -228,7 +231,7 @@ fun TaskSheet(initial: TaskItem, onDismiss: () -> Unit) {
             DetailRow(Icons.Rounded.Label, "Etiquetas", "", trailing = {
                 Text(if (tags.isEmpty()) "Nenhuma" else tags.joinToString(", "), style = Type.body, color = c.ink, maxLines = 1, overflow = TextOverflow.Ellipsis)
             })
-            Row(Modifier.horizontalScroll(rememberScrollState()).padding(start = 14.dp, end = 14.dp, bottom = 12.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            FlowRow(Modifier.fillMaxWidth().padding(start = 14.dp, end = 14.dp, bottom = 12.dp), horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 (d.tags + tags).distinct().forEach { tg -> SmallPill(tg, tg in tags) { tags = if (tg in tags) tags - tg else tags + tg } }
             }
             Row(Modifier.padding(start = 14.dp, end = 14.dp, bottom = 12.dp), verticalAlignment = Alignment.CenterVertically) {

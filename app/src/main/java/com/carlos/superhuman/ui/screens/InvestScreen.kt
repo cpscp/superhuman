@@ -122,11 +122,7 @@ fun InvestScreen() {
         },
     ) {
         item {
-            Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                listOf("Plano", "Aprender", "Mercado", "Notícias", "Portfólio").forEachIndexed { i, label ->
-                    com.carlos.superhuman.ui.components.SmallPill(label, i == tab) { tab = i }
-                }
-            }
+            Segmented(listOf("Plano", "Aprender", "Mercado", "Notícias", "Carteira"), tab, Modifier.fillMaxWidth()) { tab = it }
             Spacer(Modifier.height(12.dp))
         }
         when (tab) {

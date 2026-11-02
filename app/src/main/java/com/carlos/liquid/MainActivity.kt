@@ -1,5 +1,6 @@
 package com.carlos.liquid
 
+import com.carlos.liquid.ui.CrashReport
 import android.app.role.RoleManager
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProviderInfo
@@ -66,7 +67,7 @@ class MainActivity : ComponentActivity() {
                 }
                 HomeScreen(st, homeSignal, ::addAndroidWidget) { startActivity(Intent(this@MainActivity, SettingsActivity::class.java)) }
                 if (!s.onboarded) SetupSheet(onDone = { Store.settings { it.copy(onboarded = true) } })
-                com.carlos.liquid.ui.CrashReport()
+                CrashReport()
             }
         }
     }

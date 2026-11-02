@@ -1,5 +1,6 @@
 package com.carlos.liquid
 
+import com.carlos.liquid.ui.CrashReport
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,6 +12,6 @@ class SettingsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent { LiquidRoot(drawWallpaper = false) { SettingsApp(onClose = { finish() }); com.carlos.liquid.ui.CrashReport() } }
+        setContent { LiquidRoot(drawWallpaper = false) { SettingsApp(onClose = { finish() }); CrashReport() } }
     }
 }

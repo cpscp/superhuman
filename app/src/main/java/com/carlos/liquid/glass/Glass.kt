@@ -88,10 +88,10 @@ half4 main(float2 fc) {
     float2 n = normalize(g + float2(0.00001, 0.00001));
     float inside = clamp(-d / bezel, 0.0, 1.0);
     float bend = 1.0 - inside;
-    bend = bend * bend * bend;
-    float2 off = -n * bend * refr * bezel * 1.4;
+    bend = bend * bend;
+    float2 off = -n * bend * refr * bezel * 0.55;
     float2 base = origin + fc;
-    float4 c;
+    float4 c = float4(0.0);
     c.r = float(wall.eval(base + off * 1.12).r);
     c.g = float(wall.eval(base + off).g);
     c.b = float(wall.eval(base + off * 0.88).b);
@@ -134,8 +134,8 @@ fun Modifier.liquidGlass(
                 else addRoundRect(androidx.compose.ui.geometry.RoundRect(0f, 0f, size.width, size.height, CornerRadius(rPx)))
             }
             val src = env.shader
-            if (src != null && Build.VERSION.SDK_INT >= 33) {
-                val rs = RuntimeShader(AGSL)
+            val rs: RuntimeShader? = if (src != null && Build.VERSION.SDK_INT >= 33) runCatching { RuntimeShader(AGSL) }.getOrNull() else null
+            if (src != null && rs != null) {
                 rs.setInputShader("wall", src)
                 rs.setFloatUniform("size", size.width, size.height)
                 rs.setFloatUniform("radius", rPx)

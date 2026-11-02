@@ -228,7 +228,7 @@ fun BoxScope.ContextMenu(m: MenuInfo, st: HomeState, geo: Geo, spec: IconSpec, d
     Box(Modifier.offset { IntOffset(m.bounds.left.roundToInt(), m.bounds.top.roundToInt()) }.graphicsLayer { scaleX = 1.05f; scaleY = 1.05f }) {
         ItemVisual(m.item, geo, spec, dims, badges, s, edit = false, label = false)
     }
-    AnimatedVisibility(true, enter = scaleIn(spring(dampingRatio = 0.7f, stiffness = 500f), initialScale = 0.6f) + fadeIn(), exit = scaleOut() + fadeOut(),
+    AnimatedVisibility(remember { androidx.compose.animation.core.MutableTransitionState(false).apply { targetState = true } }, enter = scaleIn(spring(dampingRatio = 0.7f, stiffness = 500f), initialScale = 0.6f) + fadeIn(), exit = scaleOut() + fadeOut(),
         modifier = Modifier.offset { IntOffset(x.roundToInt(), y.roundToInt()) }) {
         val env = LocalGlass.current
         Column(Modifier.width(250.dp).liquidGlass(corner = 26.dp, tint = panelTint(env).copy(alpha = 0.78f), strength = 0.5f).padding(vertical = 6.dp)) {

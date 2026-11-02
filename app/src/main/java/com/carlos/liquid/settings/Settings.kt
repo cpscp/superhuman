@@ -300,6 +300,9 @@ private fun AppearanceScreen() {
             LSlider(s.refraction, { v -> Store.settings { it.copy(refraction = v) } }, range = 0f..1.6f)
         }
     }
+    Group(footer = "Refração e brilho em tempo real. Se o ecrã principal fechar, desliga esta opção.") {
+        ToggleRow("Vidro avançado (refração)", s.advancedGlass, divider = false) { v -> Store.settings { it.copy(advancedGlass = v) } }
+    }
     Group {
         ToggleRow("Vibração ao tocar", s.haptics, divider = false) { v -> Store.settings { it.copy(haptics = v) } }
     }

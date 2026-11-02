@@ -39,6 +39,7 @@ class GlassEnv(
     val tinted: Boolean,
     val refraction: Float,
     val dim: Float,
+    val advanced: Boolean = true,
 ) {
     val shader: BitmapShader? = source?.let { b ->
         BitmapShader(b, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP).apply {
@@ -134,7 +135,7 @@ fun Modifier.liquidGlass(
                 else addRoundRect(androidx.compose.ui.geometry.RoundRect(0f, 0f, size.width, size.height, CornerRadius(rPx)))
             }
             val src = env.shader
-            val rs: RuntimeShader? = if (src != null && Build.VERSION.SDK_INT >= 33) runCatching { RuntimeShader(AGSL) }.getOrNull() else null
+            val rs: RuntimeShader? = if (src != null && env.advanced && Build.VERSION.SDK_INT >= 33) runCatching { RuntimeShader(AGSL) }.getOrNull() else null
             if (src != null && rs != null) {
                 rs.setInputShader("wall", src)
                 rs.setFloatUniform("size", size.width, size.height)

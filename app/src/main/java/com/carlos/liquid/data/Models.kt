@@ -64,6 +64,7 @@ data class Settings(
     val appearance: Appearance = Appearance.AUTO,
     val glass: GlassStyle = GlassStyle.CLEAR,
     val refraction: Float = 1f,
+    val advancedGlass: Boolean = true,      // shader de refração (AGSL); desliga-se sozinho se o Android falhar
 
     val iconStyle: IconStyle = IconStyle.DEFAULT,
     val iconMode: IconMode = IconMode.AUTO,

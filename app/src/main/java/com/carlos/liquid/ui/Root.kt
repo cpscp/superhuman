@@ -86,7 +86,7 @@ fun LiquidRoot(lock: Boolean = false, drawWallpaper: Boolean = true, content: @C
         dark && s.dimInDark -> 0.22f
         else -> 0f
     }
-    val env = androidx.compose.runtime.remember(wp, sw, sh, dark, s.glass, s.refraction, dim) { GlassEnv(wp?.glass, sw, sh, dark, s.glass == GlassStyle.TINTED, s.refraction, dim) }
+    val env = androidx.compose.runtime.remember(wp, sw, sh, dark, s.glass, s.refraction, dim, s.advancedGlass) { GlassEnv(wp?.glass, sw, sh, dark, s.glass == GlassStyle.TINTED, s.refraction, dim, s.advancedGlass) }
 
     if (!lock) LaunchedEffect(wp, s.syncSystemWallpaper, s.lock.sameWallpaper, s.lock.wallpaperId) {
         val home = wp ?: return@LaunchedEffect

@@ -23,7 +23,7 @@ fun BoxScope.CrashReport() {
     IOSAlert(
         true,
         "O Liquid fechou inesperadamente",
-        "Copia o relatório e envia-o ao Claude para corrigir.\n\n" + t.lines().drop(3).take(4).joinToString("\n"),
+        "Copia o relatório e envia-o ao Claude para corrigir.\n\n" + t.lines().drop(2).take(5).joinToString("\n"),
         listOf(
             AlertButton("Copiar relatório", bold = true) {
                 ctx.getSystemService(ClipboardManager::class.java).setPrimaryClip(ClipData.newPlainText("Liquid", t))

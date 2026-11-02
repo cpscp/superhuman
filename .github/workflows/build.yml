@@ -37,6 +37,25 @@ jobs:
           else
             gh release create $TAG Liquid.apk --title "Liquid launcher" --notes "$NOTES" --latest=false
           fi
+      - name: Ativar KVM
+        if: success()
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Testar no emulador
+        if: success()
+        continue-on-error: true
+        timeout-minutes: 25
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          target: google_apis
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: bash ci/test.sh
       - name: Relatório do build
         if: always()
         run: |

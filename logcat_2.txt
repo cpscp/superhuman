@@ -1,0 +1,227 @@
+11-02 23:14:18.859 I/ConditionProviders(  553):  Allowing condition provider com.carlos.liquid/com.carlos.liquid.lock.NotifService (userSet: true)
+11-02 23:14:18.859 I/NotificationManagerService$NotificationListeners(  553):  Allowing notification listener com.carlos.liquid/com.carlos.liquid.lock.NotifService (userSet: true)
+11-02 23:14:18.859 V/NotificationManagerService$NotificationListeners(  553): enabling notification listener for 0: ComponentInfo{com.carlos.liquid/com.carlos.liquid.lock.NotifService}
+11-02 23:14:18.859 V/NotificationManagerService$NotificationListeners(  553): binding: Intent { act=android.service.notification.NotificationListenerService cmp=com.carlos.liquid/.lock.NotifService (has extras) }
+11-02 23:14:18.863 V/NotificationManagerService$NotificationListeners(  553): 0 notification listener service connected: ComponentInfo{com.carlos.liquid/com.carlos.liquid.lock.NotifService}
+11-02 23:14:18.869 W/Conscrypt( 1405): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:18.899 I/RoleControllerServiceImpl(  553): Package is already a role holder, package: com.carlos.liquid, role: android.app.role.HOME
+11-02 23:14:18.923 I/ActivityManager(  553): Force stopping com.carlos.liquid appid=10209 user=0: from pid 3760
+11-02 23:14:18.926 I/ActivityManager(  553): Killing 2726:com.carlos.liquid/u0a209 (adj 0): stop com.carlos.liquid due to from pid 3760
+11-02 23:14:18.932 V/NotificationManagerService$NotificationListeners(  553): 0 notification listener connection lost: ComponentInfo{com.carlos.liquid/com.carlos.liquid.lock.NotifService}
+11-02 23:14:18.932 W/NotificationManagerService$NotificationListeners(  553): 0 notification listener binding died: ComponentInfo{com.carlos.liquid/com.carlos.liquid.lock.NotifService}
+11-02 23:14:18.937 W/ActivityTaskManager(  553): Force removing ActivityRecord{6e46324 u0 com.carlos.liquid/.MainActivity t8 f}}: app died, no saved state
+11-02 23:14:18.939 W/Conscrypt( 1405): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:18.939 V/WindowManagerShell(  899): Transition requested (#18): android.os.BinderProxy@c6db37b TransitionRequestInfo { type = CLOSE, triggerTask = TaskInfo{userId=0 taskId=8 displayId=0 isRunning=false baseIntent=Intent { flg=0x10000000 cmp=com.carlos.liquid/.MainActivity } baseActivity=null topActivity=null origActivity=null realActivity=ComponentInfo{com.carlos.liquid/com.carlos.liquid.MainActivity} numActivities=0 lastActiveTime=40697 supportsMultiWindow=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{android.window.IWindowContainerToken$Stub$Proxy@3871598} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=null topActivityInfo=null launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=true isVisible=true isVisibleRequested=true isSleeping=false locusId=null displayAreaFeatureId=1 isTopActivityTransparent=false appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false topActivityEligibleForLetterboxEducation= falseisLetterboxEducationEnabled= false isLetterboxDoubleTapEnabled= false topActivityEligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false cameraCompatTaskInfo=CameraCompatTaskInfo { cameraCompatControlState=hidden freeformCameraCompatMode=inactive}}}, pipTask = null, remoteTransition = null, displayChange = null, flags = 0, debugId = 18 }
+11-02 23:14:18.944 I/ImeTracker(  553): com.carlos.liquid:44524f5: onRequestHide at ORIGIN_SERVER reason HIDE_REMOVE_CLIENT fromUser false
+11-02 23:14:18.946 I/ImeTracker(  553): com.carlos.liquid:44524f5: onCancelled at PHASE_SERVER_SHOULD_HIDE
+11-02 23:14:18.959 I/WindowManager(  553): WIN DEATH: Window{74fce15 u0 com.carlos.liquid/com.carlos.liquid.MainActivity}
+11-02 23:14:18.960 W/InputManager-JNI(  553): Input channel object '74fce15 com.carlos.liquid/com.carlos.liquid.MainActivity (client)' was disposed without first being removed with the input manager!
+11-02 23:14:18.976 I/AppsFilter(  553): interaction: PackageSetting{f3de2d9 com.android.microdroid.empty_payload/10187} -> PackageSetting{d1be37 com.carlos.liquid/10209} BLOCKED
+11-02 23:14:18.977 V/ActivityManager(  553): Got obituary of 2726:com.carlos.liquid
+11-02 23:14:18.982 D/NotificationManagerService$NotificationListeners(  553): Removing active service ComponentInfo{com.carlos.liquid/com.carlos.liquid.lock.NotifService}
+11-02 23:14:18.994 D/CarrierSvcBindHelper( 1070): onHandleForceStop: [com.carlos.liquid]
+11-02 23:14:19.001 I/AppWidgetServiceImpl(  553): Updating package stopped masked state for uid 10209 package com.carlos.liquid isStopped true
+11-02 23:14:19.002 W/ActivityTaskManager(  553): Unable to send transaction to client proc com.carlos.liquid: no app thread
+11-02 23:14:19.007 V/NotificationManagerService$NotificationListeners(  553): enabling notification listener for 0: ComponentInfo{com.carlos.liquid/com.carlos.liquid.lock.NotifService}
+11-02 23:14:19.007 V/NotificationManagerService$NotificationListeners(  553): binding: Intent { act=android.service.notification.NotificationListenerService cmp=com.carlos.liquid/.lock.NotifService (has extras) }
+11-02 23:14:19.010 I/AppsFilter(  553): interaction: PackageSetting{f3de2d9 com.android.microdroid.empty_payload/10187} -> PackageSetting{2b23b46 com.carlos.liquid/10209} BLOCKED
+11-02 23:14:19.024 I/ActivityManager(  553): Start proc 3767:com.carlos.liquid/u0a209 for service {com.carlos.liquid/com.carlos.liquid.lock.NotifService}
+11-02 23:14:19.025 I/AppWidgetServiceImpl(  553): Updating package stopped masked state for uid 10209 package com.carlos.liquid isStopped false
+11-02 23:14:19.065 D/nativeloader( 3767): Configuring clns-7 for other apk /data/app/~~cBUM_9rBhFz4N4v0DvUu2g==/com.carlos.liquid-_EocUVxeLasXWm2vBAmeFQ==/base.apk. target_sdk_version=35, uses_libraries=, library_path=/data/app/~~cBUM_9rBhFz4N4v0DvUu2g==/com.carlos.liquid-_EocUVxeLasXWm2vBAmeFQ==/lib/x86_64:/data/app/~~cBUM_9rBhFz4N4v0DvUu2g==/com.carlos.liquid-_EocUVxeLasXWm2vBAmeFQ==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/com.carlos.liquid
+11-02 23:14:19.080 D/OneSearchSuggestProvider( 1147): java.util.concurrent.CompletionException: java.util.NoSuchElementException: No value present
+11-02 23:14:19.080 D/OneSearchSuggestProvider( 1147): 	at java.util.concurrent.CompletableFuture.completeExceptionally(CompletableFuture.java:2138)
+11-02 23:14:19.080 D/OneSearchSuggestProvider( 1147): Caused by: java.util.NoSuchElementException: No value present
+11-02 23:14:19.180 V/WindowManager(  553): Sent Transition (#18) createdAt=11-02 23:14:18.937 via request=TransitionRequestInfo { type = CLOSE, triggerTask = TaskInfo{userId=0 taskId=8 displayId=0 isRunning=false baseIntent=Intent { flg=0x10000000 cmp=com.carlos.liquid/.MainActivity } baseActivity=null topActivity=null origActivity=null realActivity=ComponentInfo{com.carlos.liquid/com.carlos.liquid.MainActivity} numActivities=0 lastActiveTime=40697 supportsMultiWindow=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{RemoteToken{5bccd96 Task{3968d90 #8 type=standard A=10209:com.carlos.liquid}}} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=null topActivityInfo=null launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=true isVisible=true isVisibleRequested=true isSleeping=false locusId=null displayAreaFeatureId=1 isTopActivityTransparent=false appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false topActivityEligibleForLetterboxEducation= falseisLetterboxEducationEnabled= false isLetterboxDoubleTapEnabled= false topActivityEligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false cameraCompatTaskInfo=CameraCompatTaskInfo { cameraCompatControlState=hidden freeformCameraCompatMode=inactive}}}, pipTask = null, remoteTransition = null, displayChange = null, flags = 0, debugId = 18 }
+11-02 23:14:19.180 V/WindowManager(  553):         {WCT{RemoteToken{5bccd96 Task{3968d90 #8 type=standard A=10209:com.carlos.liquid}}} m=CLOSE f=NONE leash=Surface(name=Task=8)/@0xe296a35 sb=Rect(0, 0 - 320, 640) eb=Rect(0, 0 - 320, 640) d=0 taskParent=-1},
+11-02 23:14:19.270 I/ActivityTaskManager(  553): START u0 {act=android.intent.action.MAIN cat=[android.intent.category.HOME] flg=0x10000100 cmp=com.carlos.liquid/.MainActivity (has extras)} with LAUNCH_SINGLE_TASK from uid 0 (BAL_ALLOW_ALLOWLISTED_UID) result code=0
+11-02 23:14:19.286 W/WindowManager(  553): Exception thrown during dispatchAppVisibility Window{74fce15 u0 com.carlos.liquid/com.carlos.liquid.MainActivity EXITING}
+11-02 23:14:19.286 W/WindowManager(  553): android.os.DeadObjectException
+11-02 23:14:19.304 I/TopTaskTracker( 1147): onTaskMovedToFront: (moved taskInfo to front) taskId=9, baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.HOME] flg=0x10000100 cmp=com.carlos.liquid/.MainActivity }
+11-02 23:14:19.305 V/WindowManagerShell(  899): Transition requested (#19): android.os.BinderProxy@ae0b947 TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=9 displayId=0 isRunning=true baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.HOME] flg=0x10000100 cmp=com.carlos.liquid/.MainActivity } baseActivity=ComponentInfo{com.carlos.liquid/com.carlos.liquid.MainActivity} topActivity=ComponentInfo{com.carlos.liquid/com.carlos.liquid.MainActivity} origActivity=null realActivity=ComponentInfo{com.carlos.liquid/com.carlos.liquid.MainActivity} numActivities=1 lastActiveTime=58760 supportsMultiWindow=false resizeMode=0 isResizeable=false minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{android.window.IWindowContainerToken$Stub$Proxy@e0cb574} topActivityType=2 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=null topActivityInfo=ActivityInfo{66aca9d com.carlos.liquid.MainActivity} launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=true isVisible=false isVisibleRequested=true isSleeping=false locusId=null displayAreaFeatureId=1 isTopActivityTransparent=false appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false topActivityEligibleForLetterboxEducation= falseisLetterboxEducationEnabled= true isLetterboxDoubleTapEnabled= false topActivityEligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=320 topActivityLetterboxHeight=640 isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false cameraCompatTaskInfo=CameraCompatTaskInfo { cameraCompatControlState=hidden freeformCameraCompatMode=inactive}}}, pipTask = null, remoteTransition = null, displayChange = null, flags = 0, debugId = 19 }
+11-02 23:14:19.502 V/NotificationManagerService$NotificationListeners(  553): 0 notification listener service connected: ComponentInfo{com.carlos.liquid/com.carlos.liquid.lock.NotifService}
+11-02 23:14:19.588 W/ModernMediaScanner( 1382): android.database.sqlite.SQLiteConstraintException: UNIQUE constraint failed: files._data (code 2067 SQLITE_CONSTRAINT_UNIQUE)
+11-02 23:14:19.592 D/CoreBackPreview(  553): Window{3029b97 u0 com.carlos.liquid/com.carlos.liquid.MainActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@fe52d25, mPriority=0, mIsAnimationCallback=false}
+11-02 23:14:19.869 E/AppOps  (  553): java.lang.SecurityException: Specified package "android" under uid 10186 but it is not
+11-02 23:14:19.869 E/AppOps  (  553): java.lang.SecurityException: Specified package "android" under uid 10186 but it is not
+11-02 23:14:19.869 E/AppOps  (  553): java.lang.SecurityException: Specified package "android" under uid 10186 but it is not
+11-02 23:14:19.869 E/AppOps  (  553): java.lang.SecurityException: Specified package "android" under uid 10186 but it is not
+11-02 23:14:20.171 V/NotificationManagerService$NotificationListeners(  553): enabling notification listener for 0: ComponentInfo{com.carlos.liquid/com.carlos.liquid.lock.NotifService}
+11-02 23:14:20.188 V/NotificationManagerService$NotificationListeners(  553): Not registering ComponentInfo{com.carlos.liquid/com.carlos.liquid.lock.NotifService} is already bound
+11-02 23:14:20.481 W/PackageManager( 1147): android.content.res.Resources$NotFoundException: String resource ID #0x7f130786
+11-02 23:14:20.767 I/ImeTracker(  553): com.carlos.liquid:6f16133: onRequestHide at ORIGIN_SERVER reason HIDE_UNSPECIFIED_WINDOW fromUser false
+11-02 23:14:20.768 I/ImeTracker(  553): com.carlos.liquid:6f16133: onCancelled at PHASE_SERVER_SHOULD_HIDE
+11-02 23:14:20.780 I/GoogleInputMethodService( 1321): GoogleInputMethodService.onStartInput():1986 onStartInput(EditorInfo{EditorInfo{packageName=com.carlos.liquid, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
+11-02 23:14:20.782 W/PackageConfigPersister(  553): App-specific configuration not found for packageName: com.carlos.liquid and userId: 0
+11-02 23:14:20.800 I/ActivityTaskManager(  553): Displayed com.carlos.liquid/.MainActivity for user 0: +1s451ms
+11-02 23:14:20.801 V/WindowManager(  553): Sent Transition (#19) createdAt=11-02 23:14:19.177 via request=TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=9 displayId=0 isRunning=true baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.HOME] flg=0x10000100 cmp=com.carlos.liquid/.MainActivity } baseActivity=ComponentInfo{com.carlos.liquid/com.carlos.liquid.MainActivity} topActivity=ComponentInfo{com.carlos.liquid/com.carlos.liquid.MainActivity} origActivity=null realActivity=ComponentInfo{com.carlos.liquid/com.carlos.liquid.MainActivity} numActivities=1 lastActiveTime=58760 supportsMultiWindow=false resizeMode=0 isResizeable=false minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{RemoteToken{223ede5 Task{78a5c00 #9 type=home A=10209:com.carlos.liquid}}} topActivityType=2 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=null topActivityInfo=ActivityInfo{fe640ba com.carlos.liquid.MainActivity} launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=true isVisible=false isVisibleRequested=true isSleeping=false locusId=null displayAreaFeatureId=1 isTopActivityTransparent=false appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false topActivityEligibleForLetterboxEducation= falseisLetterboxEducationEnabled= true isLetterboxDoubleTapEnabled= false topActivityEligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=320 topActivityLetterboxHeight=640 isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false cameraCompatTaskInfo=CameraCompatTaskInfo { cameraCompatControlState=hidden freeformCameraCompatMode=inactive}}}, pipTask = null, remoteTransition = null, displayChange = null, flags = 0, debugId = 19 }
+11-02 23:14:20.801 V/WindowManager(  553):         {WCT{RemoteToken{223ede5 Task{78a5c00 #9 type=home A=10209:com.carlos.liquid}}} m=OPEN f=NONE leash=Surface(name=Task=9)/@0x88b32fe sb=Rect(0, 0 - 320, 640) eb=Rect(0, 0 - 320, 640) d=0 taskParent=-1},
+11-02 23:14:20.855 I/ChimeraSrvcProxy( 1207): NullBinder for android.net.action.RECOMMEND_NETWORKS triggering remote TransactionTooLargeException due to Service without Chimera impl
+11-02 23:14:21.709 D/ShortcutService(  553): Getting shortcuts for launcher= com.carlos.liquiduser=0 pkg=com.google.android.googlequicksearchbox
+11-02 23:14:21.709 D/ShortcutService(  553): Getting shortcuts for launcher= com.carlos.liquiduser=0 pkg=com.google.android.apps.messaging
+11-02 23:14:21.709 D/ShortcutService(  553): Getting shortcuts for launcher= com.carlos.liquiduser=0 pkg=com.google.android.as
+11-02 23:14:21.709 D/ShortcutService(  553): Getting shortcuts for launcher= com.carlos.liquiduser=0 pkg=com.google.android.gms
+11-02 23:14:21.709 D/ShortcutService(  553): Getting shortcuts for launcher= com.carlos.liquiduser=0 pkg=com.android.settings
+11-02 23:14:22.022 W/MediaProvider( 1382): java.io.IOException: Failed to update quota type for /storage/emulated/0/Android
+11-02 23:14:22.022 W/MediaProvider( 1382): java.io.IOException: Failed to update quota type for /storage/emulated/0/Android/media
+11-02 23:14:22.316 W/PeoplePU( 1405): android.content.pm.PackageManager$NameNotFoundException: ComponentInfo{com.google.android.gms/com.google.android.gms.people.sync.focus.ContactsSyncAdapterService}
+11-02 23:14:22.319 W/PeoplePU( 1405): java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ContactsSyncAdapterService}
+11-02 23:14:22.319 W/PeoplePU( 1405): 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3246)
+11-02 23:14:22.319 W/PeoplePU( 1405): 	at android.os.Parcel.createException(Parcel.java:3226)
+11-02 23:14:22.319 W/PeoplePU( 1405): 	at android.os.Parcel.readException(Parcel.java:3209)
+11-02 23:14:22.319 W/PeoplePU( 1405): 	at android.os.Parcel.readException(Parcel.java:3151)
+11-02 23:14:22.319 W/PeoplePU( 1405): Caused by: android.os.RemoteException: Remote stack trace:
+11-02 23:14:22.325 W/PeoplePU( 1405): java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ContactsSyncAdapterService}
+11-02 23:14:22.325 W/PeoplePU( 1405): 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3246)
+11-02 23:14:22.325 W/PeoplePU( 1405): 	at android.os.Parcel.createException(Parcel.java:3226)
+11-02 23:14:22.325 W/PeoplePU( 1405): 	at android.os.Parcel.readException(Parcel.java:3209)
+11-02 23:14:22.325 W/PeoplePU( 1405): 	at android.os.Parcel.readException(Parcel.java:3151)
+11-02 23:14:22.326 W/PeoplePU( 1405): java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ProxyGalProvider}
+11-02 23:14:22.326 W/PeoplePU( 1405): 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3246)
+11-02 23:14:22.326 W/PeoplePU( 1405): 	at android.os.Parcel.createException(Parcel.java:3226)
+11-02 23:14:22.326 W/PeoplePU( 1405): 	at android.os.Parcel.readException(Parcel.java:3209)
+11-02 23:14:22.326 W/PeoplePU( 1405): 	at android.os.Parcel.readException(Parcel.java:3151)
+11-02 23:14:22.688 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:22.804 E/HardwareInfoFeatureProviderImpl( 1074): java.lang.NumberFormatException: For input string: "E"
+11-02 23:14:22.815 W/BaseSearchIndex( 1074): Error initializing controller in fragment: com.android.settings.deviceinfo.aboutphone.MyDeviceInfoFragment$1@a3d8328, e: java.lang.IllegalStateException: Cannot invoke setValue on a background thread
+11-02 23:14:22.934 W/PackageManager( 1147): android.content.res.Resources$NotFoundException: String resource ID #0x7f130786
+11-02 23:14:22.974 W/FileUtils(  553): android.system.ErrnoException: chmod failed: ENOENT (No such file or directory)
+11-02 23:14:23.007 W/BaseSearchIndex( 1074): Error initializing controller in fragment: com.android.settings.network.NetworkDashboardFragment$1@fb3e6cc, e: java.lang.IllegalArgumentException: Lifecycle must be set
+11-02 23:14:23.704 D/SettingsSliceProvider( 1074): java.lang.IllegalStateException: Invalid Slices key from path: wifi_calling
+11-02 23:14:23.873 E/MDD     ( 1321): DownloadListener: onFailure: java.util.concurrent.CancellationException: Task was cancelled.
+11-02 23:14:23.873 W/ForegroundDownloadTaskWorker( 1321): java.util.concurrent.CancellationException: Task was cancelled.
+11-02 23:14:23.874 I/WM-WorkerWrapper( 1321): java.util.concurrent.CancellationException: Task was cancelled.
+11-02 23:14:23.903 W/ndroid.settings( 1074): ApkAssets: Deleting an ApkAssets object '<empty> and /data/app/~~cBUM_9rBhFz4N4v0DvUu2g==/com.carlos.liquid-_EocUVxeLasXWm2vBAmeFQ==/base.apk' with 1 weak references
+11-02 23:14:24.589 D/ProfileInstaller( 3767): Installing profile for com.carlos.liquid
+11-02 23:14:25.012 W/ModernMediaScanner( 1382): Failed to visit /data/data/com.android.providers.downloads/cache/model.smfb.metadata: java.nio.file.NoSuchFileException: /data/data/com.android.providers.downloads/cache/model.smfb.metadata
+11-02 23:14:25.141 W/ModernMediaScanner( 1382): Failed to visit /data/data/com.android.providers.downloads/cache/model.smfb: java.nio.file.NoSuchFileException: /data/data/com.android.providers.downloads/cache/model.smfb
+11-02 23:14:25.671 E/A       ( 1516): Caused by: com.google.android.apps.gsa.shared.speech.b.n: errorCode: 65586, engine: 2
+11-02 23:14:25.671 E/A       ( 1516): Caused by: com.google.android.apps.gsa.shared.speech.b.j: errorCode: 401, engine: 2
+11-02 23:14:25.962 W/ModernMediaScanner( 1382): Failed to visit /data/data/com.android.providers.downloads/cache/en.fb.metadata: java.nio.file.NoSuchFileException: /data/data/com.android.providers.downloads/cache/en.fb.metadata
+11-02 23:14:26.026 W/ModernMediaScanner( 1382): Failed to visit /data/data/com.android.providers.downloads/cache/en.fb: java.nio.file.NoSuchFileException: /data/data/com.android.providers.downloads/cache/en.fb
+11-02 23:14:26.318 W/ModernMediaScanner( 1382): Failed to visit /data/data/com.android.providers.downloads/cache/en.model.metadata: java.nio.file.NoSuchFileException: /data/data/com.android.providers.downloads/cache/en.model.metadata
+11-02 23:14:26.327 W/ModernMediaScanner( 1382): Failed to visit /data/data/com.android.providers.downloads/cache/en.model: java.nio.file.NoSuchFileException: /data/data/com.android.providers.downloads/cache/en.model
+11-02 23:14:27.037 W/ModernMediaScanner( 1382): Failed to visit /data/data/com.android.providers.downloads/cache/09252026-sms-denylist-metadata.txt: java.nio.file.NoSuchFileException: /data/data/com.android.providers.downloads/cache/09252026-sms-denylist-metadata.txt
+11-02 23:14:27.079 W/ModernMediaScanner( 1382): Failed to visit /data/data/com.android.providers.downloads/cache/09252026-sms-denylist.txt: java.nio.file.NoSuchFileException: /data/data/com.android.providers.downloads/cache/09252026-sms-denylist.txt
+11-02 23:14:27.283 W/ModernMediaScanner( 1382): Failed to visit /data/data/com.android.providers.downloads/cache/08202014-metadata.txt: java.nio.file.NoSuchFileException: /data/data/com.android.providers.downloads/cache/08202014-metadata.txt
+11-02 23:14:27.349 W/ModernMediaScanner( 1382): Failed to visit /data/data/com.android.providers.downloads/cache/08202014-pins.txt: java.nio.file.NoSuchFileException: /data/data/com.android.providers.downloads/cache/08202014-pins.txt
+11-02 23:14:27.614 D/StrictMode( 3359): 	at android.os.Parcel.readExceptionCode(Parcel.java:3187)
+11-02 23:14:27.614 D/StrictMode( 3359): 	at android.database.DatabaseUtils.readExceptionFromParcel(DatabaseUtils.java:152)
+11-02 23:14:28.223 E/dqod    ( 3359): RuntimeException while executing runnable dqra{dkqj@63474e3} with executor MoreExecutors.directExecutor()
+11-02 23:14:28.223 E/dqod    ( 3359): java.lang.NullPointerException: Attempt to read from field 'java.lang.String cwru.b' on a null object reference in method 'void cyar.b(java.lang.Object)'
+11-02 23:14:28.223 E/dqod    ( 3359): RuntimeException while executing runnable dqra{dkqj@b569599} with executor MoreExecutors.directExecutor()
+11-02 23:14:28.223 E/dqod    ( 3359): java.lang.NullPointerException: Attempt to read from field 'java.lang.String cwru.b' on a null object reference in method 'void cyar.b(java.lang.Object)'
+11-02 23:14:28.223 E/dqod    ( 3359): RuntimeException while executing runnable dqra{dkqj@d2f7c3f} with executor MoreExecutors.directExecutor()
+11-02 23:14:28.223 E/dqod    ( 3359): java.lang.NullPointerException: Attempt to read from field 'java.lang.String cwru.b' on a null object reference in method 'void cyar.b(java.lang.Object)'
+11-02 23:14:28.256 E/dqod    ( 3359): RuntimeException while executing runnable dqra{dkqj@80e0010} with executor MoreExecutors.directExecutor()
+11-02 23:14:28.256 E/dqod    ( 3359): java.lang.NullPointerException: Attempt to read from field 'java.lang.String cwru.b' on a null object reference in method 'void cyar.b(java.lang.Object)'
+11-02 23:14:28.268 E/dqod    ( 3359): RuntimeException while executing runnable dqra{dkqj@3151ac5} with executor MoreExecutors.directExecutor()
+11-02 23:14:28.268 E/dqod    ( 3359): java.lang.NullPointerException: Attempt to read from field 'java.lang.String cwru.b' on a null object reference in method 'void cyar.b(java.lang.Object)'
+11-02 23:14:28.268 E/dqod    ( 3359): RuntimeException while executing runnable dqra{dkqj@448934b} with executor MoreExecutors.directExecutor()
+11-02 23:14:28.268 E/dqod    ( 3359): java.lang.NullPointerException: Attempt to read from field 'java.lang.String cwru.b' on a null object reference in method 'void cyar.b(java.lang.Object)'
+11-02 23:14:28.957 W/PeoplePU( 1405): java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ContactsSyncAdapterService}
+11-02 23:14:28.957 W/PeoplePU( 1405): 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3246)
+11-02 23:14:28.957 W/PeoplePU( 1405): 	at android.os.Parcel.createException(Parcel.java:3226)
+11-02 23:14:28.957 W/PeoplePU( 1405): 	at android.os.Parcel.readException(Parcel.java:3209)
+11-02 23:14:28.957 W/PeoplePU( 1405): 	at android.os.Parcel.readException(Parcel.java:3151)
+11-02 23:14:28.957 W/PeoplePU( 1405): Caused by: android.os.RemoteException: Remote stack trace:
+11-02 23:14:28.968 W/PeoplePU( 1405): java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ContactsSyncAdapterService}
+11-02 23:14:28.968 W/PeoplePU( 1405): 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3246)
+11-02 23:14:28.968 W/PeoplePU( 1405): 	at android.os.Parcel.createException(Parcel.java:3226)
+11-02 23:14:28.968 W/PeoplePU( 1405): 	at android.os.Parcel.readException(Parcel.java:3209)
+11-02 23:14:28.968 W/PeoplePU( 1405): 	at android.os.Parcel.readException(Parcel.java:3151)
+11-02 23:14:28.969 W/PeoplePU( 1405): java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ProxyGalProvider}
+11-02 23:14:28.969 W/PeoplePU( 1405): 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3246)
+11-02 23:14:28.969 W/PeoplePU( 1405): 	at android.os.Parcel.createException(Parcel.java:3226)
+11-02 23:14:28.969 W/PeoplePU( 1405): 	at android.os.Parcel.readException(Parcel.java:3209)
+11-02 23:14:28.969 W/PeoplePU( 1405): 	at android.os.Parcel.readException(Parcel.java:3151)
+11-02 23:14:28.979 V/NotificationManagerService$NotificationListeners(  553): Not registering ComponentInfo{com.carlos.liquid/com.carlos.liquid.lock.NotifService} is already bound
+11-02 23:14:29.529 W/GLSUser ( 1207): [AppCertManager] Exception while requesting key: 
+11-02 23:14:29.529 W/GLSUser ( 1207): java.util.concurrent.ExecutionException: bpcw: Parse Proto Exception with response code 400
+11-02 23:14:29.529 W/GLSUser ( 1207): Caused by: bpcw: Parse Proto Exception with response code 400
+11-02 23:14:29.529 W/GLSUser ( 1207): Caused by: fkhe: Protocol message contained an invalid tag (zero).
+11-02 23:14:30.354 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:31.678 W/PeoplePU( 1405): java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ContactsSyncAdapterService}
+11-02 23:14:31.678 W/PeoplePU( 1405): 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3246)
+11-02 23:14:31.678 W/PeoplePU( 1405): 	at android.os.Parcel.createException(Parcel.java:3226)
+11-02 23:14:31.678 W/PeoplePU( 1405): 	at android.os.Parcel.readException(Parcel.java:3209)
+11-02 23:14:31.678 W/PeoplePU( 1405): 	at android.os.Parcel.readException(Parcel.java:3151)
+11-02 23:14:31.678 W/PeoplePU( 1405): Caused by: android.os.RemoteException: Remote stack trace:
+11-02 23:14:31.680 W/PeoplePU( 1405): java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ContactsSyncAdapterService}
+11-02 23:14:31.680 W/PeoplePU( 1405): 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3246)
+11-02 23:14:31.680 W/PeoplePU( 1405): 	at android.os.Parcel.createException(Parcel.java:3226)
+11-02 23:14:31.680 W/PeoplePU( 1405): 	at android.os.Parcel.readException(Parcel.java:3209)
+11-02 23:14:31.680 W/PeoplePU( 1405): 	at android.os.Parcel.readException(Parcel.java:3151)
+11-02 23:14:31.684 W/PeoplePU( 1405): java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ProxyGalProvider}
+11-02 23:14:31.684 W/PeoplePU( 1405): 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3246)
+11-02 23:14:31.684 W/PeoplePU( 1405): 	at android.os.Parcel.createException(Parcel.java:3226)
+11-02 23:14:31.684 W/PeoplePU( 1405): 	at android.os.Parcel.readException(Parcel.java:3209)
+11-02 23:14:31.684 W/PeoplePU( 1405): 	at android.os.Parcel.readException(Parcel.java:3151)
+11-02 23:14:31.773 E/AmbientMusicServiceMana( 1383): xrv: java.lang.reflect.InvocationTargetException
+11-02 23:14:31.773 E/AmbientMusicServiceMana( 1383): Caused by: java.lang.reflect.InvocationTargetException
+11-02 23:14:31.773 E/AmbientMusicServiceMana( 1383): Caused by: java.lang.IllegalStateException: No underlying SoundTriggerModule available
+11-02 23:14:32.025 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:32.344 V/NotificationManagerService$NotificationListeners(  553): enabling notification listener for 0: ComponentInfo{com.carlos.liquid/com.carlos.liquid.lock.NotifService}
+11-02 23:14:32.345 V/NotificationManagerService$NotificationListeners(  553): Not registering ComponentInfo{com.carlos.liquid/com.carlos.liquid.lock.NotifService} is already bound
+11-02 23:14:32.617 I/ChimeraSrvcProxy( 1207): NullBinder for android.net.action.RECOMMEND_NETWORKS triggering remote TransactionTooLargeException due to Service without Chimera impl
+11-02 23:14:32.622 D/ShortcutService(  553): Getting shortcuts for launcher= com.carlos.liquiduser=0 pkg=com.google.android.apps.messaging
+11-02 23:14:32.626 D/ShortcutService(  553): Getting shortcuts for launcher= com.carlos.liquiduser=0 pkg=com.google.android.as
+11-02 23:14:32.635 D/ShortcutService(  553): Getting shortcuts for launcher= com.carlos.liquiduser=0 pkg=com.google.android.gms
+11-02 23:14:34.486 W/InputDispatcher(  553): Not sending touch gesture to 8059532 ActivityRecordInputSink com.carlos.liquid/.MainActivity because it has config NO_INPUT_CHANNEL
+11-02 23:14:35.646 I/ChimeraSrvcProxy( 1207): NullBinder for android.net.action.RECOMMEND_NETWORKS triggering remote TransactionTooLargeException due to Service without Chimera impl
+11-02 23:14:38.635 I/ChimeraSrvcProxy( 1207): NullBinder for android.net.action.RECOMMEND_NETWORKS triggering remote TransactionTooLargeException due to Service without Chimera impl
+11-02 23:14:39.168 W/InputDispatcher(  553): Not sending touch gesture to 8059532 ActivityRecordInputSink com.carlos.liquid/.MainActivity because it has config NO_INPUT_CHANNEL
+11-02 23:14:39.684 W/NetworkScheduler( 1207): java.lang.IllegalArgumentException: Only the following extra parameter types are supported: Integer, Long, Double, String, Boolean, and nested Bundles with the same restrictions.
+11-02 23:14:39.851 W/TapAndPay( 1207): java.lang.NullPointerException: NfcAdapter is null
+11-02 23:14:41.500 W/InputDispatcher(  553): Not sending touch gesture to 8059532 ActivityRecordInputSink com.carlos.liquid/.MainActivity because it has config NO_INPUT_CHANNEL
+11-02 23:14:41.606 I/ChimeraSrvcProxy( 1207): NullBinder for android.net.action.RECOMMEND_NETWORKS triggering remote TransactionTooLargeException due to Service without Chimera impl
+11-02 23:14:41.904 W/PeoplePU( 1405): java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ContactsSyncAdapterService}
+11-02 23:14:41.904 W/PeoplePU( 1405): 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3246)
+11-02 23:14:41.904 W/PeoplePU( 1405): 	at android.os.Parcel.createException(Parcel.java:3226)
+11-02 23:14:41.904 W/PeoplePU( 1405): 	at android.os.Parcel.readException(Parcel.java:3209)
+11-02 23:14:41.904 W/PeoplePU( 1405): 	at android.os.Parcel.readException(Parcel.java:3151)
+11-02 23:14:41.904 W/PeoplePU( 1405): Caused by: android.os.RemoteException: Remote stack trace:
+11-02 23:14:41.909 W/PeoplePU( 1405): java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ContactsSyncAdapterService}
+11-02 23:14:41.909 W/PeoplePU( 1405): 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3246)
+11-02 23:14:41.909 W/PeoplePU( 1405): 	at android.os.Parcel.createException(Parcel.java:3226)
+11-02 23:14:41.909 W/PeoplePU( 1405): 	at android.os.Parcel.readException(Parcel.java:3209)
+11-02 23:14:41.909 W/PeoplePU( 1405): 	at android.os.Parcel.readException(Parcel.java:3151)
+11-02 23:14:41.909 W/PeoplePU( 1405): java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ProxyGalProvider}
+11-02 23:14:41.909 W/PeoplePU( 1405): 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3246)
+11-02 23:14:41.909 W/PeoplePU( 1405): 	at android.os.Parcel.createException(Parcel.java:3226)
+11-02 23:14:41.909 W/PeoplePU( 1405): 	at android.os.Parcel.readException(Parcel.java:3209)
+11-02 23:14:41.909 W/PeoplePU( 1405): 	at android.os.Parcel.readException(Parcel.java:3151)
+11-02 23:14:42.616 W/GLSUser ( 1207): [AppCertManager] Exception while requesting key: 
+11-02 23:14:42.616 W/GLSUser ( 1207): java.util.concurrent.ExecutionException: bpcw: Parse Proto Exception with response code 400
+11-02 23:14:42.616 W/GLSUser ( 1207): Caused by: bpcw: Parse Proto Exception with response code 400
+11-02 23:14:42.616 W/GLSUser ( 1207): Caused by: fkhe: Protocol message contained an invalid tag (zero).
+11-02 23:14:42.951 D/ShortcutService(  553): Getting shortcuts for launcher= com.carlos.liquiduser=0 pkg=com.google.android.gms
+11-02 23:14:43.341 W/NetworkScheduler( 1207): java.lang.IllegalArgumentException: Only the following extra parameter types are supported: Integer, Long, Double, String, Boolean, and nested Bundles with the same restrictions.
+11-02 23:14:43.932 E/dqod    ( 3359): RuntimeException while executing runnable dqra{dkqj@2b9d462} with executor MoreExecutors.directExecutor()
+11-02 23:14:43.932 E/dqod    ( 3359): java.lang.NullPointerException: Attempt to read from field 'java.lang.String cwru.b' on a null object reference in method 'void cyar.b(java.lang.Object)'
+11-02 23:14:43.932 E/dqod    ( 3359): RuntimeException while executing runnable dqra{dkqj@5db26b0} with executor MoreExecutors.directExecutor()
+11-02 23:14:43.932 E/dqod    ( 3359): java.lang.NullPointerException: Attempt to read from field 'java.lang.String cwru.b' on a null object reference in method 'void cyar.b(java.lang.Object)'
+11-02 23:14:43.932 E/dqod    ( 3359): RuntimeException while executing runnable dqra{dkqj@b64d4ae} with executor MoreExecutors.directExecutor()
+11-02 23:14:43.932 E/dqod    ( 3359): java.lang.NullPointerException: Attempt to read from field 'java.lang.String cwru.b' on a null object reference in method 'void cyar.b(java.lang.Object)'
+11-02 23:14:44.586 I/ChimeraSrvcProxy( 1207): NullBinder for android.net.action.RECOMMEND_NETWORKS triggering remote TransactionTooLargeException due to Service without Chimera impl
+11-02 23:14:44.782 W/NetworkScheduler( 1207): java.lang.IllegalArgumentException: Only the following extra parameter types are supported: Integer, Long, Double, String, Boolean, and nested Bundles with the same restrictions.
+11-02 23:14:45.307 W/NetworkScheduler( 1207): java.lang.IllegalArgumentException: Only the following extra parameter types are supported: Integer, Long, Double, String, Boolean, and nested Bundles with the same restrictions.
+11-02 23:14:46.003 I/ActivityTaskManager(  553): START u0 {act=android.intent.action.MAIN cat=[android.intent.category.HOME] flg=0x10000100 cmp=com.carlos.liquid/.MainActivity (has extras)} with LAUNCH_SINGLE_TASK from uid 0 (BAL_ALLOW_ALLOWLISTED_UID) result code=3
+11-02 23:14:46.006 D/WindowManagerShell(  899): onActivityRestartAttempt: ComponentInfo{com.carlos.liquid/com.carlos.liquid.MainActivity}
+11-02 23:14:47.560 W/GmsPipelineLogger( 1405): java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Class java.lang.Object.getClass()' on a null object reference
+11-02 23:14:49.019 V/SplashScreenExceptionList(  553): SplashScreen checking exception for package com.carlos.liquid (target sdk:35) -> false
+11-02 23:14:49.022 I/ActivityTaskManager(  553): START u0 {flg=0x10000000 cmp=com.carlos.liquid/.SettingsActivity} with LAUNCH_MULTIPLE from uid 2000 (BAL_ALLOW_PERMISSION) result code=0
+11-02 23:14:49.022 V/WindowManagerShell(  899): Transition requested (#30): android.os.BinderProxy@73779f4 TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=10 displayId=0 isRunning=true baseIntent=Intent { flg=0x10000000 cmp=com.carlos.liquid/.SettingsActivity } baseActivity=ComponentInfo{com.carlos.liquid/com.carlos.liquid.SettingsActivity} topActivity=ComponentInfo{com.carlos.liquid/com.carlos.liquid.SettingsActivity} origActivity=null realActivity=ComponentInfo{com.carlos.liquid/com.carlos.liquid.SettingsActivity} numActivities=1 lastActiveTime=88524 supportsMultiWindow=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{android.window.IWindowContainerToken$Stub$Proxy@7f751d} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=null topActivityInfo=ActivityInfo{d61e392 com.carlos.liquid.SettingsActivity} launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isVisible=false isVisibleRequested=false isSleeping=false locusId=null displayAreaFeatureId=1 isTopActivityTransparent=false appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false topActivityEligibleForLetterboxEducation= falseisLetterboxEducationEnabled= true isLetterboxDoubleTapEnabled= false topActivityEligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=320 topActivityLetterboxHeight=640 isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false cameraCompatTaskInfo=CameraCompatTaskInfo { cameraCompatControlState=hidden freeformCameraCompatMode=inactive}}}, pipTask = null, remoteTransition = null, displayChange = null, flags = 0, debugId = 30 }
+11-02 23:14:49.042 I/TopTaskTracker( 1147): onTaskMovedToFront: (moved taskInfo to front) taskId=10, baseIntent=Intent { flg=0x10000000 cmp=com.carlos.liquid/.SettingsActivity }
+11-02 23:14:49.068 D/CoreBackPreview(  553): Window{bbd7593 u0 Splash Screen com.carlos.liquid}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@553f2fc, mPriority=0, mIsAnimationCallback=false}
+11-02 23:14:49.088 V/WindowManager(  553): Sent Transition (#30) createdAt=11-02 23:14:49.016 via request=TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=10 displayId=0 isRunning=true baseIntent=Intent { flg=0x10000000 cmp=com.carlos.liquid/.SettingsActivity } baseActivity=ComponentInfo{com.carlos.liquid/com.carlos.liquid.SettingsActivity} topActivity=ComponentInfo{com.carlos.liquid/com.carlos.liquid.SettingsActivity} origActivity=null realActivity=ComponentInfo{com.carlos.liquid/com.carlos.liquid.SettingsActivity} numActivities=1 lastActiveTime=88524 supportsMultiWindow=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{RemoteToken{6b42e8 Task{f57c0f7 #10 type=standard A=10209:com.carlos.liquid.settings}}} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=null topActivityInfo=ActivityInfo{37e5d01 com.carlos.liquid.SettingsActivity} launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isVisible=false isVisibleRequested=false isSleeping=false locusId=null displayAreaFeatureId=1 isTopActivityTransparent=false appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false topActivityEligibleForLetterboxEducation= falseisLetterboxEducationEnabled= true isLetterboxDoubleTapEnabled= false topActivityEligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=320 topActivityLetterboxHeight=640 isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false cameraCompatTaskInfo=CameraCompatTaskInfo { cameraCompatControlState=hidden freeformCameraCompatMode=inactive}}}, pipTask = null, remoteTransition = null, displayChange = null, flags = 0, debugId = 30 }
+11-02 23:14:49.088 V/WindowManager(  553):         {WCT{RemoteToken{6b42e8 Task{f57c0f7 #10 type=standard A=10209:com.carlos.liquid.settings}}} m=OPEN f=NONE leash=Surface(name=Task=10)/@0xeee57da sb=Rect(0, 0 - 320, 640) eb=Rect(0, 0 - 320, 640) d=0 taskParent=-1},
+11-02 23:14:49.108 D/CoreBackPreview(  553): Window{f173cce u0 com.carlos.liquid/com.carlos.liquid.SettingsActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@97ee983, mPriority=0, mIsAnimationCallback=false}
+11-02 23:14:49.221 I/ActivityTaskManager(  553): Displayed com.carlos.liquid/.SettingsActivity for user 0: +206ms
+11-02 23:14:49.235 D/CoreBackPreview(  553): Window{bbd7593 u0 Splash Screen com.carlos.liquid EXITING}: Setting back callback null
+11-02 23:14:49.235 W/InputManager-JNI(  553): Input channel object 'bbd7593 Splash Screen com.carlos.liquid (client)' was disposed without first being removed with the input manager!
+11-02 23:14:49.240 I/AppWidgetServiceImpl(  553): Pruning host HostId{user:0, app:10209, hostId:2611, pkg:com.carlos.liquid}
+11-02 23:14:49.249 I/ImeTracker(  553): com.carlos.liquid:f0371de0: onRequestHide at ORIGIN_SERVER reason HIDE_UNSPECIFIED_WINDOW fromUser false
+11-02 23:14:49.250 I/ImeTracker(  553): com.carlos.liquid:f0371de0: onCancelled at PHASE_SERVER_SHOULD_HIDE
+11-02 23:14:49.255 I/GoogleInputMethodService( 1321): GoogleInputMethodService.onStartInput():1986 onStartInput(EditorInfo{EditorInfo{packageName=com.carlos.liquid, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
+11-02 23:14:49.292 W/PackageConfigPersister(  553): App-specific configuration not found for packageName: com.carlos.liquid and userId: 0
+11-02 23:14:53.599 I/ChimeraSrvcProxy( 1207): NullBinder for android.net.action.RECOMMEND_NETWORKS triggering remote TransactionTooLargeException due to Service without Chimera impl

@@ -1,0 +1,8 @@
+ACTIVITY MANAGER PROCESS EXIT INFO (dumpsys activity exit-info)
+Last Timestamp of Persistence Into Persistent Storage: 1970-01-01 00:00:00.000
+  package: com.carlos.liquid
+    Historical Process Exit for uid=10209
+        ApplicationExitInfo #0:
+          timestamp=2026-11-02 23:14:18.927 pid=2726 realUid=10209 packageUid=10209 definingUid=10209 user=0
+          process=com.carlos.liquid reason=10 (USER REQUESTED) subreason=21 (FORCE STOP) status=0
+          importance=100 pss=0.00 rss=0.00 description=stop com.carlos.liquid due to from pid 3760 state=empty trace=null

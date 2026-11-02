@@ -1,0 +1,300 @@
+11-02 23:14:00.418 V/SplashScreenExceptionList(  553): SplashScreen checking exception for package com.carlos.liquid (target sdk:35) -> false
+11-02 23:14:00.482 I/AppsFilter(  553): interaction: PackageSetting{f3de2d9 com.android.microdroid.empty_payload/10187} -> PackageSetting{54de49e com.carlos.liquid/10209} BLOCKED
+11-02 23:14:00.505 I/ActivityTaskManager(  553): START u0 {flg=0x10000000 cmp=com.carlos.liquid/.MainActivity} with LAUNCH_SINGLE_TASK from uid 2000 (BAL_ALLOW_PERMISSION) result code=0
+11-02 23:14:00.516 V/WindowManagerShell(  899): Transition requested (#8): android.os.BinderProxy@7a690f TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=8 displayId=0 isRunning=true baseIntent=Intent { flg=0x10000000 cmp=com.carlos.liquid/.MainActivity } baseActivity=ComponentInfo{com.carlos.liquid/com.carlos.liquid.MainActivity} topActivity=ComponentInfo{com.carlos.liquid/com.carlos.liquid.MainActivity} origActivity=null realActivity=ComponentInfo{com.carlos.liquid/com.carlos.liquid.MainActivity} numActivities=1 lastActiveTime=40008 supportsMultiWindow=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{android.window.IWindowContainerToken$Stub$Proxy@bb7d9c} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=null topActivityInfo=ActivityInfo{2c233a5 com.carlos.liquid.MainActivity} launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isVisible=false isVisibleRequested=true isSleeping=false locusId=null displayAreaFeatureId=1 isTopActivityTransparent=false appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false topActivityEligibleForLetterboxEducation= falseisLetterboxEducationEnabled= true isLetterboxDoubleTapEnabled= false topActivityEligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=320 topActivityLetterboxHeight=640 isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false cameraCompatTaskInfo=CameraCompatTaskInfo { cameraCompatControlState=hidden freeformCameraCompatMode=inactive}}}, pipTask = null, remoteTransition = null, displayChange = null, flags = 0, debugId = 8 }
+11-02 23:14:00.531 I/TopTaskTracker( 1147): onTaskMovedToFront: (moved taskInfo to front) taskId=8, baseIntent=Intent { flg=0x10000000 cmp=com.carlos.liquid/.MainActivity }
+11-02 23:14:00.547 D/CoreBackPreview(  553): Window{14f1368 u0 Splash Screen com.carlos.liquid}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@d0154b2, mPriority=0, mIsAnimationCallback=false}
+11-02 23:14:00.582 I/ActivityManager(  553): Start proc 2726:com.carlos.liquid/u0a209 for top-activity {com.carlos.liquid/com.carlos.liquid.MainActivity}
+11-02 23:14:00.633 E/TelephonyProvider( 1070): internal sim-specific settings backup data file does not exist. Aborting restore
+11-02 23:14:00.712 E/PhenotypeFlagCommitter( 1405): java.util.concurrent.TimeoutException: Timed out waiting for Task
+11-02 23:14:00.762 V/WindowManager(  553): Sent Transition (#8) createdAt=11-02 23:14:00.367 via request=TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=8 displayId=0 isRunning=true baseIntent=Intent { flg=0x10000000 cmp=com.carlos.liquid/.MainActivity } baseActivity=ComponentInfo{com.carlos.liquid/com.carlos.liquid.MainActivity} topActivity=ComponentInfo{com.carlos.liquid/com.carlos.liquid.MainActivity} origActivity=null realActivity=ComponentInfo{com.carlos.liquid/com.carlos.liquid.MainActivity} numActivities=1 lastActiveTime=40008 supportsMultiWindow=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{RemoteToken{5bccd96 Task{3968d90 #8 type=standard A=10209:com.carlos.liquid}}} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=null topActivityInfo=ActivityInfo{b6d17 com.carlos.liquid.MainActivity} launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isVisible=false isVisibleRequested=true isSleeping=false locusId=null displayAreaFeatureId=1 isTopActivityTransparent=false appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false topActivityEligibleForLetterboxEducation= falseisLetterboxEducationEnabled= true isLetterboxDoubleTapEnabled= false topActivityEligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=320 topActivityLetterboxHeight=640 isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false cameraCompatTaskInfo=CameraCompatTaskInfo { cameraCompatControlState=hidden freeformCameraCompatMode=inactive}}}, pipTask = null, remoteTransition = null, displayChange = null, flags = 0, debugId = 8 }
+11-02 23:14:00.762 V/WindowManager(  553):         {WCT{RemoteToken{5bccd96 Task{3968d90 #8 type=standard A=10209:com.carlos.liquid}}} m=OPEN f=NONE leash=Surface(name=Task=8)/@0xe296a35 sb=Rect(0, 0 - 320, 640) eb=Rect(0, 0 - 320, 640) d=0 taskParent=-1},
+11-02 23:14:00.841 D/nativeloader( 2726): Configuring clns-7 for other apk /data/app/~~cBUM_9rBhFz4N4v0DvUu2g==/com.carlos.liquid-_EocUVxeLasXWm2vBAmeFQ==/base.apk. target_sdk_version=35, uses_libraries=, library_path=/data/app/~~cBUM_9rBhFz4N4v0DvUu2g==/com.carlos.liquid-_EocUVxeLasXWm2vBAmeFQ==/lib/x86_64:/data/app/~~cBUM_9rBhFz4N4v0DvUu2g==/com.carlos.liquid-_EocUVxeLasXWm2vBAmeFQ==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/com.carlos.liquid
+11-02 23:14:01.089 I/AiAiEcho( 1383): AppFetcherImplV2 updateApps package:[com.carlos.liquid], userId:[0], reason:[package is added.].
+11-02 23:14:01.210 E/AppHibernationService(  553): Package com.carlos.liquid is not installed for user 0
+11-02 23:14:01.210 E/AppHibernationService(  553): Package com.carlos.liquid is not installed for any user
+11-02 23:14:01.210 E/AppHibernationService(  553): Package com.carlos.liquid is not installed for user 0
+11-02 23:14:01.210 E/AppHibernationService(  553): Package com.carlos.liquid is not installed for any user
+11-02 23:14:01.424 D/PackageUpdatedTask( 1147): Package updated: mOp=ADD packages=[com.carlos.liquid]
+11-02 23:14:01.507 W/PackageManager( 1383): android.content.res.Resources$NotFoundException: String resource ID #0x7f130786
+11-02 23:14:01.542 D/CoreBackPreview(  553): Window{74fce15 u0 com.carlos.liquid/com.carlos.liquid.MainActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@d921e8f, mPriority=0, mIsAnimationCallback=false}
+11-02 23:14:01.641 E/SystemServiceRegistry(  971): android.os.ServiceManager$ServiceNotFoundException: No service published for: ethernet
+11-02 23:14:01.660 E/FirebaseMessaging( 2271): Topic sync or token retrieval failed on hard failure exceptions: java.util.concurrent.ExecutionException: java.io.IOException: AUTHENTICATION_FAILED. Won't retry the operation.
+11-02 23:14:01.675 W/WifiService(  553): Permission violation - getConfiguredNetworks not allowed for uid=10140, packageName=com.google.android.settings.intelligence, reason=java.lang.SecurityException: UID 10140 has no location permission
+11-02 23:14:01.695 E/constellation( 1405): java.io.IOException: AUTHENTICATION_FAILED
+11-02 23:14:01.696 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:01.697 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:01.820 W/AsyncOperation( 1207): OperationException[Status{statusCode=unknown status code: 29503, resolution=null}]
+11-02 23:14:01.886 W/PackageManager( 1147): android.content.res.Resources$NotFoundException: String resource ID #0x7f130786
+11-02 23:14:01.961 I/m.carlos.liquid( 2726): Compiler allocated 5957KB to compile void com.carlos.liquid.ui.home.LibraryKt.AppLibrary(com.carlos.liquid.ui.home.HomeState, com.carlos.liquid.ui.home.Geo, com.carlos.liquid.icons.IconSpec, com.carlos.liquid.ui.home.HomeActions, androidx.compose.runtime.Composer, int)
+11-02 23:14:02.036 E/etxo    ( 1207): RuntimeException while executing runnable etyd{aasn@35301a7} with executor MoreExecutors.directExecutor()
+11-02 23:14:02.036 E/etxo    ( 1207): java.lang.NullPointerException: Attempt to get length of null array
+11-02 23:14:02.049 W/Telephony( 1070): registerMmTelCapabilityCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:02.051 W/Telephony( 1070): registerImsRegistrationCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:02.054 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:02.056 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:02.170 W/Telephony( 1070): registerMmTelCapabilityCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:02.171 W/Telephony( 1070): registerImsRegistrationCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:02.393 W/gle.android.gms( 1405): ApkAssets: Deleting an ApkAssets object '<empty> and /data/app/~~cBUM_9rBhFz4N4v0DvUu2g==/com.carlos.liquid-_EocUVxeLasXWm2vBAmeFQ==/base.apk' with 1 weak references
+11-02 23:14:02.446 I/SdkSandboxManager(  553): No SDKs used. Skipping SDK data reconcilation for CallingInfo{mUid=10209, mPackageName='com.carlos.liquid, mAppProcessToken='null'}
+11-02 23:14:02.456 I/AppWidgetServiceImpl(  553): Updating package stopped masked state for uid 10209 package com.carlos.liquid isStopped false
+11-02 23:14:02.512 W/Telephony( 1070): registerMmTelCapabilityCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:02.514 W/Telephony( 1070): registerImsRegistrationCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:02.517 W/PackageManager( 1147): android.content.res.Resources$NotFoundException: String resource ID #0x7f130786
+11-02 23:14:02.589 D/ShortcutService(  553): adding package: com.carlos.liquid userId0
+11-02 23:14:02.589 D/ShortcutService(  553): handlePackageAdded: com.carlos.liquid user=0
+11-02 23:14:02.589 D/ShortcutService(  553): rescanPackageIfNeeded 0@com.carlos.liquid, forceRescan=true , isNewApp=true
+11-02 23:14:02.589 D/ShortcutService(  553): Package com.carlos.liquid has 0 manifest shortcut(s), and 0 share target(s)
+11-02 23:14:02.788 E/A       ( 1516): com.google.android.libraries.geller.portable.GellerException: Code: INVALID_ARGUMENT, Message: Account name is null.
+11-02 23:14:02.848 I/AppsFilter(  553): interaction: PackageSetting{f3de2d9 com.android.microdroid.empty_payload/10187} -> PackageSetting{54de49e com.carlos.liquid/10209} BLOCKED
+11-02 23:14:02.937 W/FileUtils(  553): android.system.ErrnoException: chmod failed: ENOENT (No such file or directory)
+11-02 23:14:02.976 W/InputManager-JNI(  553): Input channel object '14f1368 Splash Screen com.carlos.liquid (client)' was disposed without first being removed with the input manager!
+11-02 23:14:02.977 D/CoreBackPreview(  553): Window{14f1368 u0 Splash Screen com.carlos.liquid EXITING}: Setting back callback null
+11-02 23:14:03.053 I/ActivityTaskManager(  553): Displayed com.carlos.liquid/.MainActivity for user 0: +2s533ms
+11-02 23:14:03.244 W/Telephony( 1070): registerMmTelCapabilityCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:03.244 W/Telephony( 1070): registerImsRegistrationCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:03.264 D/SessionCommitReceiver( 1147): Removing PromiseIcon for package: com.carlos.liquid, install reason: 0, alreadyAddedPromiseIcon: false
+11-02 23:14:03.264 D/ShortcutService(  553): changing package: com.carlos.liquid userId0
+11-02 23:14:03.265 D/ShortcutService(  553): handlePackageChanged: com.carlos.liquid user=0
+11-02 23:14:03.265 D/ShortcutService(  553): rescanPackageIfNeeded 0@com.carlos.liquid, forceRescan=true , isNewApp=true
+11-02 23:14:03.265 D/ShortcutService(  553): Package com.carlos.liquid has 0 manifest shortcut(s), and 0 share target(s)
+11-02 23:14:03.302 I/SafetyLabelChangedBroadcastReceiver(  914): received broadcast packageName: com.carlos.liquid, current user: UserHandle{0}, packageChangeEvent: NEW_INSTALL, intent user: UserHandle{0}
+11-02 23:14:03.377 I/ImeTracker(  553): com.carlos.liquid:b73f2c09: onRequestHide at ORIGIN_SERVER reason HIDE_UNSPECIFIED_WINDOW fromUser false
+11-02 23:14:03.378 I/ImeTracker(  553): com.carlos.liquid:b73f2c09: onCancelled at PHASE_SERVER_SHOULD_HIDE
+11-02 23:14:03.414 W/WellbeingSettingsProvid( 1339): java.util.concurrent.TimeoutException: Waited 5000 milliseconds (plus 5 milliseconds, 110465 nanoseconds delay) for lep@fd1a127[status=PENDING, info=[inputFuture=[leo@685afd4[status=PENDING, setFuture=[ldw@476a57d[status=PENDING, info=[inputFuture=[lep@89ebc72[status=PENDING, info=[inputFuture=[lep@b2d28c3[status=PENDING, info=[inputFuture=[lfl@e77f540[status=PENDING, info=[futures=[lep@54d1c79[status=PENDING, info=[inputFuture=[lep@f182dbe[status=PENDING, info=[inputFuture=[lgj@a2f8e1f[status=PENDING, info=[delegate=[lhp@e87256c[status=PENDING, setFuture=[lep@a7a0735[status=PENDING, info=[inputFuture=[leo@c2567ca[status=PENDING, info=[inputFuture=[lgj@1c8ed3b[status=PENDING, info=[delegate=[lhp@1772c58[status=PENDING, setFuture=[leo@350e1b1[status=PENDING, info=[function=[propagating=[cer@e1a3696]]]]]]]]]], function=[propagating=[car@bcf2217]]]]], function=[propagating=[cau@85eb604]]]]]]]]]], function=[propagating=[cag@6e0e7ed]]]]], function=[propagating=[cme@2bb2622]]]]]]]], function=[propagating=[dhi@f99c8b3]]]]], function=[propagating=[bxu@d132e70]]]]], exceptionType=[class java.lang.Throwable], fallback=[propagating=[cau@3f115e9]]]]]]], function=[propagating=[bxu@d89826e]]]]
+11-02 23:14:03.476 I/GoogleInputMethodService( 1321): GoogleInputMethodService.onStartInput():1986 onStartInput(EditorInfo{EditorInfo{packageName=com.carlos.liquid, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
+11-02 23:14:03.534 W/PackageConfigPersister(  553): App-specific configuration not found for packageName: com.carlos.liquid and userId: 0
+11-02 23:14:03.607 I/AiAiEcho( 1383): AppFetcherImpl onPackageChanged com.carlos.liquid.
+11-02 23:14:03.650 I/AiAiEcho( 1383): AppIndexer Package:[com.carlos.liquid] UserProfile:[0] Enabled:[true].
+11-02 23:14:03.650 I/AiAiEcho( 1383): AppFetcherImplV2 updateApps package:[com.carlos.liquid], userId:[0], reason:[package is updated.].
+11-02 23:14:03.749 D/PackageUpdatedTask( 1147): Package updated: mOp=UPDATE packages=[com.carlos.liquid]
+11-02 23:14:03.945 W/Telephony( 1070): registerMmTelCapabilityCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:03.945 W/Telephony( 1070): registerImsRegistrationCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:04.367 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:04.369 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:04.598 I/ChimeraSrvcProxy( 1207): NullBinder for android.net.action.RECOMMEND_NETWORKS triggering remote TransactionTooLargeException due to Service without Chimera impl
+11-02 23:14:04.732 W/Conscrypt( 1405): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:04.734 E/DeviceChannelFetcher( 1516): java.util.NoSuchElementException: No value present
+11-02 23:14:04.854 W/Conscrypt( 1405): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:05.271 D/CarrierSvcBindHelper( 1070): onPackageAdded: com.carlos.liquid
+11-02 23:14:05.280 I/FontLog ( 1207): Package com.carlos.liquid has no metadata [CONTEXT service_id=132 ]
+11-02 23:14:05.307 D/ImsResolver( 1070): maybeAddedImsService, packageName: com.carlos.liquid
+11-02 23:14:05.411 D/CarrierSvcBindHelper( 1070): onPackageModified: com.carlos.liquid
+11-02 23:14:05.428 D/ImsResolver( 1070): maybeAddedImsService, packageName: com.carlos.liquid
+11-02 23:14:05.517 W/Telephony( 1070): registerMmTelCapabilityCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:05.519 I/Blockstore( 1405): [DataStoreImpl] Clearing Blockstore Data for package com.carlos.liquid [CONTEXT service_id=258 ]
+11-02 23:14:05.630 W/Conscrypt( 1405): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:05.849 W/Conscrypt( 1207): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:05.926 W/Conscrypt( 1405): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:05.976 W/Telephony( 1070): registerMmTelCapabilityCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:05.976 W/Telephony( 1070): registerImsRegistrationCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:06.004 W/Conscrypt( 1405): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:06.013 I/ChimeraSrvcProxy( 1207): NullBinder for android.net.action.RECOMMEND_NETWORKS triggering remote TransactionTooLargeException due to Service without Chimera impl
+11-02 23:14:06.066 W/Conscrypt( 1207): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:06.185 W/Telephony( 1070): registerMmTelCapabilityCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:06.245 W/Conscrypt( 1405): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:06.458 W/Conscrypt( 1207): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:06.538 W/ndroid.systemui(  899): ApkAssets: Deleting an ApkAssets object '<empty> and /data/app/~~cBUM_9rBhFz4N4v0DvUu2g==/com.carlos.liquid-_EocUVxeLasXWm2vBAmeFQ==/base.apk' with 1 weak references
+11-02 23:14:06.581 W/Conscrypt( 1207): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:06.890 E/gclu    ( 1405): java.lang.RuntimeException: ManagedChannel allocation site
+11-02 23:14:06.978 W/gle.android.gms( 1405): ApkAssets: Deleting an ApkAssets object '<empty> and /data/app/~~cBUM_9rBhFz4N4v0DvUu2g==/com.carlos.liquid-_EocUVxeLasXWm2vBAmeFQ==/base.apk' with 1 weak references
+11-02 23:14:06.996 W/Conscrypt( 1405): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:07.006 W/Conscrypt( 1405): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:07.027 D/ProfileInstaller( 2726): Installing profile for com.carlos.liquid
+11-02 23:14:07.236 W/Telephony( 1070): registerMmTelCapabilityCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:07.821 W/Telephony( 1070): registerMmTelCapabilityCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:07.822 W/Telephony( 1070): registerImsRegistrationCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:07.854 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:07.855 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:07.857 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:07.858 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:07.858 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:07.976 E/A       ( 1516): com.google.android.libraries.geller.portable.GellerException: Code: INVALID_ARGUMENT, Message: Account name is null.
+11-02 23:14:08.024 W/PackageManager( 1147): android.content.res.Resources$NotFoundException: String resource ID #0x7f130786
+11-02 23:14:08.137 W/PackageManager( 1147): android.content.res.Resources$NotFoundException: String resource ID #0x7f130786
+11-02 23:14:08.234 W/Telephony( 1070): registerMmTelCapabilityCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:08.234 W/Telephony( 1070): registerImsRegistrationCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:08.529 W/Telephony( 1070): registerMmTelCapabilityCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:08.529 W/Telephony( 1070): registerImsRegistrationCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:08.540 I/ChimeraSrvcProxy( 1207): NullBinder for android.net.action.RECOMMEND_NETWORKS triggering remote TransactionTooLargeException due to Service without Chimera impl
+11-02 23:14:08.617 W/WellbeingSettingsProvid( 1339): java.util.concurrent.TimeoutException: Waited 5000 milliseconds (plus 5 milliseconds, 666149 nanoseconds delay) for lep@1d3194b[status=PENDING, info=[inputFuture=[leo@398cf28[status=PENDING, setFuture=[ldw@81e9441[status=PENDING, info=[inputFuture=[lep@1771de6[status=PENDING, info=[inputFuture=[lep@b7ff27[status=PENDING, info=[inputFuture=[lfl@d3fb5d4[status=PENDING, info=[futures=[lep@37f337d[status=PENDING, info=[inputFuture=[lep@e873272[status=PENDING, info=[inputFuture=[lgj@71b66c3[status=PENDING, info=[delegate=[lhp@dcc5b40[status=PENDING, setFuture=[lep@7508a79[status=PENDING, info=[inputFuture=[leo@a1203be[status=PENDING, info=[inputFuture=[lgj@9c3ac1f[status=PENDING, info=[delegate=[lhp@5bbeb6c[status=PENDING, setFuture=[leo@4465535[status=PENDING, info=[function=[propagating=[cer@be69dca]]]]]]]]]], function=[propagating=[car@980eb3b]]]]], function=[propagating=[cau@e325258]]]]]]]]]], function=[propagating=[cag@8940fb1]]]]], function=[propagating=[cme@7b8cc96]]]]]]]], function=[propagating=[dhi@a090017]]]]], function=[propagating=[bxu@ca63c04]]]]], exceptionType=[class java.lang.Throwable], fallback=[propagating=[cau@828f5ed]]]]]]], function=[propagating=[bxu@6ad1c22]]]]
+11-02 23:14:08.651 E/SystemServiceRegistry(  971): android.os.ServiceManager$ServiceNotFoundException: No service published for: ethernet
+11-02 23:14:08.664 W/Telephony( 1070): registerMmTelCapabilityCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:08.692 W/SemanticLocation( 1207): java.util.concurrent.TimeoutException: Waited 10000 milliseconds (plus 1 milliseconds, 510161 nanoseconds delay) for etvv@c0c0235[status=PENDING, info=[function=[ddbg@3c746ca]]]
+11-02 23:14:08.923 E/DeviceChannelFetcher( 1516): java.util.NoSuchElementException: No value present
+11-02 23:14:08.946 W/Telephony( 1070): registerMmTelCapabilityCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:08.946 W/Telephony( 1070): registerImsRegistrationCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:09.054 E/A       ( 1516): Caused by: com.google.android.apps.gsa.shared.speech.b.n: errorCode: 65586, engine: 2
+11-02 23:14:09.054 E/A       ( 1516): Caused by: com.google.android.apps.gsa.shared.speech.b.j: errorCode: 401, engine: 2
+11-02 23:14:09.075 W/Telephony( 1070): registerMmTelCapabilityCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:09.075 W/Telephony( 1070): registerImsRegistrationCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:09.127 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:09.127 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:09.127 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:09.138 E/HardwareInfoFeatureProviderImpl( 1074): java.lang.NumberFormatException: For input string: "E"
+11-02 23:14:09.144 E/HardwareInfoFeatureProviderImpl( 1074): java.lang.NumberFormatException: For input string: "E"
+11-02 23:14:09.145 W/BaseSearchIndex( 1074): Error initializing controller in fragment: com.android.settings.deviceinfo.aboutphone.MyDeviceInfoFragment$1@a3d8328, e: java.lang.IllegalStateException: Cannot invoke setValue on a background thread
+11-02 23:14:09.147 W/BaseSearchIndex( 1074): Error initializing controller in fragment: com.android.settings.deviceinfo.aboutphone.MyDeviceInfoFragment$1@a3d8328, e: java.lang.IllegalStateException: Cannot invoke setValue on a background thread
+11-02 23:14:09.165 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:09.166 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:09.176 E/HardwareInfoFeatureProviderImpl( 1074): java.lang.NumberFormatException: For input string: "E"
+11-02 23:14:09.182 W/BaseSearchIndex( 1074): Error initializing controller in fragment: com.android.settings.deviceinfo.aboutphone.MyDeviceInfoFragment$1@a3d8328, e: java.lang.IllegalStateException: Cannot invoke setValue on a background thread
+11-02 23:14:09.263 W/Telephony( 1070): registerMmTelCapabilityCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:09.263 W/Telephony( 1070): registerImsRegistrationCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:09.288 W/Telephony( 1070): registerMmTelCapabilityCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:09.342 W/BaseSearchIndex( 1074): Error initializing controller in fragment: com.android.settings.network.NetworkDashboardFragment$1@fb3e6cc, e: java.lang.IllegalArgumentException: Lifecycle must be set
+11-02 23:14:09.347 W/BaseSearchIndex( 1074): Error initializing controller in fragment: com.android.settings.network.NetworkDashboardFragment$1@fb3e6cc, e: java.lang.IllegalArgumentException: Lifecycle must be set
+11-02 23:14:09.416 W/SemanticLocation( 1207): [MDD] ModelBundleMetadata: File not found: java.io.FileNotFoundException: /data/user/0/com.google.android.gms/files/default_model_bundle_metadata.pb: open failed: ENOENT (No such file or directory) [CONTEXT service_id=173 ]
+11-02 23:14:09.416 W/SemanticLocation( 1207): java.io.FileNotFoundException: /data/user/0/com.google.android.gms/files/default_model_bundle_metadata.pb: open failed: ENOENT (No such file or directory)
+11-02 23:14:09.416 W/SemanticLocation( 1207): Caused by: android.system.ErrnoException: open failed: ENOENT (No such file or directory)
+11-02 23:14:09.417 W/SemanticLocation( 1207): [MDD] ModelBundleMetadata: File not found: java.io.FileNotFoundException: /data/user/0/com.google.android.gms/files/model_bundle_metadata.pb: open failed: ENOENT (No such file or directory) [CONTEXT service_id=173 ]
+11-02 23:14:09.417 W/SemanticLocation( 1207): java.io.FileNotFoundException: /data/user/0/com.google.android.gms/files/model_bundle_metadata.pb: open failed: ENOENT (No such file or directory)
+11-02 23:14:09.417 W/SemanticLocation( 1207): Caused by: android.system.ErrnoException: open failed: ENOENT (No such file or directory)
+11-02 23:14:09.564 W/Telephony( 1070): registerMmTelCapabilityCallback: registration failed, no ImsService available. Exception: code: 1
+11-02 23:14:09.597 W/gle.android.gms( 1405): ApkAssets: Deleting an ApkAssets object '<empty> and /data/app/~~cBUM_9rBhFz4N4v0DvUu2g==/com.carlos.liquid-_EocUVxeLasXWm2vBAmeFQ==/base.apk' with 1 weak references
+11-02 23:14:09.612 W/ndroid.settings( 1074): ApkAssets: Deleting an ApkAssets object '<empty> and /data/app/~~cBUM_9rBhFz4N4v0DvUu2g==/com.carlos.liquid-_EocUVxeLasXWm2vBAmeFQ==/base.apk' with 1 weak references
+11-02 23:14:09.808 W/PackageManager( 1147): android.content.res.Resources$NotFoundException: String resource ID #0x7f130786
+11-02 23:14:10.489 W/SemanticLocation( 1207): [MDD] ModelBundleMetadata: File not found: java.io.FileNotFoundException: /data/user/0/com.google.android.gms/files/model_bundle_metadata.pb: open failed: ENOENT (No such file or directory) [CONTEXT service_id=173 ]
+11-02 23:14:10.489 W/SemanticLocation( 1207): java.io.FileNotFoundException: /data/user/0/com.google.android.gms/files/model_bundle_metadata.pb: open failed: ENOENT (No such file or directory)
+11-02 23:14:10.489 W/SemanticLocation( 1207): Caused by: android.system.ErrnoException: open failed: ENOENT (No such file or directory)
+11-02 23:14:10.617 E/Settings( 1074): android.content.pm.PackageManager$NameNotFoundException: com.google.android.apps.accessibility.magnifier
+11-02 23:14:10.617 E/Settings( 1074): android.content.pm.PackageManager$NameNotFoundException: com.google.android.apps.tips
+11-02 23:14:10.680 E/SystemServiceRegistry( 1074): android.os.ServiceManager$ServiceNotFoundException: No service published for: ethernet
+11-02 23:14:10.772 W/PackageManager( 1147): android.content.res.Resources$NotFoundException: String resource ID #0x7f130786
+11-02 23:14:10.985 W/BaseSearchIndex( 1074): Error initializing controller in fragment: com.android.settings.network.NetworkDashboardFragment$1@fb3e6cc, e: java.lang.IllegalArgumentException: Lifecycle must be set
+11-02 23:14:11.038 W/PackageManager( 1147): android.content.res.Resources$NotFoundException: String resource ID #0x7f130786
+11-02 23:14:11.344 W/NetworkScheduler( 1207): java.lang.IllegalArgumentException: Only the following extra parameter types are supported: Integer, Long, Double, String, Boolean, and nested Bundles with the same restrictions.
+11-02 23:14:11.491 W/ogle.android.as( 1383): ApkAssets: Deleting an ApkAssets object '<empty> and /data/app/~~cBUM_9rBhFz4N4v0DvUu2g==/com.carlos.liquid-_EocUVxeLasXWm2vBAmeFQ==/base.apk' with 1 weak references
+11-02 23:14:11.753 W/ndroid.settings( 1074): ApkAssets: Deleting an ApkAssets object '<empty> and /data/app/~~cBUM_9rBhFz4N4v0DvUu2g==/com.carlos.liquid-_EocUVxeLasXWm2vBAmeFQ==/base.apk' with 1 weak references
+11-02 23:14:11.793 W/cr_AWNetworkFetcherTask( 3312): IOException during downloadToFile.
+11-02 23:14:11.793 W/cr_AWNetworkFetcherTask( 3312): java.io.IOException: Cleartext HTTP traffic to edgedl.me.gvt1.com not permitted
+11-02 23:14:11.900 W/GnpSdk  ( 3359): java.lang.NullPointerException: Attempt to invoke interface method 'java.lang.Object eeaz.b()' on a null object reference
+11-02 23:14:11.924 I/GnpSdk  ( 3359): GrowthKit disabled by flag. Aborting GrowthKitBootCompletedBroadcastReceiver
+11-02 23:14:11.973 W/Safetyhub.EmergencySearchIndexablesProvider( 3351): java.util.concurrent.ExecutionException: java.lang.IllegalStateException: No account, cannot provide search indexables
+11-02 23:14:11.973 W/Safetyhub.EmergencySearchIndexablesProvider( 3351): Caused by: java.lang.IllegalStateException: No account, cannot provide search indexables
+11-02 23:14:11.981 W/Safetyhub.EmergencySearchIndexablesProvider( 3351): java.util.concurrent.ExecutionException: java.lang.IllegalStateException: No account, cannot provide search indexables
+11-02 23:14:11.981 W/Safetyhub.EmergencySearchIndexablesProvider( 3351): Caused by: java.lang.IllegalStateException: No account, cannot provide search indexables
+11-02 23:14:12.063 W/PackageManager( 1147): android.content.res.Resources$NotFoundException: String resource ID #0x7f130786
+11-02 23:14:12.149 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:12.150 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:12.279 W/Conscrypt( 1207): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:12.293 W/Conscrypt( 1207): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:12.522 W/Conscrypt( 1207): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:12.525 W/Conscrypt( 1207): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:12.639 W/PackageManager( 1147): android.content.res.Resources$NotFoundException: String resource ID #0x7f130786
+11-02 23:14:12.692 I/BugleRcs( 3359): android.content.pm.PackageManager$NameNotFoundException: com.google.android.ims
+11-02 23:14:12.737 E/BlockableFutures( 3359): java.lang.IllegalStateException: Cannot block on non-blocking thread: BG Thread #1
+11-02 23:14:13.296 E/VS.BluetoothShim( 1433): java.lang.NoSuchMethodException: android.bluetooth.BluetoothHeadset.startScoUsingVirtualVoiceCall [class android.bluetooth.BluetoothDevice]
+11-02 23:14:13.625 W/.apps.wellbeing( 1339): ApkAssets: Deleting an ApkAssets object '<empty> and /data/app/~~cBUM_9rBhFz4N4v0DvUu2g==/com.carlos.liquid-_EocUVxeLasXWm2vBAmeFQ==/base.apk' with 1 weak references
+11-02 23:14:13.672 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:13.672 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:13.672 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:13.672 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:13.675 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:13.675 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:13.675 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:14.036 E/HardwareInfoFeatureProviderImpl( 1074): java.lang.NumberFormatException: For input string: "E"
+11-02 23:14:14.048 W/SliceDataConverter( 1074): java.lang.IllegalStateException: Invalid preference controller: com.android.settings.accessibility.VibrationMainSwitchPreferenceController
+11-02 23:14:14.048 W/SliceDataConverter( 1074): Caused by: java.lang.reflect.InvocationTargetException
+11-02 23:14:14.048 W/SliceDataConverter( 1074): Caused by: java.lang.RuntimeException: Can't create handler inside thread Thread[binder:1074_3,5,main] that has not called Looper.prepare()
+11-02 23:14:14.066 W/SliceDataConverter( 1074): java.lang.IllegalStateException: Invalid preference controller: com.android.settings.development.DevelopmentMemtagFooterPreferenceController
+11-02 23:14:14.066 W/SliceDataConverter( 1074): Caused by: java.lang.ClassNotFoundException: com.android.settings.development.DevelopmentMemtagFooterPreferenceController
+11-02 23:14:14.066 W/SliceDataConverter( 1074): Caused by: java.lang.ClassNotFoundException: com.android.settings.development.DevelopmentMemtagFooterPreferenceController
+11-02 23:14:14.066 W/SliceDataConverter( 1074): java.lang.IllegalStateException: Invalid preference controller: com.android.settings.fuelgauge.batteryusage.BatteryChartPreferenceController
+11-02 23:14:14.066 W/SliceDataConverter( 1074): Caused by: java.lang.NoSuchMethodException: com.android.settings.fuelgauge.batteryusage.BatteryChartPreferenceController.<init> [class android.content.Context, class java.lang.String]
+11-02 23:14:14.079 W/SliceDataConverter( 1074): java.lang.IllegalStateException: Invalid preference controller: com.android.settings.applications.appinfo.ManageAppLocalePreferenceController
+11-02 23:14:14.079 W/SliceDataConverter( 1074): Caused by: java.lang.ClassNotFoundException: com.android.settings.applications.appinfo.ManageAppLocalePreferenceController
+11-02 23:14:14.079 W/SliceDataConverter( 1074): Caused by: java.lang.ClassNotFoundException: com.android.settings.applications.appinfo.ManageAppLocalePreferenceController
+11-02 23:14:14.091 W/SliceDataConverter( 1074): java.lang.IllegalStateException: Invalid preference controller: com.android.settings.applications.credentials.CredentialManagerPreferenceController
+11-02 23:14:14.091 W/SliceDataConverter( 1074): Caused by: java.lang.reflect.InvocationTargetException
+11-02 23:14:14.091 W/SliceDataConverter( 1074): Caused by: java.lang.RuntimeException: Can't create handler inside thread Thread[binder:1074_3,5,main] that has not called Looper.prepare()
+11-02 23:14:14.138 W/SliceDataConverter( 1074): java.lang.IllegalStateException: Invalid preference controller: com.android.settings.accessibility.VibrationMainSwitchPreferenceController
+11-02 23:14:14.138 W/SliceDataConverter( 1074): Caused by: java.lang.reflect.InvocationTargetException
+11-02 23:14:14.138 W/SliceDataConverter( 1074): Caused by: java.lang.RuntimeException: Can't create handler inside thread Thread[binder:1074_3,5,main] that has not called Looper.prepare()
+11-02 23:14:14.162 W/SliceDataConverter( 1074): java.lang.IllegalStateException: Invalid preference controller: com.google.android.settings.accessibility.AdaptiveVibrationTogglePreferenceController
+11-02 23:14:14.162 W/SliceDataConverter( 1074): Caused by: java.lang.reflect.InvocationTargetException
+11-02 23:14:14.162 W/SliceDataConverter( 1074): Caused by: java.lang.RuntimeException: Can't create handler inside thread Thread[binder:1074_3,5,main] that has not called Looper.prepare()
+11-02 23:14:14.328 W/Conscrypt( 1405): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:14.359 W/Conscrypt( 1405): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:14.380 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:14.380 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:14.380 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:14.381 W/Conscrypt( 1405): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:14.410 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:14.413 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:14.418 W/Conscrypt( 1405): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:14.603 E/A       ( 1516): java.lang.IllegalStateException: No account found.
+11-02 23:14:15.072 W/RcsClientLib( 3359): java.lang.IllegalStateException: JibeService Not Initialized
+11-02 23:14:15.072 W/RcsClientLib( 3359): 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3250)
+11-02 23:14:15.072 W/RcsClientLib( 3359): 	at android.os.Parcel.createException(Parcel.java:3226)
+11-02 23:14:15.072 W/RcsClientLib( 3359): 	at android.os.Parcel.readException(Parcel.java:3209)
+11-02 23:14:15.072 W/RcsClientLib( 3359): 	at android.os.Parcel.readException(Parcel.java:3151)
+11-02 23:14:15.072 W/RcsClientLib( 3359): 	at com.google.android.aidl.BaseProxy.transactAndReadExceptionReturnVoid(PG:11)
+11-02 23:14:15.154 W/AsyncOperation( 1207): OperationException[Status{statusCode=unknown status code: 29503, resolution=null}]
+11-02 23:14:15.303 E/RecoverySnapshotStorage(  553): java.io.FileNotFoundException: /data/system/recoverablekeystore/snapshots/10143.xml: open failed: ENOENT (No such file or directory)
+11-02 23:14:15.303 E/RecoverySnapshotStorage(  553): Caused by: android.system.ErrnoException: open failed: ENOENT (No such file or directory)
+11-02 23:14:15.332 W/AsyncOperation( 1207): OperationException[Status{statusCode=Stale snapshot for com.google.android.googlequicksearchbox(change count changed - expected 2  but was 1), resolution=null}]
+11-02 23:14:15.346 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:15.372 W/Conscrypt( 1405): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:15.427 E/ApplicationPropertiesBu( 1516): java.lang.NumberFormatException: For input string: "messages"
+11-02 23:14:15.435 W/A       ( 1516): (REDACTED) Exception while fetching versionCode for package[%s].
+11-02 23:14:15.435 W/A       ( 1516): android.content.pm.PackageManager$NameNotFoundException: com.google.android.apps.tv.dreamx
+11-02 23:14:15.436 W/A       ( 1516): (REDACTED) Exception while fetching versionCode for package[%s].
+11-02 23:14:15.436 W/A       ( 1516): android.content.pm.PackageManager$NameNotFoundException: com.google.android.apps.tv.launcherx
+11-02 23:14:15.488 W/Conscrypt( 1405): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:15.580 E/BugleRcsEngine( 3591): java.lang.IllegalArgumentException: Receiver not registered: com.google.android.ims.receiver.sip.DebugOptionsReceiver@feccee2
+11-02 23:14:15.625 E/RecoverySnapshotStorage(  553): java.io.FileNotFoundException: /data/system/recoverablekeystore/snapshots/10143.xml: open failed: ENOENT (No such file or directory)
+11-02 23:14:15.625 E/RecoverySnapshotStorage(  553): Caused by: android.system.ErrnoException: open failed: ENOENT (No such file or directory)
+11-02 23:14:15.889 W/NetworkScheduler( 1207): java.lang.IllegalArgumentException: Only the following extra parameter types are supported: Integer, Long, Double, String, Boolean, and nested Bundles with the same restrictions.
+11-02 23:14:16.241 W/AsyncOperation( 1207): OperationException[Status{statusCode=Stale snapshot (committed configuration changed) for com.google.android.partnersetup#com.google.android.partnersetup, resolution=null}]
+11-02 23:14:16.420 E/gclu    ( 1405): java.lang.RuntimeException: ManagedChannel allocation site
+11-02 23:14:16.426 E/gclu    ( 1405): java.lang.RuntimeException: ManagedChannel allocation site
+11-02 23:14:16.640 W/AsyncOperation( 1207): OperationException[Status{statusCode=Empty (package not registered?) or malformed snapshot token for null: , resolution=null}]
+11-02 23:14:16.684 W/PeoplePU( 1405): android.content.pm.PackageManager$NameNotFoundException: ComponentInfo{com.google.android.gms/com.google.android.gms.people.sync.focus.ContactsSyncAdapterService}
+11-02 23:14:16.730 W/RcsClientLib( 3359): java.lang.IllegalStateException: JibeService Not Initialized
+11-02 23:14:16.730 W/RcsClientLib( 3359): 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3250)
+11-02 23:14:16.730 W/RcsClientLib( 3359): 	at android.os.Parcel.createException(Parcel.java:3226)
+11-02 23:14:16.730 W/RcsClientLib( 3359): 	at android.os.Parcel.readException(Parcel.java:3209)
+11-02 23:14:16.730 W/RcsClientLib( 3359): 	at android.os.Parcel.readException(Parcel.java:3151)
+11-02 23:14:16.730 W/RcsClientLib( 3359): 	at com.google.android.aidl.BaseProxy.transactAndReadExceptionReturnVoid(PG:11)
+11-02 23:14:17.047 W/SemanticLocation( 1207): [MDD] ModelBundleMetadata: File not found: java.io.FileNotFoundException: /data/user/0/com.google.android.gms/files/model_bundle_metadata.pb: open failed: ENOENT (No such file or directory) [CONTEXT service_id=173 ]
+11-02 23:14:17.047 W/SemanticLocation( 1207): java.io.FileNotFoundException: /data/user/0/com.google.android.gms/files/model_bundle_metadata.pb: open failed: ENOENT (No such file or directory)
+11-02 23:14:17.047 W/SemanticLocation( 1207): Caused by: android.system.ErrnoException: open failed: ENOENT (No such file or directory)
+11-02 23:14:17.082 W/SemanticLocation( 1207): [MDD] ModelBundleMetadata: File not found: java.io.FileNotFoundException: /data/user/0/com.google.android.gms/files/model_bundle_metadata.pb: open failed: ENOENT (No such file or directory) [CONTEXT service_id=173 ]
+11-02 23:14:17.082 W/SemanticLocation( 1207): java.io.FileNotFoundException: /data/user/0/com.google.android.gms/files/model_bundle_metadata.pb: open failed: ENOENT (No such file or directory)
+11-02 23:14:17.082 W/SemanticLocation( 1207): Caused by: android.system.ErrnoException: open failed: ENOENT (No such file or directory)
+11-02 23:14:17.218 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:17.219 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:17.220 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:17.247 E/BugleRcsEngine( 3591): java.lang.IllegalArgumentException: Receiver not registered: com.google.android.ims.receiver.sip.DebugOptionsReceiver@feccee2
+11-02 23:14:17.324 W/AsyncOperation( 1207): OperationException[Status{statusCode=Stale snapshot for com.google.android.location(change count changed - expected 3  but was 2), resolution=null}]
+11-02 23:14:17.410 W/Conscrypt( 1405): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:17.514 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:17.515 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:17.515 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:17.515 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:17.515 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:17.527 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:17.528 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:17.536 I/ChimeraSrvcProxy( 1207): NullBinder for android.net.action.RECOMMEND_NETWORKS triggering remote TransactionTooLargeException due to Service without Chimera impl
+11-02 23:14:17.600 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:17.600 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:17.600 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:17.600 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:17.643 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:17.643 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:17.643 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:17.643 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:17.643 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:17.812 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:17.812 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:17.842 W/SearchServiceCore( 1516): Abort, client detached.
+11-02 23:14:17.923 W/.apps.wellbeing( 1339): ApkAssets: Deleting an ApkAssets object '<empty> and /data/app/~~cBUM_9rBhFz4N4v0DvUu2g==/com.carlos.liquid-_EocUVxeLasXWm2vBAmeFQ==/base.apk' with 1 weak references
+11-02 23:14:17.956 W/RcsClientLib( 3359): java.lang.IllegalStateException: JibeService Not Initialized
+11-02 23:14:17.956 W/RcsClientLib( 3359): 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3250)
+11-02 23:14:17.956 W/RcsClientLib( 3359): 	at android.os.Parcel.createException(Parcel.java:3226)
+11-02 23:14:17.956 W/RcsClientLib( 3359): 	at android.os.Parcel.readException(Parcel.java:3209)
+11-02 23:14:17.956 W/RcsClientLib( 3359): 	at android.os.Parcel.readException(Parcel.java:3151)
+11-02 23:14:17.956 W/RcsClientLib( 3359): 	at com.google.android.aidl.BaseProxy.transactAndReadExceptionReturnVoid(PG:11)
+11-02 23:14:17.963 W/Conscrypt( 1405): Could not set socket write timeout: java.net.SocketException: Socket closed
+11-02 23:14:18.493 E/BugleRcsEngine( 3591): java.lang.IllegalArgumentException: Receiver not registered: com.google.android.ims.receiver.sip.DebugOptionsReceiver@feccee2

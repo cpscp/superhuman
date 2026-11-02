@@ -1,0 +1,7 @@
+Starting: Intent { cmp=com.carlos.liquid/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: com.carlos.liquid/.MainActivity
+TotalTime: 2533
+WaitTime: 2648
+Complete

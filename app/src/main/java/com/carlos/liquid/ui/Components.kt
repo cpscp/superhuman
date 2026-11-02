@@ -293,8 +293,8 @@ fun Row2(
     chevron: Boolean = false,
     destructive: Boolean = false,
     divider: Boolean = true,
-    onClick: (() -> Unit)? = null,
     trailing: (@Composable () -> Unit)? = null,
+    onClick: (() -> Unit)? = null,
 ) {
     val p = LocalPalette.current
     Column {

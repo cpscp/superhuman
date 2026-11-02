@@ -66,6 +66,7 @@ class MainActivity : ComponentActivity() {
                 }
                 HomeScreen(st, homeSignal, ::addAndroidWidget) { startActivity(Intent(this@MainActivity, SettingsActivity::class.java)) }
                 if (!s.onboarded) SetupSheet(onDone = { Store.settings { it.copy(onboarded = true) } })
+                com.carlos.liquid.ui.CrashReport()
             }
         }
     }

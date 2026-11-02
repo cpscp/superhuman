@@ -56,9 +56,9 @@ object WallpaperCache {
         if (key == lastApplied) return
         val prefs = ctx.getSharedPreferences("liquid", Context.MODE_PRIVATE)
         if (prefs.getString("sysWallpaper", null) == key) { lastApplied = key; return }
-        Wallpapers.applySystem(ctx, home.sharp, lock?.sharp ?: home.sharp)
-        prefs.edit().putString("sysWallpaper", key).apply()
         lastApplied = key
+        prefs.edit().putString("sysWallpaper", key).commit()
+        Wallpapers.applySystem(ctx, home.sharp, lock?.sharp ?: home.sharp)
     }
 }
 

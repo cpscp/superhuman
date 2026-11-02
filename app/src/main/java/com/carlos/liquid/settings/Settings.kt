@@ -55,6 +55,7 @@ import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material.icons.rounded.Wallpaper
 import androidx.compose.material.icons.rounded.Widgets
 import androidx.compose.material3.Icon
+import kotlinx.coroutines.launch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
@@ -120,17 +121,49 @@ fun rememberResumeTick(): Int {
 fun isDefaultHome(ctx: Context) = ctx.getSystemService(RoleManager::class.java).isRoleHeld(RoleManager.ROLE_HOME)
 fun hasPerm(ctx: Context, p: String) = ctx.checkSelfPermission(p) == PackageManager.PERMISSION_GRANTED
 
+/** Depois de dares a permissão no Android, volta sozinho ao Liquid. */
+object ReturnWatcher {
+    private var job: kotlinx.coroutines.Job? = null
+    fun watch(ctx: Context, granted: (Context) -> Boolean) {
+        val app = ctx.applicationContext
+        val target: Class<*> = (ctx as? android.app.Activity)?.javaClass ?: com.carlos.liquid.MainActivity::class.java
+        job?.cancel()
+        job = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
+            val end = System.currentTimeMillis() + 180_000
+            kotlinx.coroutines.delay(800)
+            while (System.currentTimeMillis() < end) {
+                if (granted(app)) {
+                    kotlinx.coroutines.delay(400)
+                    runCatching {
+                        app.startActivity(Intent(app, target).addFlags(
+                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT))
+                    }
+                    break
+                }
+                kotlinx.coroutines.delay(500)
+            }
+        }
+    }
+}
+
 fun openNotifAccess(ctx: Context) {
+    if (NotifService.enabled(ctx)) return
     val i = if (Build.VERSION.SDK_INT >= 30) Intent(AS.ACTION_NOTIFICATION_LISTENER_DETAIL_SETTINGS)
         .putExtra(AS.EXTRA_NOTIFICATION_LISTENER_COMPONENT_NAME, ComponentName(ctx, NotifService::class.java).flattenToString())
     else Intent(AS.ACTION_NOTIFICATION_LISTENER_SETTINGS)
     runCatching { ctx.startActivity(i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }.onFailure {
         runCatching { ctx.startActivity(Intent(AS.ACTION_NOTIFICATION_LISTENER_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
     }
+    ReturnWatcher.watch(ctx) { NotifService.enabled(it) }
 }
 
-fun openOverlay(ctx: Context) = runCatching {
-    ctx.startActivity(Intent(AS.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + ctx.packageName)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+fun openOverlay(ctx: Context) {
+    if (LockController.canShow(ctx)) return
+    runCatching {
+        ctx.startActivity(Intent(AS.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + ctx.packageName)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+    }
+    Toast.makeText(ctx, "Desce até «Liquid», abre e ativa. O Liquid volta sozinho.", Toast.LENGTH_LONG).show()
+    ReturnWatcher.watch(ctx) { LockController.canShow(it) }
 }
 
 /** Passos de configuração (no primeiro arranque e nas Definições). */
@@ -225,7 +258,9 @@ private fun Root(go: (String) -> Unit) {
     val ctx = LocalContext.current
     @Suppress("UNUSED_VARIABLE") val tick = rememberResumeTick()
     Group {
-        Row2("Liquid", Icons.Rounded.AccountCircle, Color(0xFF5E5CE6), subtitle = "Launcher estilo iOS 26 para o Pixel", divider = false)
+        Row2("Abrir o ecrã principal", Icons.Rounded.Home, Color(0xFF5E5CE6), subtitle = "Launcher Liquid estilo iOS 26", chevron = true, divider = false) {
+            ctx.startActivity(Intent(ctx, com.carlos.liquid.MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        }
     }
     if (!isDefaultHome(ctx)) {
         Group(footer = "Toca para escolher o Liquid como app de ecrã principal.") {

@@ -11,6 +11,6 @@ class SettingsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent { LiquidRoot(drawWallpaper = false) { SettingsApp(onClose = { finish() }) } }
+        setContent { LiquidRoot(drawWallpaper = false) { SettingsApp(onClose = { finish() }); com.carlos.liquid.ui.CrashReport() } }
     }
 }

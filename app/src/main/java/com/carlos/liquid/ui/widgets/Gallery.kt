@@ -4,6 +4,8 @@ import android.Manifest
 import android.appwidget.AppWidgetProviderInfo
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.graphics.Bitmap as AndroidBitmap
+import android.graphics.Canvas as AndroidCanvas
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -155,8 +157,8 @@ fun ColumnScope.GalleryContent(dims: WidgetDims, onAdd: (HomeItem.Widget) -> Uni
             val icon by produceState<androidx.compose.ui.graphics.ImageBitmap?>(null, info) {
                 value = withContext(Dispatchers.Default) { runCatching {
                     val d = ctx.packageManager.getApplicationIcon(info.provider.packageName)
-                    val b = android.graphics.Bitmap.createBitmap(96, 96, android.graphics.Bitmap.Config.ARGB_8888)
-                    d.setBounds(0, 0, 96, 96); d.draw(android.graphics.Canvas(b)); b.asImageBitmap()
+                    val b = AndroidBitmap.createBitmap(96, 96, AndroidBitmap.Config.ARGB_8888)
+                    d.setBounds(0, 0, 96, 96); d.draw(AndroidCanvas(b)); b.asImageBitmap()
                 }.getOrNull() }
             }
             Row(Modifier.fillMaxWidth().clickable { android = info; sizeIdx = 0 }.padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -363,7 +365,7 @@ suspend fun savePhotos(ctx: android.content.Context, widgetId: String, uris: Lis
             ctx.contentResolver.openInputStream(u)?.use { BitmapFactory.decodeStream(it, null, o) }
             var sample = 1; while (o.outWidth / (sample * 2) >= 1000) sample *= 2
             val b = ctx.contentResolver.openInputStream(u)?.use { BitmapFactory.decodeStream(it, null, BitmapFactory.Options().apply { inSampleSize = sample }) } ?: return@runCatching
-            File(dir, "%03d.jpg".format(i)).outputStream().use { b.compress(android.graphics.Bitmap.CompressFormat.JPEG, 88, it) }
+            File(dir, "%03d.jpg".format(i)).outputStream().use { b.compress(AndroidBitmap.CompressFormat.JPEG, 88, it) }
             b.recycle()
         }
     }

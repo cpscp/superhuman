@@ -257,9 +257,9 @@ fun WeatherWidget(size: WidgetSize, w: Dp, h: Dp) {
                             Canvas(Modifier.weight(1f).height(5.dp).padding(horizontal = 8.dp)) {
                                 val span = (hi - lo).coerceAtLeast(1).toFloat()
                                 drawRoundRect(fg.copy(alpha = 0.25f), cornerRadius = androidx.compose.ui.geometry.CornerRadius(10f))
-                                val x0 = size.width * (d.min - lo) / span; val x1 = size.width * (d.max - lo) / span
+                                val x0 = this.size.width * (d.min - lo) / span; val x1 = this.size.width * (d.max - lo) / span
                                 drawRoundRect(Brush.horizontalGradient(listOf(Color(0xFF64D2FF), Color(0xFFFFD60A), Color(0xFFFF9F0A))),
-                                    Offset(x0, 0f), Size((x1 - x0).coerceAtLeast(6f), size.height), androidx.compose.ui.geometry.CornerRadius(10f))
+                                    Offset(x0, 0f), Size((x1 - x0).coerceAtLeast(6f), this.size.height), androidx.compose.ui.geometry.CornerRadius(10f))
                             }
                             LText("${d.max}°", 14.sp, FontWeight.SemiBold, fg, Modifier.width(34.dp), align = TextAlign.End)
                         }

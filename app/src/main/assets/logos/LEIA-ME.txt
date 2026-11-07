@@ -1,0 +1,5 @@
+Põe aqui os teus logótipos (PNG com fundo transparente fica melhor):
+  cp.png       -> quadros de comboio
+  carris.png   -> quadros de autocarro Carris Metropolitana
+Também aceita .webp ou .jpg. Sem ficheiro, o quadro mostra um selo "CP" / "CM".
+Depois de trocar os ficheiros, volta a instalar a app.

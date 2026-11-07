@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Fundo (quadro + coluna de informação) desenhado em Inter pelo BoardPainter.
+  Por cima: grelha com scroll vertical dos mosaicos (cada um também uma imagem em Inter)
+  e a área do botão ↻. As margens da grelha são ajustadas em código ao tamanho do widget.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/board"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="Quadro de partidas"
+        android:scaleType="fitXY" />
+
+    <GridView
+        android:id="@+id/grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="128dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="12dp"
+        android:horizontalSpacing="7dp"
+        android:numColumns="2"
+        android:scrollbars="none"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="7dp" />
+
+    <ImageView
+        android:id="@+id/refresh"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="top|start"
+        android:layout_marginStart="86dp"
+        android:layout_marginTop="4dp"
+        android:contentDescription="Atualizar" />
+</FrameLayout>

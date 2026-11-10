@@ -1,0 +1,30 @@
+name: Build Smart Business Cards APK
+on:
+  push:
+    branches: [smart-business-cards]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter --version
+      - run: flutter pub get
+      - run: flutter build apk --release
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: smart-business-cards-v${{ github.run_number }}
+          name: Smart Business Cards build ${{ github.run_number }}
+          target_commitish: ${{ github.sha }}
+          files: build/app/outputs/flutter-apk/app-release.apk

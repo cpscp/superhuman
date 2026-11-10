@@ -20,6 +20,11 @@ jobs:
           cache: true
       - run: flutter --version
       - run: flutter pub get
+      - name: Patch nfc_manager for current Kotlin
+        run: |
+          for d in $HOME/.pub-cache/hosted/pub.dev/nfc_manager-*/android; do
+            find "$d" -name '*.kt' -exec sed -i -E 's/\.toLowerCase\(/.lowercase(/g; s/\.toUpperCase\(/.uppercase(/g' {} +
+          done
       - run: flutter build apk --release
       - name: Publish release
         uses: softprops/action-gh-release@v2

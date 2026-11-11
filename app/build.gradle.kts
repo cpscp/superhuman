@@ -44,6 +44,8 @@ android {
     }
     kotlinOptions {
         jvmTarget = "17"
+        // O SDK do Google Home foi compilado com um Kotlin mais recente.
+        freeCompilerArgs += listOf("-Xskip-metadata-version-check")
     }
     buildFeatures {
         compose = true

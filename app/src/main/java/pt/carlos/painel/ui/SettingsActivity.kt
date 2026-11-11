@@ -256,7 +256,7 @@ private fun SettingsScreen(onBack: () -> Unit) {
                         OutlinedTextField(prefs.trainStation, { prefs.trainStation = it }, label = { Text("Estação") }, singleLine = true, modifier = Modifier.weight(1f))
                         OutlinedTextField(prefs.trainDirection, { prefs.trainDirection = it }, label = { Text("Sentido") }, singleLine = true, modifier = Modifier.weight(1f))
                     }
-                    Text("Autocarros (Carris Metropolitana)", style = MaterialTheme.typography.titleSmall, modifier = Modifier.padding(top = 16.dp))
+                    Text("Autocarros (Carris)", style = MaterialTheme.typography.titleSmall, modifier = Modifier.padding(top = 16.dp))
                     Row(Modifier.fillMaxWidth().padding(top = 8.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         OutlinedTextField(prefs.busTitle, { prefs.busTitle = it }, label = { Text("Nome do quadro") }, singleLine = true, modifier = Modifier.weight(1f))
                         OutlinedTextField(prefs.busStops, { prefs.busStops = it }, label = { Text("Paragens (números, separados por vírgulas)") }, singleLine = true, modifier = Modifier.weight(2f))

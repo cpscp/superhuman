@@ -11,7 +11,8 @@ import java.net.URLEncoder
 
 data class WeatherNow(val tempC: Int, val code: Int, val isDay: Boolean)
 data class WeatherHour(val hour: Int, val tempC: Int, val code: Int, val isDay: Boolean, val rainPct: Int)
-data class Forecast(val now: WeatherNow, val max: Int, val min: Int, val hours: List<WeatherHour>, val place: String)
+data class WeatherDay(val date: java.time.LocalDate, val code: Int, val max: Int, val min: Int, val rainPct: Int)
+data class Forecast(val now: WeatherNow, val max: Int, val min: Int, val hours: List<WeatherHour>, val days: List<WeatherDay>, val place: String)
 data class GeoPlace(val name: String, val region: String, val lat: Double, val lon: Double)
 
 /** Tempo pelo Open-Meteo (gratuito, sem chave). Cache de 20 minutos por localização. */
@@ -28,7 +29,7 @@ object Weather {
         val lat = prefs.weatherLat
         val lon = prefs.weatherLon
         val sp = ctx.getSharedPreferences("weather", Context.MODE_PRIVATE)
-        val locKey = "$lat,$lon"
+        val locKey = "v2:$lat,$lon"
         val fresh = sp.getString("loc", "") == locKey && System.currentTimeMillis() - sp.getLong("at", 0) < TTL
         val body = if (fresh) sp.getString("json", null) else null
         val text = body ?: runCatching {
@@ -36,7 +37,7 @@ object Weather {
                 "https://api.open-meteo.com/v1/forecast?latitude=$lat&longitude=$lon" +
                     "&current=temperature_2m,weather_code,is_day" +
                     "&hourly=temperature_2m,weather_code,is_day,precipitation_probability" +
-                    "&daily=temperature_2m_max,temperature_2m_min&forecast_days=2&timezone=auto"
+                    "&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_max&forecast_days=6&timezone=auto"
             ).also { sp.edit().putString("json", it).putString("loc", locKey).putLong("at", System.currentTimeMillis()).apply() }
         }.getOrNull() ?: sp.getString("json", null) ?: return@withContext null
         runCatching { parse(text, prefs.weatherPlace) }.getOrNull()
@@ -63,11 +64,22 @@ object Weather {
             )
         }
         val d = j.getJSONObject("daily")
+        val dTimes = d.getJSONArray("time")
+        val days = (1 until dTimes.length()).map { i ->
+            WeatherDay(
+                date = java.time.LocalDate.parse(dTimes.getString(i)),
+                code = d.getJSONArray("weather_code").getInt(i),
+                max = Math.round(d.getJSONArray("temperature_2m_max").getDouble(i)).toInt(),
+                min = Math.round(d.getJSONArray("temperature_2m_min").getDouble(i)).toInt(),
+                rainPct = d.getJSONArray("precipitation_probability_max").optInt(i, 0),
+            )
+        }.take(5)
         return Forecast(
             now = now,
             max = Math.round(d.getJSONArray("temperature_2m_max").getDouble(0)).toInt(),
             min = Math.round(d.getJSONArray("temperature_2m_min").getDouble(0)).toInt(),
             hours = hours,
+            days = days,
             place = place,
         )
     }

@@ -27,7 +27,7 @@ Cada nova versão instala por cima da anterior (mesma chave), sem perder a confi
 
 - Abre com o botão "Modo Display" no ecrã inicial ou nas Definições rápidas; só abre quando o acionas.
 - Hora, data, tempo agora e próximas horas (Open-Meteo), comboios CP (Alcântara-Mar, sentido Cascais),
-  autocarros Carris Metropolitana (paragens 10210, 10209, 10203, 10202, 10201), agenda de hoje e amanhã,
+  autocarros Carris (paragens 10210, 10209, 10203, 10202, 10201), agenda de hoje e amanhã,
   e música (BitChord, YouTube, Nuvio) com reproduzir/pausar, anterior e seguinte.
 - Modo noite automático (23h–7h): ecrã escuro, só o relógio e o próximo comboio.
 - Ecrã de bloqueio: também mostra o próximo evento e a música a tocar.

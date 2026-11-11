@@ -62,6 +62,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -85,7 +88,7 @@ import pt.carlos.painel.data.Weather
 import pt.carlos.painel.media.Media
 import pt.carlos.painel.theme.PainelTheme
 import pt.carlos.painel.theme.googleSansFlexAt
-import pt.carlos.painel.transit.BusApi
+import pt.carlos.painel.transit.CarrisApi
 import pt.carlos.painel.transit.Departure
 import pt.carlos.painel.transit.LiveStatus
 import pt.carlos.painel.transit.StopRef
@@ -172,7 +175,7 @@ private fun DisplayScreen(onClose: () -> Unit, onNight: (Boolean) -> Unit) {
         val stops = prefs.busStops.split(',', ' ', ';').map { it.trim() }.filter { it.isNotEmpty() }.map { StopRef(it, "") }
         while (true) {
             val r = withContext(Dispatchers.IO) {
-                runCatching { BusApi.departures(ctx, stops, System.currentTimeMillis(), 6) }
+                runCatching { CarrisApi.departures(stops, System.currentTimeMillis(), 6) }
             }
             r.onSuccess { buses = it; busError = false }.onFailure { busError = true }
             delay(30_000)
@@ -222,11 +225,12 @@ private fun DisplayScreen(onClose: () -> Unit, onNight: (Boolean) -> Unit) {
                     )
                     TransitCard(
                         title = prefs.busTitle,
-                        subtitle = "Carris Metropolitana",
+                        subtitle = "Carris",
                         icon = { Icon(Icons.Outlined.DirectionsBus, null, tint = Color(0xFFFDD663)) },
                         list = buses, error = busError, train = false, nowMs = System.currentTimeMillis(),
                         modifier = Modifier.weight(1f),
                     )
+                    HomeCard()
                 }
                 Column(Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(20.dp)) {
                     AgendaCard(
@@ -235,7 +239,7 @@ private fun DisplayScreen(onClose: () -> Unit, onNight: (Boolean) -> Unit) {
                         onAsk = { calLauncher.launch(Manifest.permission.READ_CALENDAR) },
                         modifier = Modifier.weight(1f),
                     )
-                    MusicCard(tick)
+                    MusicCard(tick, Modifier.weight(1f))
                 }
             }
         }
@@ -292,7 +296,9 @@ private fun WeatherCard(f: Forecast?, modifier: Modifier) {
                 Text("Máx. ${f.max}° · Mín. ${f.min}°", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
-        Spacer(Modifier.weight(1f))
+        Spacer(Modifier.height(16.dp))
+        Text("Hoje, por hora", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Spacer(Modifier.height(8.dp))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             f.hours.forEach { h ->
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -301,6 +307,28 @@ private fun WeatherCard(f: Forecast?, modifier: Modifier) {
                     Icon(icon, null, tint = tint, modifier = Modifier.padding(vertical = 6.dp).size(24.dp))
                     Text("${h.tempC}°", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
                     if (h.rainPct >= 20) Text("${h.rainPct}%", style = MaterialTheme.typography.labelMedium, color = Color(0xFF8AB4F8))
+                }
+            }
+        }
+        if (f.days.isNotEmpty()) {
+            Spacer(Modifier.height(16.dp))
+            Box(Modifier.fillMaxWidth().height(1.dp).background(MaterialTheme.colorScheme.outlineVariant))
+            Spacer(Modifier.height(14.dp))
+            Text("Próximos 5 dias", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Spacer(Modifier.height(8.dp))
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                f.days.forEach { d ->
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            d.date.format(DateTimeFormatter.ofPattern("EEE", pt)).trimEnd('.').replaceFirstChar { it.titlecase(pt) },
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        val (icon, tint) = weatherIcon(d.code, true)
+                        Icon(icon, null, tint = tint, modifier = Modifier.padding(vertical = 6.dp).size(24.dp))
+                        Text("${d.max}°", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
+                        Text("${d.min}°", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
                 }
             }
         }
@@ -350,8 +378,9 @@ private fun DepartureRow(d: Departure, train: Boolean, nowMs: Long) {
         if (train) {
             Text(hhmm(d.etaMs), style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onSurface, modifier = Modifier.width(76.dp))
         } else {
-            val bg = d.badgeColor?.let { Color(it) } ?: MaterialTheme.colorScheme.secondaryContainer
-            val fg = d.badgeTextColor?.let { Color(it) } ?: MaterialTheme.colorScheme.onSecondaryContainer
+            // Carris: amarelo e azul da marca (como no Partidas).
+            val bg = d.badgeColor?.let { Color(it) } ?: Color(0xFFFFC20E)
+            val fg = d.badgeTextColor?.let { Color(it) } ?: Color(0xFF00467F)
             Box(
                 Modifier.width(64.dp).clip(RoundedCornerShape(10.dp)).background(bg).padding(vertical = 4.dp),
                 contentAlignment = Alignment.Center,
@@ -438,61 +467,96 @@ private fun dayOf(e: CalEvent): LocalDate =
     else Instant.ofEpochMilli(e.begin).atZone(ZoneId.systemDefault()).toLocalDate()
 
 @Composable
-private fun MusicCard(tick: Long) {
+private fun MusicCard(tick: Long, modifier: Modifier) {
     val ctx = LocalContext.current
     val info = Media.info
-    Card {
-        if (!Media.hasAccess(ctx)) {
+    if (!Media.hasAccess(ctx) || info == null) {
+        Card(modifier) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Outlined.MusicNote, null, tint = MaterialTheme.colorScheme.primary)
                 Spacer(Modifier.width(12.dp))
-                Text("Música: falta o Acesso a notificações", color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.weight(1f))
+                Text("Música", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onSurface)
+            }
+            Spacer(Modifier.height(12.dp))
+            if (!Media.hasAccess(ctx)) {
+                Text("Para ver e controlar a música, ativa o Acesso a notificações do Painel.", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Spacer(Modifier.height(12.dp))
                 FilledTonalButton(onClick = {
                     runCatching { ctx.startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)) }
                 }) { Text("Ativar") }
+            } else {
+                Text("Nada a tocar. Põe música no BitChord, YouTube ou Nuvio.", color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-            return@Card
         }
-        if (info == null) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Outlined.MusicNote, null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                Spacer(Modifier.width(12.dp))
-                Text("Nada a tocar", color = MaterialTheme.colorScheme.onSurfaceVariant)
+        return
+    }
+    // A capa do álbum é o fundo do mosaico, com um véu escuro para o texto se ler bem.
+    Surface(shape = RoundedCornerShape(32.dp), color = MaterialTheme.colorScheme.surfaceContainer, modifier = modifier.fillMaxWidth()) {
+        Box(Modifier.fillMaxSize()) {
+            if (info.art != null) {
+                Image(info.art, null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize().blur(18.dp))
+                Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color.Black.copy(alpha = 0.25f), Color.Black.copy(alpha = 0.70f)))))
             }
-            return@Card
+            Column(Modifier.fillMaxSize().padding(24.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        Modifier.size(88.dp).clip(RoundedCornerShape(18.dp)).background(Color.White.copy(alpha = 0.12f))
+                            .clickable { Media.openApp(ctx) },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        if (info.art != null) Image(info.art, null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
+                        else Icon(Icons.Outlined.MusicNote, null, tint = Color.White)
+                    }
+                    Spacer(Modifier.width(16.dp))
+                    Column(Modifier.weight(1f).clickable { Media.openApp(ctx) }) {
+                        Text(info.title, style = MaterialTheme.typography.titleLarge, color = Color.White, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                        Text(info.artist, style = MaterialTheme.typography.bodyLarge, color = Color.White.copy(alpha = 0.8f), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    }
+                }
+                Spacer(Modifier.weight(1f))
+                if (info.durationMs > 0) {
+                    val progress = if (tick >= 0) (info.currentPosition().toFloat() / info.durationMs).coerceIn(0f, 1f) else 0f
+                    LinearProgressIndicator(
+                        progress = { progress },
+                        color = Color.White,
+                        trackColor = Color.White.copy(alpha = 0.25f),
+                        modifier = Modifier.fillMaxWidth().height(6.dp).clip(CircleShape),
+                    )
+                    Spacer(Modifier.height(12.dp))
+                }
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+                    IconButton(onClick = { Media.previous() }) { Icon(Icons.Outlined.SkipPrevious, "Anterior", tint = Color.White, modifier = Modifier.size(32.dp)) }
+                    Spacer(Modifier.width(20.dp))
+                    FilledIconButton(
+                        onClick = { Media.playPause() },
+                        modifier = Modifier.size(64.dp),
+                        colors = IconButtonDefaults.filledIconButtonColors(containerColor = Color.White, contentColor = Color.Black),
+                    ) {
+                        Icon(if (info.playing) Icons.Outlined.Pause else Icons.Outlined.PlayArrow, "Reproduzir/pausar", modifier = Modifier.size(32.dp))
+                    }
+                    Spacer(Modifier.width(20.dp))
+                    IconButton(onClick = { Media.next() }) { Icon(Icons.Outlined.SkipNext, "Seguinte", tint = Color.White, modifier = Modifier.size(32.dp)) }
+                }
+            }
         }
+    }
+}
+
+/** Casa: os dispositivos do Google Home entram aqui na Fase 3 (Google Home APIs). */
+@Composable
+private fun HomeCard() {
+    val ctx = LocalContext.current
+    Card {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(
-                Modifier.size(64.dp).clip(RoundedCornerShape(16.dp)).background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                    .clickable { Media.openApp(ctx) },
-                contentAlignment = Alignment.Center,
-            ) {
-                if (info.art != null) Image(info.art, null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
-                else Icon(Icons.Outlined.MusicNote, null)
+            Icon(Icons.Outlined.Home, null, tint = MaterialTheme.colorScheme.primary)
+            Spacer(Modifier.width(12.dp))
+            Column(Modifier.weight(1f)) {
+                Text("Casa", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onSurface)
+                Text("Luzes Tapo e Govee: ligação ao Google Home a preparar", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-            Spacer(Modifier.width(14.dp))
-            Column(Modifier.weight(1f).clickable { Media.openApp(ctx) }) {
-                Text(info.title, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                Text(info.artist, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            }
-        }
-        Spacer(Modifier.height(12.dp))
-        if (info.durationMs > 0) {
-            val progress = if (tick >= 0) (info.currentPosition().toFloat() / info.durationMs).coerceIn(0f, 1f) else 0f
-            LinearProgressIndicator(
-                progress = { progress },
-                modifier = Modifier.fillMaxWidth().height(6.dp).clip(CircleShape),
-            )
-            Spacer(Modifier.height(10.dp))
-        }
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = { Media.previous() }) { Icon(Icons.Outlined.SkipPrevious, "Anterior") }
-            Spacer(Modifier.width(16.dp))
-            FilledIconButton(onClick = { Media.playPause() }, modifier = Modifier.size(56.dp)) {
-                Icon(if (info.playing) Icons.Outlined.Pause else Icons.Outlined.PlayArrow, "Reproduzir/pausar")
-            }
-            Spacer(Modifier.width(16.dp))
-            IconButton(onClick = { Media.next() }) { Icon(Icons.Outlined.SkipNext, "Seguinte") }
+            FilledTonalButton(onClick = {
+                ctx.packageManager.getLaunchIntentForPackage("com.google.android.apps.chromecast.app")?.let { runCatching { ctx.startActivity(it) } }
+            }) { Text("Google Home") }
         }
     }
 }

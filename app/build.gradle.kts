@@ -12,8 +12,8 @@ android {
         applicationId = "pt.carlos.painel"
         minSdk = 33          // Lenovo Tab M10 Plus Gen 3 corre Android 13
         targetSdk = 35
-        versionCode = 6
-        versionName = "0.6 (Fase 2)"
+        versionCode = 7
+        versionName = "0.7 (Fase 3)"
     }
 
     signingConfigs {
@@ -64,4 +64,7 @@ dependencies {
     implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.profileinstaller:profileinstaller:1.4.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+    // Google Home APIs (Casa)
+    implementation("com.google.android.gms:play-services-home:17.1.0")
+    implementation("com.google.android.gms:play-services-home-types:17.1.0")
 }

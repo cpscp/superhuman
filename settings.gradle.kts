@@ -10,6 +10,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        // SDK das Google Home APIs (não está em repositório público): decifrado pelo CI para esta pasta.
+        maven { url = uri("homesdk") }
     }
 }
 rootProject.name = "Painel"

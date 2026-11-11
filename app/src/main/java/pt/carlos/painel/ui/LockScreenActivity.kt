@@ -93,9 +93,8 @@ class LockScreenActivity : ComponentActivity() {
         }
     }
 
-    /** Google Home (controlos da casa); a Fase 3 traz os controlos para dentro do Painel. */
-    private fun homeIntent(): Intent? =
-        packageManager.getLaunchIntentForPackage("com.google.android.apps.chromecast.app")
+    /** Atalho da Casa: abre o modo Display, onde estão os controlos das luzes. */
+    private fun homeIntent(): Intent = Intent(this, DisplayActivity::class.java)
 
     private fun unlock(then: Intent?) {
         val done = {

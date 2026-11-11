@@ -62,6 +62,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.material.icons.outlined.Lightbulb
+import androidx.compose.material.icons.outlined.Power
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Slider
+import androidx.compose.material3.TextButton
+import pt.carlos.painel.home.HomeDev
+import pt.carlos.painel.home.HomeRepo
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Brush
@@ -112,6 +123,7 @@ class DisplayActivity : ComponentActivity() {
             systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
         Media.start(this)
+        HomeRepo.register(this, this)
         setContent {
             PainelTheme(PainelApp.instance.prefs, forceDark = true) {
                 DisplayScreen(
@@ -542,21 +554,89 @@ private fun MusicCard(tick: Long, modifier: Modifier) {
     }
 }
 
-/** Casa: os dispositivos do Google Home entram aqui na Fase 3 (Google Home APIs). */
+/** Casa: luzes e tomadas do Google Home (Tapo, Govee...). Toque liga/desliga; toque longo regula o brilho. */
 @Composable
 private fun HomeCard() {
     val ctx = LocalContext.current
+    var brightnessFor by remember { mutableStateOf<HomeDev?>(null) }
+    LaunchedEffect(Unit) { runCatching { HomeRepo.client(ctx) } }
     Card {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(Icons.Outlined.Home, null, tint = MaterialTheme.colorScheme.primary)
             Spacer(Modifier.width(12.dp))
-            Column(Modifier.weight(1f)) {
-                Text("Casa", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onSurface)
-                Text("Luzes Tapo e Govee: ligação ao Google Home a preparar", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("Casa", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onSurface, modifier = Modifier.weight(1f))
+            if (HomeRepo.permitted == true) {
+                val onCount = HomeRepo.devices.count { it.on == true }
+                Text(if (onCount == 0) "Tudo desligado" else "$onCount ligado(s)", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-            FilledTonalButton(onClick = {
-                ctx.packageManager.getLaunchIntentForPackage("com.google.android.apps.chromecast.app")?.let { runCatching { ctx.startActivity(it) } }
-            }) { Text("Google Home") }
+        }
+        Spacer(Modifier.height(12.dp))
+        when (HomeRepo.permitted) {
+            false -> Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    HomeRepo.error?.let { "Erro: $it" } ?: "Autoriza o Painel a ver e controlar os dispositivos do Google Home.",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.weight(1f),
+                )
+                FilledTonalButton(onClick = { HomeRepo.requestPermission(ctx) }) { Text("Ligar ao Google Home") }
+            }
+            null -> Text("A ligar ao Google Home…", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            true -> if (HomeRepo.devices.isEmpty()) {
+                Text(HomeRepo.error?.let { "Erro: $it" } ?: "A carregar dispositivos…", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            } else {
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    items(HomeRepo.devices, key = { it.id }) { d -> DeviceTile(d, onLong = { brightnessFor = d }) }
+                }
+            }
+        }
+    }
+    brightnessFor?.let { d ->
+        val live = HomeRepo.devices.firstOrNull { it.id == d.id } ?: d
+        var value by remember(d.id) { mutableStateOf((live.levelPct ?: 100).toFloat()) }
+        AlertDialog(
+            onDismissRequest = { brightnessFor = null },
+            title = { Text(live.name) },
+            text = {
+                Column {
+                    Text("Brilho: ${value.toInt()}%")
+                    Slider(value = value, onValueChange = { value = it }, onValueChangeFinished = { HomeRepo.setLevel(live, value.toInt()) }, valueRange = 1f..100f)
+                }
+            },
+            confirmButton = { TextButton(onClick = { brightnessFor = null }) { Text("Fechar") } },
+        )
+    }
+}
+
+@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
+@Composable
+private fun DeviceTile(d: HomeDev, onLong: () -> Unit) {
+    val on = d.on == true
+    Surface(
+        shape = RoundedCornerShape(24.dp),
+        color = if (on) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHighest,
+        modifier = Modifier
+            .width(168.dp)
+            .height(92.dp)
+            .clip(RoundedCornerShape(24.dp))
+            .combinedClickable(onClick = { HomeRepo.toggle(d) }, onLongClick = { if (d.levelPct != null) onLong() }),
+    ) {
+        Column(Modifier.padding(14.dp)) {
+            Icon(
+                if (d.isLight) (if (on) Icons.Filled.Lightbulb else Icons.Outlined.Lightbulb) else Icons.Outlined.Power,
+                null,
+                tint = if (on) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Spacer(Modifier.weight(1f))
+            Text(d.name, style = MaterialTheme.typography.titleSmall, color = if (on) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(
+                listOfNotNull(
+                    d.room.ifBlank { null },
+                    when { d.on == null -> "—"; !on -> "Desligada"; d.levelPct != null -> "${d.levelPct}%"; else -> "Ligada" },
+                ).joinToString(" · "),
+                style = MaterialTheme.typography.bodySmall,
+                color = if (on) MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+            )
         }
     }
 }

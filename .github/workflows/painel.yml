@@ -18,6 +18,15 @@ jobs:
           distribution: temurin
           java-version: 17
       - uses: gradle/actions/setup-gradle@v5
+      - name: Decifrar o SDK das Google Home APIs
+        env:
+          HOMESDK_KEY: ${{ secrets.HOMESDK_KEY }}
+        run: |
+          if [ -z "$HOMESDK_KEY" ]; then echo "::error::Falta o segredo HOMESDK_KEY (Settings > Secrets and variables > Actions)"; exit 1; fi
+          mkdir -p homesdk
+          printf '%s' "$HOMESDK_KEY" > /tmp/k
+          openssl enc -d -aes-256-cbc -pbkdf2 -in third_party/homesdk.tgz.enc -pass file:/tmp/k | tar xz -C homesdk
+          rm /tmp/k
       - name: Build APK
         run: |
           chmod +x gradlew

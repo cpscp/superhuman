@@ -29,6 +29,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -51,7 +52,8 @@ data class HomeDev(
 object HomeRepo {
     /** Nenhum erro do Google Home pode fechar o Painel: fica registado e aparece no mosaico. */
     private val handler = CoroutineExceptionHandler { _, e -> fail("Erro interno", e) }
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main + handler)
+    // Uma só thread própria (nem a do ecrã, nem concorrência entre pedidos).
+    private val scope = CoroutineScope(SupervisorJob() + java.util.concurrent.Executors.newSingleThreadExecutor().asCoroutineDispatcher() + handler)
     private var started = false
     private var appCtx: Context? = null
 
@@ -93,31 +95,49 @@ object HomeRepo {
         ),
     )
 
-    fun client(ctx: Context): HomeClient? {
-        client?.let { return it }
+    val ready: Boolean get() = client != null
+
+    /** Arranca o Google Home em segundo plano (nunca na thread do ecrã, que bloquearia o Display). */
+    fun init(ctx: Context) {
+        if (started) return
+        started = true
         appCtx = ctx.applicationContext
-        if (!started) {
-            started = true
-            // Se nada responder em 8 s, mostra o botão em vez de ficar à espera.
-            scope.launch {
-                delay(8_000)
-                if (permitted == null) {
-                    permitted = false
-                    if (error == null) error = "Sem resposta do Google Home. Toca em Ligar para tentar outra vez."
-                }
+        scope.launch {
+            runCatching {
+                Home.getClient(ctx.applicationContext, HomeConfig(coroutineContext = Dispatchers.IO, factoryRegistry = registry))
+            }.onSuccess { client = it; watchPermission(it) }
+                .onFailure { fail("Não foi possível iniciar o Google Home", it) }
+        }
+        // Se nada responder em 10 s, mostra o botão em vez de ficar à espera.
+        scope.launch {
+            delay(10_000)
+            if (permitted == null) {
+                permitted = false
+                if (error == null) error = "Sem resposta do Google Home. Toca em Ligar para tentar outra vez."
             }
         }
-        return runCatching {
-            Home.getClient(ctx.applicationContext, HomeConfig(coroutineContext = Dispatchers.IO, factoryRegistry = registry))
-        }.onSuccess { client = it; watchPermission(it) }
-            .onFailure { fail("Não foi possível iniciar o Google Home", it) }
-            .getOrNull()
     }
 
-    /** Tem de ser chamado no onCreate da atividade que vai pedir autorização. */
-    fun register(ctx: Context, caller: ActivityResultCaller) {
-        runCatching { client(ctx)?.registerActivityResultCallerForPermissions(caller) }
+    /** Liga o ecrã de autorização da Google a uma atividade (chamar no onCreate, só com o cliente pronto). */
+    fun registerIfReady(caller: ActivityResultCaller): Boolean {
+        val c = client ?: return false
+        return runCatching { c.registerActivityResultCallerForPermissions(caller); true }
             .onFailure { fail("Registo da autorização", it) }
+            .getOrDefault(false)
+    }
+
+    /** Abre o ecrã da Google para escolheres a casa e as luzes que o Painel pode controlar. */
+    suspend fun requestPermission() {
+        val c = client ?: return
+        error = null
+        runCatching {
+            val r = c.requestPermissions(ForcePermissionFlow.FORCE_LAUNCH)
+            when (r.status) {
+                PermissionsResultStatus.SUCCESS -> { permitted = true; startDevices(c) }
+                PermissionsResultStatus.CANCELLED -> error = "Autorização cancelada."
+                else -> error = r.errorMessage ?: "Não foi possível autorizar."
+            }
+        }.onFailure { fail("Pedido de autorização", it) }
     }
 
     private fun watchPermission(c: HomeClient) {
@@ -135,22 +155,6 @@ object HomeRepo {
                     }
                 }
             }.onFailure { fail("Estado da autorização", it) }
-        }
-    }
-
-    /** Abre o ecrã da Google para escolheres a casa e os dispositivos que o Painel pode controlar. */
-    fun requestPermission(ctx: Context) {
-        val c = client(ctx) ?: return
-        error = null
-        scope.launch {
-            runCatching {
-                val r = c.requestPermissions(ForcePermissionFlow.FORCE_LAUNCH)
-                when (r.status) {
-                    PermissionsResultStatus.SUCCESS -> { error = null; permitted = true; startDevices(c) }
-                    PermissionsResultStatus.CANCELLED -> error = "Autorização cancelada."
-                    else -> error = r.errorMessage ?: "Não foi possível autorizar."
-                }
-            }.onFailure { fail("Pedido de autorização", it) }
         }
     }
 

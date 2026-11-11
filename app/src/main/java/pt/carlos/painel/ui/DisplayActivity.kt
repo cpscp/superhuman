@@ -123,7 +123,6 @@ class DisplayActivity : ComponentActivity() {
             systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
         Media.start(this)
-        HomeRepo.register(this, this)
         setContent {
             PainelTheme(PainelApp.instance.prefs, forceDark = true) {
                 DisplayScreen(
@@ -559,7 +558,7 @@ private fun MusicCard(tick: Long, modifier: Modifier) {
 private fun HomeCard() {
     val ctx = LocalContext.current
     var brightnessFor by remember { mutableStateOf<HomeDev?>(null) }
-    LaunchedEffect(Unit) { runCatching { HomeRepo.client(ctx) } }
+    LaunchedEffect(Unit) { HomeRepo.init(ctx) }
     Card {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(Icons.Outlined.Home, null, tint = MaterialTheme.colorScheme.primary)
@@ -578,7 +577,7 @@ private fun HomeCard() {
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.weight(1f),
                 )
-                FilledTonalButton(onClick = { HomeRepo.requestPermission(ctx) }) { Text("Ligar ao Google Home") }
+                FilledTonalButton(onClick = { ctx.startActivity(Intent(ctx, HomeConnectActivity::class.java)) }) { Text("Ligar ao Google Home") }
             }
             null -> Text("A ligar ao Google Home…", color = MaterialTheme.colorScheme.onSurfaceVariant)
             true -> if (HomeRepo.devices.isEmpty()) {
@@ -591,7 +590,7 @@ private fun HomeCard() {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(msg, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.weight(1f))
                     if (HomeRepo.loaded || HomeRepo.error != null) {
-                        FilledTonalButton(onClick = { HomeRepo.requestPermission(ctx) }) { Text("Ligar") }
+                        FilledTonalButton(onClick = { ctx.startActivity(Intent(ctx, HomeConnectActivity::class.java)) }) { Text("Ligar") }
                     }
                 }
             } else {

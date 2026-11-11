@@ -66,6 +66,13 @@
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
             android:theme="@style/Theme.Painel" />
 
+        <activity
+            android:name=".ui.HomeConnectActivity"
+            android:exported="false"
+            android:taskAffinity=""
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.Painel" />
+
         <service
             android:name=".ui.DisplayTileService"
             android:exported="true"

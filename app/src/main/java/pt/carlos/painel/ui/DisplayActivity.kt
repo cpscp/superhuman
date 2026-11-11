@@ -65,7 +65,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.items as gridItems
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.outlined.Lightbulb
 import androidx.compose.material.icons.outlined.Power
@@ -187,7 +190,7 @@ private fun DisplayScreen(onClose: () -> Unit, onNight: (Boolean) -> Unit) {
         val stops = prefs.busStops.split(',', ' ', ';').map { it.trim() }.filter { it.isNotEmpty() }.map { StopRef(it, "") }
         while (true) {
             val r = withContext(Dispatchers.IO) {
-                runCatching { CarrisApi.departures(stops, System.currentTimeMillis(), 6) }
+                runCatching { CarrisApi.departures(stops, System.currentTimeMillis(), 12) }
             }
             r.onSuccess { buses = it; busError = false }.onFailure { busError = true }
             delay(30_000)
@@ -374,9 +377,16 @@ private fun TransitCard(
                 if (error) "Sem ligação aos dados. Volta a tentar em 30 s." else "Sem partidas nas próximas horas.",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+            train -> list.take(4).forEach { d -> DepartureRow(d, true, nowMs) }
             else -> {
-                val rows = if (train) list.take(4) else list.take(5)
-                rows.forEach { d -> DepartureRow(d, train, nowMs) }
+                // Autocarros: duas colunas compactas, até 12 partidas.
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    gridItems(list.take(12), key = { it.badge + it.destination + it.etaMs }) { d -> BusRow(d, nowMs) }
+                }
             }
         }
     }
@@ -424,6 +434,34 @@ private fun DepartureRow(d: Departure, train: Boolean, nowMs: Long) {
                 d.status == LiveStatus.ATRASADO -> Color(0xFFFDD663)
                 else -> MaterialTheme.colorScheme.primary
             },
+        )
+    }
+}
+
+@Composable
+private fun BusRow(d: Departure, nowMs: Long) {
+    val mins = ((d.etaMs - nowMs) / 60_000L).coerceAtLeast(0)
+    Row(Modifier.fillMaxWidth().padding(vertical = 3.dp), verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            Modifier.width(52.dp).clip(RoundedCornerShape(8.dp)).background(d.badgeColor?.let { Color(it) } ?: Color(0xFFFFC20E)).padding(vertical = 2.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(d.badge, style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold), color = d.badgeTextColor?.let { Color(it) } ?: Color(0xFF00467F))
+        }
+        Spacer(Modifier.width(8.dp))
+        Text(
+            TText.title(d.destination),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f),
+        )
+        Spacer(Modifier.width(6.dp))
+        Text(
+            if (mins == 0L) "agora" else "$mins min",
+            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
+            color = if (d.status == LiveStatus.ATRASADO) Color(0xFFFDD663) else MaterialTheme.colorScheme.primary,
         )
     }
 }

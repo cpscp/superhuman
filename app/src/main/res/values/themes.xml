@@ -1,0 +1,15 @@
+<resources>
+    <style name="Theme.Painel" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <!-- O papel de parede do sistema aparece por trás do ecrã inicial. -->
+    <style name="Theme.Painel.Wallpaper">
+        <item name="android:windowShowWallpaper">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowDisablePreview">true</item>
+    </style>
+</resources>

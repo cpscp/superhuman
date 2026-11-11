@@ -18,6 +18,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
@@ -190,7 +191,7 @@ private fun DisplayScreen(onClose: () -> Unit, onNight: (Boolean) -> Unit) {
         val stops = prefs.busStops.split(',', ' ', ';').map { it.trim() }.filter { it.isNotEmpty() }.map { StopRef(it, "") }
         while (true) {
             val r = withContext(Dispatchers.IO) {
-                runCatching { CarrisApi.departures(stops, System.currentTimeMillis(), 12) }
+                runCatching { CarrisApi.departures(stops, System.currentTimeMillis(), 8) }
             }
             r.onSuccess { buses = it; busError = false }.onFailure { busError = true }
             delay(30_000)
@@ -235,14 +236,14 @@ private fun DisplayScreen(onClose: () -> Unit, onNight: (Boolean) -> Unit) {
                         subtitle = "Sentido ${prefs.trainDirection}",
                         icon = { Icon(Icons.Outlined.Train, null, tint = Color(0xFF7FD48B)) },
                         list = trains, error = trainError, train = true, nowMs = System.currentTimeMillis(),
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1.2f),
                     )
                     TransitCard(
                         title = prefs.busTitle,
                         subtitle = "Carris",
                         icon = { Icon(Icons.Outlined.DirectionsBus, null, tint = Color(0xFFFDD663)) },
                         list = buses, error = busError, train = false, nowMs = System.currentTimeMillis(),
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(0.8f),
                     )
                     HomeCard()
                 }
@@ -377,15 +378,18 @@ private fun TransitCard(
                 if (error) "Sem ligação aos dados. Volta a tentar em 30 s." else "Sem partidas nas próximas horas.",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            train -> list.take(5).forEach { d -> DepartureRow(d, true, nowMs) }
+            train -> BoxWithConstraints(Modifier.fillMaxSize()) {
+                // Só mostra as linhas que cabem por inteiro (nunca cortadas), até 5.
+                val fit = (maxHeight / TrainRowHeight).toInt().coerceIn(1, 5)
+                Column { list.take(fit).forEach { d -> DepartureRow(d, true, nowMs) } }
+            }
             else -> {
-                // Autocarros: duas colunas compactas, até 12 partidas.
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    modifier = Modifier.fillMaxSize(),
-                ) {
-                    gridItems(list.take(12), key = { it.badge + it.destination + it.etaMs }) { d -> BusRow(d, nowMs) }
+                // Autocarros: 8 próximas partidas em duas colunas de 4.
+                val rows = list.take(8)
+                Row(Modifier.fillMaxWidth()) {
+                    Column(Modifier.weight(1f)) { rows.take(4).forEach { d -> BusRow(d, nowMs) } }
+                    Spacer(Modifier.width(16.dp))
+                    Column(Modifier.weight(1f)) { rows.drop(4).forEach { d -> BusRow(d, nowMs) } }
                 }
             }
         }
@@ -396,38 +400,27 @@ private fun TransitCard(
 private fun DepartureRow(d: Departure, train: Boolean, nowMs: Long) {
     val mins = ((d.etaMs - nowMs) / 60_000L).coerceAtLeast(0)
     val cancelled = d.status == LiveStatus.SUPRIMIDO
-    Row(Modifier.fillMaxWidth().padding(vertical = 3.dp), verticalAlignment = Alignment.CenterVertically) {
-        if (train) {
-            Text(hhmm(d.etaMs), style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onSurface, modifier = Modifier.width(76.dp))
-        } else {
-            // Carris: amarelo e azul da marca (como no Partidas).
-            val bg = d.badgeColor?.let { Color(it) } ?: Color(0xFFFFC20E)
-            val fg = d.badgeTextColor?.let { Color(it) } ?: Color(0xFF00467F)
-            Box(
-                Modifier.width(64.dp).clip(RoundedCornerShape(10.dp)).background(bg).padding(vertical = 4.dp),
-                contentAlignment = Alignment.Center,
-            ) { Text(d.badge, style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold), color = fg) }
-            Spacer(Modifier.width(12.dp))
-        }
-        Column(Modifier.weight(1f)) {
-            Text(
-                TText.title(d.destination),
-                style = MaterialTheme.typography.titleMedium.copy(textDecoration = if (cancelled) TextDecoration.LineThrough else null),
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            if (train && d.badge.isNotBlank()) {
-                Text(d.badge + if (d.delayMin > 0) " · +${d.delayMin} min" else "", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            }
-        }
-        val label = when {
-            cancelled -> "Suprimido"
-            mins == 0L -> "agora"
-            else -> "$mins min"
+    // Uma linha por comboio: hora · destino · linha/atraso · minutos.
+    Row(Modifier.fillMaxWidth().height(TrainRowHeight), verticalAlignment = Alignment.CenterVertically) {
+        Text(hhmm(d.etaMs), style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold), color = MaterialTheme.colorScheme.onSurface, modifier = Modifier.width(64.dp))
+        Text(
+            TText.title(d.destination),
+            style = MaterialTheme.typography.titleMedium.copy(textDecoration = if (cancelled) TextDecoration.LineThrough else null),
+            color = MaterialTheme.colorScheme.onSurface,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f),
+        )
+        val extra = listOfNotNull(
+            d.badge.ifBlank { null }?.replace("Linha ", "L"),
+            if (d.delayMin > 0 && !cancelled) "+${d.delayMin}" else null,
+        ).joinToString(" · ")
+        if (extra.isNotEmpty()) {
+            Text(extra, style = MaterialTheme.typography.bodySmall, color = if (d.delayMin > 0) Color(0xFFFDD663) else MaterialTheme.colorScheme.onSurfaceVariant)
+            Spacer(Modifier.width(10.dp))
         }
         Text(
-            label,
+            when { cancelled -> "Suprimido"; mins == 0L -> "agora"; else -> "$mins min" },
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
             color = when {
                 cancelled -> MaterialTheme.colorScheme.error
@@ -437,6 +430,8 @@ private fun DepartureRow(d: Departure, train: Boolean, nowMs: Long) {
         )
     }
 }
+
+private val TrainRowHeight = 36.dp
 
 @Composable
 private fun BusRow(d: Departure, nowMs: Long) {

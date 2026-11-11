@@ -3,6 +3,25 @@
 package pt.carlos.painel.ui
 
 import android.Manifest
+import android.appwidget.AppWidgetHostView
+import android.appwidget.AppWidgetManager
+import android.appwidget.AppWidgetProviderInfo
+import android.util.SizeF
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowForward
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.ArrowDownward
+import androidx.compose.material.icons.outlined.ArrowUpward
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.runtime.key
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.viewinterop.AndroidView
+import pt.carlos.painel.data.DModule
+import pt.carlos.painel.data.DisplayLayout
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
@@ -18,7 +37,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
@@ -117,8 +135,19 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-/** Modo Display (Operações): ecrã da entrada com hora, tempo, partidas, agenda e música. */
+/** Modo Display (Operações): ecrã da entrada com hora, tempo, partidas, agenda, música, casa e widgets. */
 class DisplayActivity : ComponentActivity() {
+    private val app get() = PainelApp.instance
+
+    // Widget a meio de ser adicionado (autorização e configuração), como no ecrã inicial.
+    private var pendingId = -1
+    private var pendingInfo: AppWidgetProviderInfo? = null
+    private var pendingColumn = 0
+
+    private val bindLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { r ->
+        if (r.resultCode == RESULT_OK) configureOrAdd() else cancelPending()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -137,15 +166,59 @@ class DisplayActivity : ComponentActivity() {
                             screenBrightness = if (night) 0.02f else WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
                         }
                     },
+                    onPickWidget = ::startAddWidget,
                 )
             }
         }
     }
 
+    override fun onStart() { super.onStart(); app.widgetsStart() }
+    override fun onStop() { super.onStop(); app.widgetsStop() }
+
     override fun onResume() {
         super.onResume()
         Media.start(this)
     }
+
+    private fun startAddWidget(info: AppWidgetProviderInfo, column: Int) {
+        val id = app.widgetHost.allocateAppWidgetId()
+        pendingId = id; pendingInfo = info; pendingColumn = column
+        if (AppWidgetManager.getInstance(this).bindAppWidgetIdIfAllowed(id, info.profile, info.provider, null)) configureOrAdd()
+        else bindLauncher.launch(
+            Intent(AppWidgetManager.ACTION_APPWIDGET_BIND)
+                .putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, id)
+                .putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER, info.provider)
+                .putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER_PROFILE, info.profile)
+        )
+    }
+
+    private fun configureOrAdd() {
+        val info = pendingInfo ?: return
+        val optional = (info.widgetFeatures and AppWidgetProviderInfo.WIDGET_FEATURE_CONFIGURATION_OPTIONAL) != 0
+        if (info.configure != null && !optional) {
+            val ok = runCatching { app.widgetHost.startAppWidgetConfigureActivityForResult(this, pendingId, 0, REQ_CONFIG, null) }.isSuccess
+            if (!ok) cancelPending()
+        } else addPending()
+    }
+
+    @Deprecated("Resultado da configuração do widget")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQ_CONFIG) { if (resultCode == RESULT_OK) addPending() else cancelPending() }
+    }
+
+    private fun addPending() {
+        if (pendingId == -1) return
+        app.displayLayout.add(pendingColumn, "widget", pendingId)
+        pendingId = -1; pendingInfo = null
+    }
+
+    private fun cancelPending() {
+        if (pendingId != -1) runCatching { app.widgetHost.deleteAppWidgetId(pendingId) }
+        pendingId = -1; pendingInfo = null
+    }
+
+    companion object { private const val REQ_CONFIG = 52 }
 }
 
 private val pt = Locale("pt", "PT")
@@ -154,7 +227,7 @@ private val hm = DateTimeFormatter.ofPattern("HH:mm")
 private fun hhmm(ms: Long) = Instant.ofEpochMilli(ms).atZone(ZoneId.systemDefault()).format(hm)
 
 @Composable
-private fun DisplayScreen(onClose: () -> Unit, onNight: (Boolean) -> Unit) {
+private fun DisplayScreen(onClose: () -> Unit, onNight: (Boolean) -> Unit, onPickWidget: (AppWidgetProviderInfo, Int) -> Unit) {
     val ctx = LocalContext.current
     val prefs = PainelApp.instance.prefs
 
@@ -167,6 +240,9 @@ private fun DisplayScreen(onClose: () -> Unit, onNight: (Boolean) -> Unit) {
     var events by remember { mutableStateOf<List<CalEvent>>(emptyList()) }
     var calOk by remember { mutableStateOf(CalendarRepo.hasPermission(ctx)) }
     var tick by remember { mutableLongStateOf(0L) }
+    var editing by remember { mutableStateOf(false) }
+    var pickerColumn by remember { mutableStateOf<Int?>(null) }
+    BackHandler(enabled = editing) { editing = false }
 
     val calLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { calOk = it }
 
@@ -222,42 +298,76 @@ private fun DisplayScreen(onClose: () -> Unit, onNight: (Boolean) -> Unit) {
         if (night) {
             NightView(now, trains)
         } else {
+            val layout = PainelApp.instance.displayLayout
+            val colWeights = listOf(1.05f, 1.2f, 1f)
             Row(
-                Modifier.fillMaxSize().padding(start = 32.dp, end = 32.dp, top = 28.dp, bottom = 28.dp),
+                Modifier.fillMaxSize().padding(start = 32.dp, end = 32.dp, top = if (editing) 76.dp else 28.dp, bottom = 28.dp),
                 horizontalArrangement = Arrangement.spacedBy(20.dp),
             ) {
-                Column(Modifier.weight(1.05f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(20.dp)) {
-                    ClockBlock(now)
-                    WeatherCard(forecast, Modifier.weight(1f))
+                layout.columns.forEachIndexed { c, col ->
+                    Column(Modifier.weight(colWeights[c]).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                        col.forEach { m ->
+                            key(m.id) {
+                                val mod = if (m.weight > 0f) Modifier.weight(m.weight) else Modifier
+                                val fill = if (m.weight > 0f) Modifier.fillMaxSize() else Modifier
+                                Box(mod.fillMaxWidth()) {
+                                    when (m.type) {
+                                        "clock" -> ClockBlock(now)
+                                        "weather" -> WeatherCard(forecast, fill)
+                                        "trains" -> TransitCard(
+                                            title = prefs.trainStation,
+                                            subtitle = "Sentido ${prefs.trainDirection}",
+                                            icon = { Icon(Icons.Outlined.Train, null, tint = Color(0xFF7FD48B)) },
+                                            list = trains, error = trainError, train = true, nowMs = System.currentTimeMillis(),
+                                            modifier = fill,
+                                        )
+                                        "buses" -> TransitCard(
+                                            title = prefs.busTitle,
+                                            subtitle = "Carris",
+                                            icon = { Icon(Icons.Outlined.DirectionsBus, null, tint = Color(0xFFFDD663)) },
+                                            list = buses, error = busError, train = false, nowMs = System.currentTimeMillis(),
+                                            modifier = fill,
+                                        )
+                                        "home" -> HomeCard()
+                                        "agenda" -> AgendaCard(
+                                            events = events,
+                                            calOk = calOk,
+                                            onAsk = { calLauncher.launch(Manifest.permission.READ_CALENDAR) },
+                                            modifier = fill,
+                                        )
+                                        "music" -> MusicCard(tick, fill)
+                                        "widget" -> DisplayWidget(m.widgetId)
+                                    }
+                                    if (editing) EditOverlay(m, c, col.size)
+                                }
+                            }
+                        }
+                        if (editing) AddModuleButton(column = c, onWidget = { pickerColumn = c })
+                    }
                 }
-                Column(Modifier.weight(1.2f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    TransitCard(
-                        title = prefs.trainStation,
-                        subtitle = "Sentido ${prefs.trainDirection}",
-                        icon = { Icon(Icons.Outlined.Train, null, tint = Color(0xFF7FD48B)) },
-                        list = trains, error = trainError, train = true, nowMs = System.currentTimeMillis(),
-                        modifier = Modifier.weight(1f),
-                    )
-                    TransitCard(
-                        title = prefs.busTitle,
-                        subtitle = "Carris",
-                        icon = { Icon(Icons.Outlined.DirectionsBus, null, tint = Color(0xFFFDD663)) },
-                        list = buses, error = busError, train = false, nowMs = System.currentTimeMillis(),
-                        modifier = Modifier.weight(1f),
-                    )
-                    HomeCard()
-                }
-                Column(Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(20.dp)) {
-                    AgendaCard(
-                        events = events,
-                        calOk = calOk,
-                        onAsk = { calLauncher.launch(Manifest.permission.READ_CALENDAR) },
-                        modifier = Modifier.weight(1f),
-                    )
-                    MusicCard(tick, Modifier.weight(1f))
+            }
+            if (editing) {
+                Surface(
+                    shape = RoundedCornerShape(28.dp),
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    modifier = Modifier.align(Alignment.TopCenter).padding(top = 12.dp),
+                ) {
+                    Row(Modifier.padding(horizontal = 20.dp, vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Text("A arrumar o Display", style = MaterialTheme.typography.titleMedium)
+                        Spacer(Modifier.width(16.dp))
+                        TextButton(onClick = { layout.reset() }) { Text("Repor") }
+                        Spacer(Modifier.width(8.dp))
+                        androidx.compose.material3.Button(onClick = { editing = false }) { Text("Concluído") }
+                    }
                 }
             }
         }
+
+        if (!editing) IconButton(
+            onClick = { editing = true },
+            modifier = Modifier.align(Alignment.TopEnd).padding(top = 8.dp, end = 56.dp),
+            colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)),
+        ) { Icon(Icons.Outlined.Edit, "Arrumar o Display") }
 
         IconButton(
             onClick = onClose,
@@ -265,6 +375,95 @@ private fun DisplayScreen(onClose: () -> Unit, onNight: (Boolean) -> Unit) {
             colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)),
         ) { Icon(Icons.Outlined.Close, "Sair do modo Display") }
     }
+    }
+    pickerColumn?.let { c ->
+        WidgetPicker(onDismiss = { pickerColumn = null }, onPick = { info -> pickerColumn = null; onPickWidget(info, c) })
+    }
+}
+
+/** Controlos de cada mosaico no modo de arrumação: mover, tamanho, remover. */
+@Composable
+private fun BoxScope.EditOverlay(m: DModule, column: Int, count: Int) {
+    val layout = PainelApp.instance.displayLayout
+    Box(
+        Modifier
+            .matchParentSize()
+            .clip(RoundedCornerShape(32.dp))
+            .background(Color.Black.copy(alpha = 0.45f))
+            .pointerInput(Unit) { awaitPointerEventScope { while (true) awaitPointerEvent().changes.forEach { it.consume() } } },
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(DisplayLayout.TYPES[m.type] ?: m.type, style = MaterialTheme.typography.titleMedium, color = Color.White)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                FilledTonalIconButton(onClick = { layout.move(m.id, -1, 0) }, enabled = column > 0) { Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Coluna à esquerda") }
+                FilledTonalIconButton(onClick = { layout.move(m.id, 0, -1) }) { Icon(Icons.Outlined.ArrowUpward, "Subir") }
+                FilledTonalIconButton(onClick = { layout.move(m.id, 0, 1) }) { Icon(Icons.Outlined.ArrowDownward, "Descer") }
+                FilledTonalIconButton(onClick = { layout.move(m.id, 1, 0) }, enabled = column < 2) { Icon(Icons.AutoMirrored.Outlined.ArrowForward, "Coluna à direita") }
+            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                TextButton(onClick = { layout.cycleSize(m.id) }) {
+                    Text(
+                        "Tamanho: " + when (m.weight) { 0f -> "automático"; 1f -> "normal"; 1.5f -> "grande"; else -> "maior" },
+                        color = Color.White,
+                    )
+                }
+                TextButton(onClick = {
+                    val gone = layout.remove(m.id)
+                    if (gone?.type == "widget") runCatching { PainelApp.instance.widgetHost.deleteAppWidgetId(gone.widgetId) }
+                }) { Text("Remover", color = Color(0xFFF2B8B5)) }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AddModuleButton(column: Int, onWidget: () -> Unit) {
+    val layout = PainelApp.instance.displayLayout
+    var open by remember { mutableStateOf(false) }
+    Box {
+        androidx.compose.material3.OutlinedButton(onClick = { open = true }, modifier = Modifier.fillMaxWidth()) {
+            Icon(Icons.Outlined.Add, null)
+            Spacer(Modifier.width(8.dp))
+            Text("Adicionar")
+        }
+        androidx.compose.material3.DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
+            DisplayLayout.TYPES.forEach { (type, label) ->
+                if (type == "widget" || !layout.has(type)) {
+                    androidx.compose.material3.DropdownMenuItem(
+                        text = { Text(if (type == "widget") "Widget de uma app…" else label) },
+                        onClick = { open = false; if (type == "widget") onWidget() else layout.add(column, type) },
+                    )
+                }
+            }
+        }
+    }
+}
+
+/** Widget de qualquer app (Material You Widgets, Calendar...) dentro do Display. */
+@Composable
+private fun DisplayWidget(widgetId: Int) {
+    val app = PainelApp.instance
+    val info = remember(widgetId) { AppWidgetManager.getInstance(app).getAppWidgetInfo(widgetId) }
+    Surface(shape = RoundedCornerShape(32.dp), color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.72f), modifier = Modifier.fillMaxWidth()) {
+        if (info == null) {
+            Box(Modifier.fillMaxWidth().height(120.dp), contentAlignment = Alignment.Center) {
+                Text("Widget indisponível", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        } else {
+            BoxWithConstraints(Modifier.fillMaxWidth().heightIn(min = 120.dp).padding(12.dp)) {
+                val w = maxWidth.value
+                val h = if (maxHeight.value.isFinite() && maxHeight.value < 5000f) maxHeight.value else 180f
+                AndroidView<AppWidgetHostView>(
+                    factory = { c -> app.widgetHost.createView(c, widgetId, info) },
+                    update = { v ->
+                        val key = "${w.toInt()}x${h.toInt()}"
+                        if (v.tag != key) { v.tag = key; runCatching { v.updateAppWidgetSize(Bundle(), listOf(SizeF(w, h))) } }
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
+        }
     }
 }
 

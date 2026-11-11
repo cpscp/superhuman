@@ -63,7 +63,7 @@ class HomeActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
-        runCatching { app.widgetHost.startListening() }
+        app.widgetsStart()
     }
 
     override fun onResume() {
@@ -73,7 +73,7 @@ class HomeActivity : ComponentActivity() {
 
     override fun onStop() {
         super.onStop()
-        runCatching { app.widgetHost.stopListening() }
+        app.widgetsStop()
     }
 
     override fun onNewIntent(intent: Intent) {

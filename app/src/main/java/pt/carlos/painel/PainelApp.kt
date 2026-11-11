@@ -17,6 +17,13 @@ class PainelApp : Application() {
         private set
     lateinit var widgetHost: PainelHost
         private set
+    lateinit var displayLayout: pt.carlos.painel.data.DisplayLayout
+        private set
+
+    // Ecrã inicial e Display partilham o mesmo anfitrião de widgets: só pára quando nenhum está visível.
+    private var listeners = 0
+    fun widgetsStart() { if (listeners++ == 0) runCatching { widgetHost.startListening() } }
+    fun widgetsStop() { if (--listeners <= 0) { listeners = 0; runCatching { widgetHost.stopListening() } } }
 
     override fun onCreate() {
         super.onCreate()
@@ -35,6 +42,7 @@ class PainelApp : Application() {
         layout = LayoutStore(this)
         apps = AppsRepository(this, prefs)
         widgetHost = PainelHost(this)
+        displayLayout = pt.carlos.painel.data.DisplayLayout(this)
         LockController.sync(this)
         pt.carlos.painel.media.Media.start(this)
     }

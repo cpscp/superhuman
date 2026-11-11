@@ -142,6 +142,15 @@ private fun SettingsScreen(onBack: () -> Unit) {
                 )
             }
 
+            item {
+                ListItem(
+                    colors = rowColors,
+                    headlineContent = { Text("Limpeza do tablet") },
+                    supportingContent = { Text("Apps da Lenovo, de parceiros e da Google que podes remover") },
+                    modifier = Modifier.clickable { ctx.startActivity(Intent(ctx, DebloatActivity::class.java)) },
+                )
+            }
+
             item { Section("Aspeto") }
             item {
                 ListItem(

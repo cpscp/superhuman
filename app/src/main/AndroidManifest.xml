@@ -3,6 +3,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <!-- Só para a Limpeza do tablet: ver todas as apps instaladas (Painel não é distribuído na Play Store). -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
     <!-- Permite mostrar o ecrã de bloqueio do Painel quando o ecrã se apaga dentro de outra app. -->
@@ -94,6 +96,11 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
+
+        <activity
+            android:name=".ui.DebloatActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Painel" />
 
         <activity
             android:name=".ui.WallpaperActivity"

@@ -180,7 +180,7 @@ private fun DisplayScreen(onClose: () -> Unit, onNight: (Boolean) -> Unit) {
     LaunchedEffect(prefs.trainStation, prefs.trainDirection) {
         while (true) {
             val r = withContext(Dispatchers.IO) {
-                runCatching { TrainApi.departures("", prefs.trainStation, prefs.trainDirection, System.currentTimeMillis(), 5) }
+                runCatching { TrainApi.departures("", prefs.trainStation, prefs.trainDirection, System.currentTimeMillis(), 6) }
             }
             r.onSuccess { trains = it; trainError = false }.onFailure { trainError = true }
             delay(30_000)
@@ -377,7 +377,7 @@ private fun TransitCard(
                 if (error) "Sem ligação aos dados. Volta a tentar em 30 s." else "Sem partidas nas próximas horas.",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            train -> list.take(4).forEach { d -> DepartureRow(d, true, nowMs) }
+            train -> list.take(5).forEach { d -> DepartureRow(d, true, nowMs) }
             else -> {
                 // Autocarros: duas colunas compactas, até 12 partidas.
                 LazyVerticalGrid(
@@ -396,7 +396,7 @@ private fun TransitCard(
 private fun DepartureRow(d: Departure, train: Boolean, nowMs: Long) {
     val mins = ((d.etaMs - nowMs) / 60_000L).coerceAtLeast(0)
     val cancelled = d.status == LiveStatus.SUPRIMIDO
-    Row(Modifier.fillMaxWidth().padding(vertical = 5.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(Modifier.fillMaxWidth().padding(vertical = 3.dp), verticalAlignment = Alignment.CenterVertically) {
         if (train) {
             Text(hhmm(d.etaMs), style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onSurface, modifier = Modifier.width(76.dp))
         } else {

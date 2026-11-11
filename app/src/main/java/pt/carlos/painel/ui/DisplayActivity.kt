@@ -64,6 +64,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.outlined.Lightbulb
@@ -199,7 +200,7 @@ private fun DisplayScreen(onClose: () -> Unit, onNight: (Boolean) -> Unit) {
     LaunchedEffect(calOk, prefs.hiddenCalendars) {
         while (calOk) {
             val start = LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
-            events = CalendarRepo.events(ctx, start, start + 2 * 86_400_000L, prefs.hiddenCalendars)
+            events = CalendarRepo.events(ctx, start, start + 14 * 86_400_000L, prefs.hiddenCalendars)
             delay(5 * 60_000)
         }
     }
@@ -207,12 +208,11 @@ private fun DisplayScreen(onClose: () -> Unit, onNight: (Boolean) -> Unit) {
     // Pequena deslocação a cada minuto (proteção do ecrã sempre ligado).
     val shift = (now.minute % 4) * 2
 
-    val bg by animateColorAsState(if (night) Color.Black else MaterialTheme.colorScheme.surface, label = "bg")
-
+    Box(Modifier.fillMaxSize().background(Color.Black)) {
+    if (!night) WeatherBackground(forecast?.now?.code, forecast?.now?.isDay ?: (now.hour in 7..19))
     Box(
         Modifier
             .fillMaxSize()
-            .background(bg)
             .offset(x = shift.dp, y = shift.dp)
     ) {
         if (night) {
@@ -261,13 +261,14 @@ private fun DisplayScreen(onClose: () -> Unit, onNight: (Boolean) -> Unit) {
             colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)),
         ) { Icon(Icons.Outlined.Close, "Sair do modo Display") }
     }
+    }
 }
 
 // ---------- Blocos ----------
 
 @Composable
 private fun Card(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
-    Surface(shape = RoundedCornerShape(32.dp), color = MaterialTheme.colorScheme.surfaceContainer, modifier = modifier.fillMaxWidth()) {
+    Surface(shape = RoundedCornerShape(32.dp), color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.72f), modifier = modifier.fillMaxWidth()) {
         Column(Modifier.padding(24.dp), content = content)
     }
 }
@@ -445,17 +446,23 @@ private fun AgendaCard(events: List<CalEvent>, calOk: Boolean, onAsk: () -> Unit
         val today = LocalDate.now()
         val nowMs = System.currentTimeMillis()
         val upcoming = events.filter { it.end > nowMs }
-        val groups = listOf(
-            "Hoje" to upcoming.filter { dayOf(it) == today },
-            "Amanhã" to upcoming.filter { dayOf(it) == today.plusDays(1) },
-        )
         if (upcoming.isEmpty()) {
-            Text("Nada marcado para hoje e amanhã.", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("Nada marcado para as próximas duas semanas.", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            return@Card
         }
-        groups.forEach { (label, list) ->
-            if (list.isNotEmpty()) {
-                Text(label, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(top = 6.dp, bottom = 4.dp))
-                list.take(4).forEach { e ->
+        // Todos os eventos, agrupados por dia, até encher o mosaico (o resto vê-se a deslizar).
+        val byDay = upcoming.groupBy { dayOf(it) }.toSortedMap()
+        LazyColumn(Modifier.fillMaxSize()) {
+            byDay.forEach { (day, list) ->
+                item(key = "d$day") {
+                    val label = when (day) {
+                        today -> "Hoje"
+                        today.plusDays(1) -> "Amanhã"
+                        else -> day.format(DateTimeFormatter.ofPattern("EEEE, d MMM", pt)).replaceFirstChar { it.titlecase(pt) }
+                    }
+                    Text(label, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(top = 8.dp, bottom = 4.dp))
+                }
+                items(list, key = { "${it.calendarId}-${it.begin}-${it.title}" }) { e ->
                     Row(Modifier.padding(vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
                         Box(Modifier.size(10.dp).clip(CircleShape).background(Color(e.color)))
                         Spacer(Modifier.width(10.dp))
@@ -502,7 +509,7 @@ private fun MusicCard(tick: Long, modifier: Modifier) {
         return
     }
     // A capa do álbum é o fundo do mosaico, com um véu escuro para o texto se ler bem.
-    Surface(shape = RoundedCornerShape(32.dp), color = MaterialTheme.colorScheme.surfaceContainer, modifier = modifier.fillMaxWidth()) {
+    Surface(shape = RoundedCornerShape(32.dp), color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.72f), modifier = modifier.fillMaxWidth()) {
         Box(Modifier.fillMaxSize()) {
             if (info.art != null) {
                 Image(info.art, null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize().blur(18.dp))

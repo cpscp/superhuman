@@ -23,6 +23,16 @@ Cada nova versão instala por cima da anterior (mesma chave), sem perder a confi
 - Ecrã de bloqueio ao estilo Pixel 11: relógio centrado em duas linhas (Google Sans Flex arredondada), data e tempo (Open-Meteo), botão de desbloqueio e atalho da Casa.
 - Desempenho: R8 + encolhimento de recursos, perfis de arranque (ProfileInstaller), sem serviços em segundo plano.
 
+## Fase 2: Modo Display (entrada de casa)
+
+- Abre com o botão "Modo Display" no ecrã inicial ou nas Definições rápidas; só abre quando o acionas.
+- Hora, data, tempo agora e próximas horas (Open-Meteo), comboios CP (Alcântara-Mar, sentido Cascais),
+  autocarros Carris Metropolitana (paragens 10210, 10209, 10203, 10202, 10201), agenda de hoje e amanhã,
+  e música (BitChord, YouTube, Nuvio) com reproduzir/pausar, anterior e seguinte.
+- Modo noite automático (23h–7h): ecrã escuro, só o relógio e o próximo comboio.
+- Ecrã de bloqueio: também mostra o próximo evento e a música a tocar.
+- Tudo configurável em Definições › Modo Display.
+
 Gestos: toque longo num espaço vazio → menu (Widgets, Editar, Papel de parede, Definições);
 toque longo num widget → modo de edição; no modo de edição arrasta para mover e usa o canto para redimensionar.
 

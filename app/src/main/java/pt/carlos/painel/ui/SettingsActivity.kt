@@ -3,6 +3,19 @@
 package pt.carlos.painel.ui
 
 import android.app.role.RoleManager
+import android.Manifest
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.text.input.ImeAction
+import kotlinx.coroutines.launch
+import pt.carlos.painel.data.CalInfo
+import pt.carlos.painel.data.CalendarRepo
+import pt.carlos.painel.data.GeoPlace
+import pt.carlos.painel.data.Weather
+import pt.carlos.painel.media.Media
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -224,6 +237,121 @@ private fun SettingsScreen(onBack: () -> Unit) {
                     headlineContent = { Text("Nome e imagem de cada app") },
                     supportingContent = { Text("Toque longo num ícone › Editar ícone") },
                 )
+            }
+
+
+            item { Section("Modo Display") }
+            item {
+                ListItem(
+                    colors = rowColors,
+                    headlineContent = { Text("Abrir") },
+                    supportingContent = { Text("Botão \"Modo Display\" no ecrã inicial ou nas Definições rápidas (Modo Display)") },
+                    modifier = Modifier.clickable { ctx.startActivity(Intent(ctx, DisplayActivity::class.java)) },
+                )
+            }
+            item {
+                Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                    Text("Comboio (CP)", style = MaterialTheme.typography.titleSmall)
+                    Row(Modifier.fillMaxWidth().padding(top = 8.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        OutlinedTextField(prefs.trainStation, { prefs.trainStation = it }, label = { Text("Estação") }, singleLine = true, modifier = Modifier.weight(1f))
+                        OutlinedTextField(prefs.trainDirection, { prefs.trainDirection = it }, label = { Text("Sentido") }, singleLine = true, modifier = Modifier.weight(1f))
+                    }
+                    Text("Autocarros (Carris Metropolitana)", style = MaterialTheme.typography.titleSmall, modifier = Modifier.padding(top = 16.dp))
+                    Row(Modifier.fillMaxWidth().padding(top = 8.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        OutlinedTextField(prefs.busTitle, { prefs.busTitle = it }, label = { Text("Nome do quadro") }, singleLine = true, modifier = Modifier.weight(1f))
+                        OutlinedTextField(prefs.busStops, { prefs.busStops = it }, label = { Text("Paragens (números, separados por vírgulas)") }, singleLine = true, modifier = Modifier.weight(2f))
+                    }
+                }
+            }
+            item {
+                val scope = rememberCoroutineScope()
+                var query by remember { mutableStateOf("") }
+                var results by remember { mutableStateOf<List<GeoPlace>>(emptyList()) }
+                Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                    Text("Tempo: ${prefs.weatherPlace}", style = MaterialTheme.typography.titleSmall)
+                    OutlinedTextField(
+                        value = query,
+                        onValueChange = { query = it },
+                        label = { Text("Mudar localidade") },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                        keyboardActions = KeyboardActions(onSearch = { scope.launch { results = Weather.search(query) } }),
+                        trailingIcon = { TextButton(onClick = { scope.launch { results = Weather.search(query) } }) { Text("Procurar") } },
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                    )
+                    results.forEach { g ->
+                        ListItem(
+                            colors = rowColors,
+                            headlineContent = { Text(g.name) },
+                            supportingContent = { Text(g.region) },
+                            modifier = Modifier.clickable {
+                                prefs.setWeatherPlace(g.name, g.lat, g.lon)
+                                results = emptyList(); query = ""
+                            },
+                        )
+                    }
+                }
+            }
+            item {
+                var calOk by remember { mutableStateOf(CalendarRepo.hasPermission(ctx)) }
+                var cals by remember { mutableStateOf<List<CalInfo>>(emptyList()) }
+                val calLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { calOk = it }
+                LaunchedEffect(calOk) { if (calOk) cals = CalendarRepo.calendars(ctx) }
+                Column(Modifier.padding(vertical = 8.dp)) {
+                    Text("Calendários na agenda", style = MaterialTheme.typography.titleSmall, modifier = Modifier.padding(horizontal = 16.dp))
+                    if (!calOk) {
+                        ListItem(
+                            colors = rowColors,
+                            headlineContent = { Text("Acesso ao calendário") },
+                            supportingContent = { Text("Necessário para mostrar a agenda") },
+                            trailingContent = { Button(onClick = { calLauncher.launch(Manifest.permission.READ_CALENDAR) }) { Text("Permitir") } },
+                        )
+                    }
+                    cals.forEach { c ->
+                        ListItem(
+                            colors = rowColors,
+                            leadingContent = { Box(Modifier.size(14.dp).background(Color(c.color), CircleShape)) },
+                            headlineContent = { Text(c.name) },
+                            supportingContent = { Text(c.account) },
+                            trailingContent = {
+                                Switch(
+                                    checked = c.id.toString() !in prefs.hiddenCalendars,
+                                    onCheckedChange = { on -> prefs.setCalendarHidden(c.id, !on) },
+                                )
+                            },
+                        )
+                    }
+                }
+            }
+            item {
+                val access = Media.hasAccess(ctx)
+                ListItem(
+                    colors = rowColors,
+                    headlineContent = { Text("Música (BitChord, YouTube, Nuvio)") },
+                    supportingContent = { Text(if (access) "Ativo: o Display mostra e controla o que está a tocar" else "Precisa de \"Acesso a notificações\" para o Painel") },
+                    trailingContent = {
+                        if (!access) Button(onClick = { runCatching { ctx.startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)) } }) { Text("Ativar") }
+                        else Icon(Icons.Outlined.CheckCircle, null, tint = MaterialTheme.colorScheme.primary)
+                    },
+                )
+            }
+            item {
+                ListItem(
+                    colors = rowColors,
+                    headlineContent = { Text("Modo noite automático") },
+                    supportingContent = { Text("Das ${prefs.nightStart}h às ${prefs.nightEnd}h: ecrã escuro, só relógio e próximo comboio") },
+                    trailingContent = { Switch(checked = prefs.nightAuto, onCheckedChange = { prefs.nightAuto = it }) },
+                )
+            }
+            if (prefs.nightAuto) {
+                item {
+                    Column(Modifier.padding(horizontal = 16.dp)) {
+                        Text("Começa às ${prefs.nightStart}h", style = MaterialTheme.typography.bodyMedium)
+                        Slider(value = prefs.nightStart.toFloat(), onValueChange = { prefs.nightStart = it.roundToInt() }, valueRange = 18f..23f, steps = 4)
+                        Text("Acaba às ${prefs.nightEnd}h", style = MaterialTheme.typography.bodyMedium)
+                        Slider(value = prefs.nightEnd.toFloat(), onValueChange = { prefs.nightEnd = it.roundToInt() }, valueRange = 5f..9f, steps = 3)
+                    }
+                }
             }
 
             item { Section("Ecrã de bloqueio") }

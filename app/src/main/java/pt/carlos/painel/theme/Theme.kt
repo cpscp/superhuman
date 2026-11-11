@@ -105,9 +105,9 @@ fun isPainelDark(prefs: Prefs): Boolean = when (prefs.themeMode) {
 }
 
 @Composable
-fun PainelTheme(prefs: Prefs, content: @Composable () -> Unit) {
+fun PainelTheme(prefs: Prefs, forceDark: Boolean = false, content: @Composable () -> Unit) {
     val ctx = LocalContext.current
-    val dark = isPainelDark(prefs)
+    val dark = forceDark || isPainelDark(prefs)
     val scheme = remember(dark, prefs.dynamicColor, prefs.seed) {
         when {
             prefs.dynamicColor && dark -> dynamicDarkColorScheme(ctx)

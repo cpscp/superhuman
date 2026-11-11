@@ -32,6 +32,14 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import pt.carlos.painel.data.Weather
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material.icons.outlined.MusicNote
+import androidx.compose.material.icons.outlined.Pause
+import androidx.compose.material.icons.outlined.PlayArrow
+import androidx.compose.material3.IconButton
+import pt.carlos.painel.data.CalEvent
+import pt.carlos.painel.data.CalendarRepo
+import pt.carlos.painel.media.Media
 import pt.carlos.painel.data.WeatherNow
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -106,14 +114,6 @@ class LockScreenActivity : ComponentActivity() {
 private val pt = Locale("pt", "PT")
 private val glow = Shadow(color = Color.Black.copy(alpha = 0.30f), offset = Offset(0f, 2f), blurRadius = 14f)
 
-private fun weatherIcon(w: WeatherNow): Pair<ImageVector, Color> = when (w.code) {
-    0, 1 -> if (w.isDay) Icons.Outlined.WbSunny to Color(0xFFFDD663) else Icons.Outlined.NightsStay to Color(0xFFE8EAED)
-    2, 3, 45, 48 -> Icons.Outlined.Cloud to Color(0xFFE8EAED)
-    in 51..67, in 80..82 -> Icons.Outlined.WaterDrop to Color(0xFF8AB4F8)
-    in 71..77, 85, 86 -> Icons.Outlined.AcUnit to Color(0xFFE8EAED)
-    else -> Icons.Outlined.FlashOn to Color(0xFFFDD663)
-}
-
 /** Ecrã de bloqueio ao estilo Pixel 11: relógio centrado em duas linhas, data e tempo, botão de desbloqueio e atalho da Casa. */
 @Composable
 private fun LockScreen(style: Int, onUnlock: () -> Unit, onHome: () -> Unit) {
@@ -121,10 +121,14 @@ private fun LockScreen(style: Int, onUnlock: () -> Unit, onHome: () -> Unit) {
     var now by remember { mutableStateOf(LocalDateTime.now()) }
     var weather by remember { mutableStateOf<WeatherNow?>(null) }
     var charging by remember { mutableStateOf("") }
+    var nextEvent by remember { mutableStateOf<CalEvent?>(null) }
     LaunchedEffect(Unit) {
         while (true) {
             now = LocalDateTime.now()
             weather = Weather.now(ctx)
+            val nowMs = System.currentTimeMillis()
+            nextEvent = CalendarRepo.events(ctx, nowMs, nowMs + 24 * 3_600_000L, PainelApp.instance.prefs.hiddenCalendars)
+                .firstOrNull { !it.allDay && it.end > nowMs }
             val b = ctx.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
             if (b != null) {
                 val level = b.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
@@ -170,11 +174,39 @@ private fun LockScreen(style: Int, onUnlock: () -> Unit, onHome: () -> Unit) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(date, style = MaterialTheme.typography.titleMedium.copy(shadow = glow), color = Color.White)
                 weather?.let { w ->
-                    val (icon, tint) = weatherIcon(w)
+                    val (icon, tint) = weatherIcon(w.code, w.isDay)
                     Spacer(Modifier.width(10.dp))
                     Icon(icon, null, tint = tint, modifier = Modifier.size(20.dp))
                     Spacer(Modifier.width(6.dp))
                     Text("${w.tempC}°C", style = MaterialTheme.typography.titleMedium.copy(shadow = glow), color = Color.White)
+                }
+            }
+            nextEvent?.let { e ->
+                Spacer(Modifier.height(6.dp))
+                Text(
+                    "${DateTimeFormatter.ofPattern("HH:mm").format(java.time.Instant.ofEpochMilli(e.begin).atZone(java.time.ZoneId.systemDefault()))} · ${e.title}",
+                    style = MaterialTheme.typography.titleSmall.copy(shadow = glow),
+                    color = Color.White.copy(alpha = 0.9f),
+                    maxLines = 1,
+                )
+            }
+            Media.info?.let { m ->
+                Spacer(Modifier.height(14.dp))
+                Surface(shape = CircleShape, color = Color.Black.copy(alpha = 0.35f)) {
+                    Row(Modifier.padding(start = 16.dp, end = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Outlined.MusicNote, null, tint = Color.White, modifier = Modifier.size(18.dp))
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            listOf(m.title, m.artist).filter { it.isNotBlank() }.joinToString(" · "),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = Color.White,
+                            maxLines = 1,
+                            modifier = Modifier.widthIn(max = 360.dp),
+                        )
+                        IconButton(onClick = { Media.playPause() }) {
+                            Icon(if (m.playing) Icons.Outlined.Pause else Icons.Outlined.PlayArrow, "Reproduzir/pausar", tint = Color.White)
+                        }
+                    }
                 }
             }
             if (charging.isNotEmpty()) {

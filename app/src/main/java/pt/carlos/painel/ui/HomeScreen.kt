@@ -49,6 +49,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Apps
 import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Dashboard
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Info
@@ -233,7 +234,22 @@ fun HomeScreen(
 
             PageDots(count = layout.pages, current = pager.currentPage)
             Spacer(Modifier.height(8.dp))
-            SearchPill(onClick = { openDrawer(true) })
+            Row(Modifier.fillMaxWidth().padding(horizontal = 24.dp), verticalAlignment = Alignment.CenterVertically) {
+                Box(Modifier.weight(1f)) { SearchPill(onClick = { openDrawer(true) }) }
+                // Modo Display (entrada de casa): só abre quando tu o acionas.
+                Surface(
+                    onClick = { ctx.startActivity(Intent(ctx, DisplayActivity::class.java)) },
+                    shape = RoundedCornerShape(28.dp),
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    modifier = Modifier.height(56.dp),
+                ) {
+                    Row(Modifier.padding(horizontal = 20.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Outlined.Dashboard, null, tint = MaterialTheme.colorScheme.onPrimaryContainer)
+                        Spacer(Modifier.width(10.dp))
+                        Text("Modo Display", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onPrimaryContainer)
+                    }
+                }
+            }
             Dock(app = app, onOpenDrawer = { openDrawer(false) })
         }
 
@@ -655,7 +671,7 @@ private fun SearchPill(onClick: () -> Unit) {
             onClick = onClick,
             shape = RoundedCornerShape(28.dp),
             color = MaterialTheme.colorScheme.surfaceContainerHigh,
-            modifier = Modifier.padding(horizontal = 24.dp).widthIn(max = 620.dp).fillMaxWidth().height(56.dp),
+            modifier = Modifier.padding(end = 12.dp).widthIn(max = 620.dp).fillMaxWidth().height(56.dp),
         ) {
             Row(Modifier.padding(horizontal = 20.dp), verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Outlined.Search, null, tint = MaterialTheme.colorScheme.onSurfaceVariant)

@@ -86,6 +86,68 @@ class Prefs(ctx: Context) {
         sp.edit().putString("labels", org.json.JSONObject(_labels).toString()).apply()
     }
 
+
+    // ---- Modo Display ----
+    private fun str(key: String, def: String) = mutableStateOf(sp.getString(key, def) ?: def)
+    private fun putStr(key: String, v: String) = sp.edit().putString(key, v).apply()
+
+    private var _trainStation by str("trainStation", "Alcântara-Mar")
+    var trainStation: String
+        get() = _trainStation
+        set(v) { _trainStation = v; putStr("trainStation", v) }
+
+    private var _trainDirection by str("trainDirection", "Cascais")
+    var trainDirection: String
+        get() = _trainDirection
+        set(v) { _trainDirection = v; putStr("trainDirection", v) }
+
+    private var _busStops by str("busStops", "10210, 10209, 10203, 10202, 10201")
+    /** Paragens da Carris Metropolitana, separadas por vírgulas. */
+    var busStops: String
+        get() = _busStops
+        set(v) { _busStops = v; putStr("busStops", v) }
+
+    private var _busTitle by str("busTitle", "Alcântara")
+    var busTitle: String
+        get() = _busTitle
+        set(v) { _busTitle = v; putStr("busTitle", v) }
+
+    private var _weatherPlace by str("weatherPlace", "Lisboa")
+    val weatherPlace: String get() = _weatherPlace
+    private var _weatherLat by str("weatherLat", "38.7069")
+    val weatherLat: Double get() = _weatherLat.toDoubleOrNull() ?: 38.7069
+    private var _weatherLon by str("weatherLon", "-9.1766")
+    val weatherLon: Double get() = _weatherLon.toDoubleOrNull() ?: -9.1766
+    fun setWeatherPlace(name: String, lat: Double, lon: Double) {
+        _weatherPlace = name; _weatherLat = lat.toString(); _weatherLon = lon.toString()
+        sp.edit().putString("weatherPlace", name).putString("weatherLat", lat.toString()).putString("weatherLon", lon.toString()).apply()
+    }
+
+    private var _hiddenCalendars by mutableStateOf(sp.getStringSet("hiddenCalendars", emptySet())!!.toSet())
+    val hiddenCalendars: Set<String> get() = _hiddenCalendars
+    fun setCalendarHidden(id: Long, hidden: Boolean) {
+        _hiddenCalendars = if (hidden) _hiddenCalendars + id.toString() else _hiddenCalendars - id.toString()
+        sp.edit().putStringSet("hiddenCalendars", _hiddenCalendars).apply()
+    }
+
+    private var _nightAuto by mutableStateOf(sp.getBoolean("nightAuto", true))
+    var nightAuto: Boolean
+        get() = _nightAuto
+        set(v) { _nightAuto = v; sp.edit().putBoolean("nightAuto", v).apply() }
+
+    private var _nightStart by mutableStateOf(sp.getInt("nightStart", 23))
+    var nightStart: Int
+        get() = _nightStart
+        set(v) { _nightStart = v; sp.edit().putInt("nightStart", v).apply() }
+
+    private var _nightEnd by mutableStateOf(sp.getInt("nightEnd", 7))
+    var nightEnd: Int
+        get() = _nightEnd
+        set(v) { _nightEnd = v; sp.edit().putInt("nightEnd", v).apply() }
+
+    fun isNight(hour: Int): Boolean =
+        nightAuto && (if (nightStart > nightEnd) hour >= nightStart || hour < nightEnd else hour in nightStart until nightEnd)
+
     var dockSeeded: Boolean
         get() = sp.getBoolean("dockSeeded", false)
         set(v) { sp.edit().putBoolean("dockSeeded", v).apply() }

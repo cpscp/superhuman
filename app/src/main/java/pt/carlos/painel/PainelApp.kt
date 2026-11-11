@@ -26,6 +26,7 @@ class PainelApp : Application() {
         apps = AppsRepository(this, prefs)
         widgetHost = PainelHost(this)
         LockController.sync(this)
+        pt.carlos.painel.media.Media.start(this)
     }
 
     companion object {

@@ -230,20 +230,20 @@ private fun DisplayScreen(onClose: () -> Unit, onNight: (Boolean) -> Unit) {
                     ClockBlock(now)
                     WeatherCard(forecast, Modifier.weight(1f))
                 }
-                Column(Modifier.weight(1.2f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(20.dp)) {
+                Column(Modifier.weight(1.2f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     TransitCard(
                         title = prefs.trainStation,
                         subtitle = "Sentido ${prefs.trainDirection}",
                         icon = { Icon(Icons.Outlined.Train, null, tint = Color(0xFF7FD48B)) },
                         list = trains, error = trainError, train = true, nowMs = System.currentTimeMillis(),
-                        modifier = Modifier.weight(1.2f),
+                        modifier = Modifier.weight(1f),
                     )
                     TransitCard(
                         title = prefs.busTitle,
                         subtitle = "Carris",
                         icon = { Icon(Icons.Outlined.DirectionsBus, null, tint = Color(0xFFFDD663)) },
                         list = buses, error = busError, train = false, nowMs = System.currentTimeMillis(),
-                        modifier = Modifier.weight(0.8f),
+                        modifier = Modifier.weight(1f),
                     )
                     HomeCard()
                 }
@@ -271,9 +271,9 @@ private fun DisplayScreen(onClose: () -> Unit, onNight: (Boolean) -> Unit) {
 // ---------- Blocos ----------
 
 @Composable
-private fun Card(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
+private fun Card(modifier: Modifier = Modifier, pad: androidx.compose.ui.unit.Dp = 24.dp, content: @Composable ColumnScope.() -> Unit) {
     Surface(shape = RoundedCornerShape(32.dp), color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.72f), modifier = modifier.fillMaxWidth()) {
-        Column(Modifier.padding(24.dp), content = content)
+        Column(Modifier.padding(pad), content = content)
     }
 }
 
@@ -362,16 +362,14 @@ private fun TransitCard(
     nowMs: Long,
     modifier: Modifier,
 ) {
-    Card(modifier) {
+    Card(modifier, pad = 20.dp) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             icon()
             Spacer(Modifier.width(12.dp))
-            Column(Modifier.weight(1f)) {
-                Text(title, style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onSurface, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            }
+            Text(title, style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onSurface, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text("  ·  $subtitle", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
         }
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(8.dp))
         when {
             list == null && !error -> Text("A carregar…", color = MaterialTheme.colorScheme.onSurfaceVariant)
             list.isNullOrEmpty() -> Text(
@@ -383,13 +381,14 @@ private fun TransitCard(
                 val fit = (maxHeight / TrainRowHeight).toInt().coerceIn(1, 5)
                 Column { list.take(fit).forEach { d -> DepartureRow(d, true, nowMs) } }
             }
-            else -> {
-                // Autocarros: 8 próximas partidas em duas colunas de 4.
-                val rows = list.take(8)
+            else -> BoxWithConstraints(Modifier.fillMaxSize()) {
+                // Autocarros: duas colunas, só linhas inteiras (nunca cortadas), até 4 por coluna = 8.
+                val perCol = (maxHeight / BusRowHeight).toInt().coerceIn(1, 4)
+                val rows = list.take(perCol * 2)
                 Row(Modifier.fillMaxWidth()) {
-                    Column(Modifier.weight(1f)) { rows.take(4).forEach { d -> BusRow(d, nowMs) } }
+                    Column(Modifier.weight(1f)) { rows.take(perCol).forEach { d -> BusRow(d, nowMs) } }
                     Spacer(Modifier.width(16.dp))
-                    Column(Modifier.weight(1f)) { rows.drop(4).forEach { d -> BusRow(d, nowMs) } }
+                    Column(Modifier.weight(1f)) { rows.drop(perCol).forEach { d -> BusRow(d, nowMs) } }
                 }
             }
         }
@@ -431,12 +430,13 @@ private fun DepartureRow(d: Departure, train: Boolean, nowMs: Long) {
     }
 }
 
-private val TrainRowHeight = 36.dp
+private val TrainRowHeight = 34.dp
+private val BusRowHeight = 38.dp
 
 @Composable
 private fun BusRow(d: Departure, nowMs: Long) {
     val mins = ((d.etaMs - nowMs) / 60_000L).coerceAtLeast(0)
-    Row(Modifier.fillMaxWidth().padding(vertical = 3.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(Modifier.fillMaxWidth().height(BusRowHeight), verticalAlignment = Alignment.CenterVertically) {
         Box(
             Modifier.width(52.dp).clip(RoundedCornerShape(8.dp)).background(d.badgeColor?.let { Color(it) } ?: Color(0xFFFFC20E)).padding(vertical = 2.dp),
             contentAlignment = Alignment.Center,
@@ -599,7 +599,7 @@ private fun HomeCard() {
     val ctx = LocalContext.current
     var brightnessFor by remember { mutableStateOf<HomeDev?>(null) }
     LaunchedEffect(Unit) { HomeRepo.init(ctx) }
-    Card {
+    Card(pad = 20.dp) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(Icons.Outlined.Home, null, tint = MaterialTheme.colorScheme.primary)
             Spacer(Modifier.width(12.dp))
@@ -609,7 +609,7 @@ private fun HomeCard() {
                 Text(if (onCount == 0) "Tudo desligado" else "$onCount ligado(s)", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(8.dp))
         when (HomeRepo.permitted) {
             false -> Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
@@ -666,11 +666,11 @@ private fun DeviceTile(d: HomeDev, onLong: () -> Unit) {
         color = if (on) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHighest,
         modifier = Modifier
             .width(168.dp)
-            .height(92.dp)
+            .height(76.dp)
             .clip(RoundedCornerShape(24.dp))
             .combinedClickable(onClick = { HomeRepo.toggle(d) }, onLongClick = { if (d.levelPct != null) onLong() }),
     ) {
-        Column(Modifier.padding(14.dp)) {
+        Column(Modifier.padding(horizontal = 14.dp, vertical = 10.dp)) {
             Icon(
                 if (d.isLight) (if (on) Icons.Filled.Lightbulb else Icons.Outlined.Lightbulb) else Icons.Outlined.Power,
                 null,

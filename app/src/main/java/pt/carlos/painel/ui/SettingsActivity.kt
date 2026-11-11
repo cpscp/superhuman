@@ -238,7 +238,7 @@ private fun SettingsScreen(onBack: () -> Unit) {
                     supportingContent = {
                         Text(
                             when {
-                                !prefs.lockScreen -> "Relógio grande, data e bateria por cima do bloqueio do Android"
+                                !prefs.lockScreen -> "Como no Pixel 11: relógio grande, data, tempo e atalho da Casa"
                                 !overlayOk -> "Falta autorizar \"Sobrepor a outras apps\" (toca aqui)"
                                 else -> "Ativo. Deslizar para cima desbloqueia (pede o PIN, se tiveres)"
                             }
@@ -264,7 +264,7 @@ private fun SettingsScreen(onBack: () -> Unit) {
                     headlineContent = { Text("Estilo do relógio") },
                     supportingContent = {
                         SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth().padding(top = 8.dp)) {
-                            val labels = listOf("Grande", "Fino", "Forte")
+                            val labels = listOf("Pixel", "Fino", "Forte")
                             labels.forEachIndexed { i, l ->
                                 SegmentedButton(
                                     selected = prefs.clockStyle == i,

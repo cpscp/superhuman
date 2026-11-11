@@ -31,8 +31,15 @@ private fun gsf(weight: Int) = Font(
 
 val GoogleSansFlex = FontFamily(gsf(400), gsf(500), gsf(600), gsf(700))
 
-/** Google Sans Flex num peso exato (relógio do ecrã de bloqueio: do fino ao forte). */
-fun googleSansFlexAt(weight: Int) = FontFamily(gsf(weight))
+/** Google Sans Flex num peso exato e com cantos arredondados (eixo ROND), como o relógio do Pixel. */
+@OptIn(ExperimentalTextApi::class)
+fun googleSansFlexAt(weight: Int, round: Float = 0f) = FontFamily(
+    Font(
+        resId = R.font.google_sans_flex,
+        weight = FontWeight(weight),
+        variationSettings = FontVariation.Settings(FontVariation.weight(weight), FontVariation.Setting("ROND", round)),
+    )
+)
 
 private fun Typography.withFont(f: FontFamily) = Typography(
     displayLarge = displayLarge.copy(fontFamily = f),

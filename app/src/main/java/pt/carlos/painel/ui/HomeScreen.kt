@@ -404,30 +404,35 @@ private fun PageGrid(
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .pointerInput(editing) { detectTapGestures(onLongPress = { if (!editing) onLongPressEmpty() }) }
     ) {
-        val cw = maxWidth / cols
-        val ch = maxHeight / rows
-        LaunchedEffect(cw, ch) { onCellSize(cw.value, ch.value) }
+        // Células quadradas e do mesmo tamanho em horizontal e vertical: os widgets mantêm a proporção
+        // quando o tablet roda. A grelha fica centrada no espaço disponível.
+        val cell = minOf(maxWidth / cols, maxHeight / rows)
+        val cw = cell
+        val ch = cell
+        LaunchedEffect(cell) { onCellSize(cell.value, cell.value) }
 
-        if (editing) {
-            Canvas(Modifier.fillMaxSize()) {
-                val w = size.width / cols
-                val h = size.height / rows
-                for (x in 0 until cols) for (y in 0 until rows) {
-                    drawRoundRect(
-                        color = outline.copy(alpha = 0.5f),
-                        topLeft = Offset(x * w + 6f, y * h + 6f),
-                        size = Size(w - 12f, h - 12f),
-                        cornerRadius = CornerRadius(24f, 24f),
-                        style = Stroke(width = 2f),
-                    )
+        Box(Modifier.align(Alignment.TopCenter).size(width = cell * cols, height = cell * rows)) {
+            if (editing) {
+                Canvas(Modifier.fillMaxSize()) {
+                    val w = size.width / cols
+                    val h = size.height / rows
+                    for (x in 0 until cols) for (y in 0 until rows) {
+                        drawRoundRect(
+                            color = outline.copy(alpha = 0.5f),
+                            topLeft = Offset(x * w + 6f, y * h + 6f),
+                            size = Size(w - 12f, h - 12f),
+                            cornerRadius = CornerRadius(24f, 24f),
+                            style = Stroke(width = 2f),
+                        )
+                    }
                 }
             }
-        }
 
-        val pageItems = app.layout.items.filter { it.page == page }
-        for (item in pageItems) {
-            key(item.id) {
-                GridItem(item = item, cw = cw, ch = ch, cols = cols, rows = rows, editing = editing, app = app, onEnterEdit = onEnterEdit)
+            val pageItems = app.layout.items.filter { it.page == page }
+            for (item in pageItems) {
+                key(item.id) {
+                    GridItem(item = item, cw = cw, ch = ch, cols = cols, rows = rows, editing = editing, app = app, onEnterEdit = onEnterEdit)
+                }
             }
         }
     }

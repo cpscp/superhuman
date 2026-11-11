@@ -78,6 +78,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.material.icons.outlined.Palette
+import pt.carlos.painel.theme.isPainelDark
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -106,6 +110,9 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.math.roundToInt
 
+/** Abre o editor de ícone a partir de qualquer menu (ecrã, dock, gaveta). */
+val LocalEditIcon = staticCompositionLocalOf<(AppEntry) -> Unit> { {} }
+
 private val OnWallpaper = Color.White
 private val WallpaperShadow = Shadow(color = Color.Black.copy(alpha = 0.45f), offset = Offset(0f, 1.5f), blurRadius = 6f)
 
@@ -130,7 +137,12 @@ fun HomeScreen(
     var editing by remember { mutableStateOf(false) }
     var pickerOpen by remember { mutableStateOf(false) }
     var homeMenu by remember { mutableStateOf(false) }
+    var iconEdit by remember { mutableStateOf<AppEntry?>(null) }
     val pager = rememberPagerState { layout.pages }
+
+    // Ícones temáticos acompanham o tema claro/escuro.
+    val dark = isPainelDark(prefs)
+    LaunchedEffect(dark) { repo.setDark(dark) }
 
     // Botão Home: fecha tudo e volta à primeira página.
     LaunchedEffect(homeTick) {
@@ -167,6 +179,7 @@ fun HomeScreen(
 
     fun openDrawer(search: Boolean) { drawerSearch = search; drawerOpen = true }
 
+    CompositionLocalProvider(LocalEditIcon provides { e -> iconEdit = e }) {
     Box(Modifier.fillMaxSize()) {
         Column(
             Modifier
@@ -260,7 +273,7 @@ fun HomeScreen(
                     colors = rowColors,
                     modifier = Modifier.clickable {
                         homeMenu = false
-                        runCatching { ctx.startActivity(Intent.createChooser(Intent(Intent.ACTION_SET_WALLPAPER), "Papel de parede")) }
+                        ctx.startActivity(Intent(ctx, WallpaperActivity::class.java))
                     },
                 )
                 ListItem(
@@ -272,6 +285,9 @@ fun HomeScreen(
                 Spacer(Modifier.height(24.dp))
             }
         }
+
+        iconEdit?.let { e -> IconEditDialog(entry = e, app = app, onDismiss = { iconEdit = null }) }
+    }
     }
 }
 
@@ -516,6 +532,12 @@ private fun HomeAppIcon(entry: AppEntry, app: PainelApp, item: Item, onEnterEdit
                 leadingIcon = { Icon(Icons.Outlined.Close, null) },
                 onClick = { menu = false; app.layout.remove(item.id) },
             )
+            val editIcon = LocalEditIcon.current
+            DropdownMenuItem(
+                text = { Text("Editar ícone") },
+                leadingIcon = { Icon(Icons.Outlined.Palette, null) },
+                onClick = { menu = false; editIcon(entry) },
+            )
             DropdownMenuItem(
                 text = { Text("Informações da app") },
                 leadingIcon = { Icon(Icons.Outlined.Info, null) },
@@ -638,7 +660,9 @@ private fun Dock(app: PainelApp, onOpenDrawer: () -> Unit) {
                         .combinedClickable(onClick = { app.apps.launch(e) }, onLongClick = { menu = true }),
                 )
                 DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
+                    val editIcon = LocalEditIcon.current
                     DropdownMenuItem(text = { Text("Tirar da dock") }, onClick = { menu = false; app.layout.dockRemove(dk) })
+                    DropdownMenuItem(text = { Text("Editar ícone") }, onClick = { menu = false; editIcon(e) })
                     DropdownMenuItem(text = { Text("Informações da app") }, onClick = { menu = false; app.apps.details(e) })
                 }
             }

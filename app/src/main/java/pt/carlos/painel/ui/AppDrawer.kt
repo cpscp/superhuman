@@ -30,6 +30,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AddToHomeScreen
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.VisibilityOff
@@ -199,6 +200,12 @@ private fun DrawerApp(e: AppEntry, app: PainelApp, onLaunch: (AppEntry) -> Unit,
                 text = { Text(if (inDock) "Tirar da dock" else "Fixar na dock") },
                 leadingIcon = { Icon(Icons.Outlined.PushPin, null) },
                 onClick = { menu = false; if (inDock) app.layout.dockRemove(e.key) else app.layout.dockAdd(e.key) },
+            )
+            val editIcon = LocalEditIcon.current
+            DropdownMenuItem(
+                text = { Text("Editar ícone") },
+                leadingIcon = { Icon(Icons.Outlined.Palette, null) },
+                onClick = { menu = false; editIcon(e) },
             )
             DropdownMenuItem(
                 text = { Text("Ocultar app") },

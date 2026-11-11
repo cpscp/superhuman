@@ -31,6 +31,9 @@ private fun gsf(weight: Int) = Font(
 
 val GoogleSansFlex = FontFamily(gsf(400), gsf(500), gsf(600), gsf(700))
 
+/** Google Sans Flex num peso exato (relógio do ecrã de bloqueio: do fino ao forte). */
+fun googleSansFlexAt(weight: Int) = FontFamily(gsf(weight))
+
 private fun Typography.withFont(f: FontFamily) = Typography(
     displayLarge = displayLarge.copy(fontFamily = f),
     displayMedium = displayMedium.copy(fontFamily = f),

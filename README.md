@@ -17,6 +17,9 @@ Cada nova versão instala por cima da anterior (mesma chave), sem perder a confi
 - Widgets de qualquer app (Material You Widgets, Calendar, YouTube…): adicionar, mover, redimensionar.
 - Gaveta de apps com pesquisa (deslizar para cima ou barra "Pesquisar apps"); ocultar, fixar na dock, desinstalar.
 - Definições próprias: tema claro/escuro/sistema, cores do papel de parede ou cor principal, grelha, apps ocultas.
+- Ícones redondos como no Pixel (ou squircle/quadrado), ícones temáticos Material You, e editar nome e imagem de cada app.
+- Papéis de parede originais ao estilo Pixel (5 estilos × 6 paletas), gerados no tablet, para o ecrã inicial e/ou de bloqueio.
+- Ecrã de bloqueio do Painel: relógio grande (3 estilos), data e bateria; deslizar para cima desbloqueia.
 - Desempenho: R8 + encolhimento de recursos, perfis de arranque (ProfileInstaller), sem serviços em segundo plano.
 
 Gestos: toque longo num espaço vazio → menu (Widgets, Editar, Papel de parede, Definições);

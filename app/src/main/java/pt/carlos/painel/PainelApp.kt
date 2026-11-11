@@ -5,6 +5,7 @@ import pt.carlos.painel.data.AppsRepository
 import pt.carlos.painel.data.LayoutStore
 import pt.carlos.painel.data.Prefs
 import pt.carlos.painel.widgets.PainelHost
+import pt.carlos.painel.lock.LockController
 
 /** Objetos partilhados por todo o Painel (um só processo, carregados uma vez). */
 class PainelApp : Application() {
@@ -22,8 +23,9 @@ class PainelApp : Application() {
         instance = this
         prefs = Prefs(this)
         layout = LayoutStore(this)
-        apps = AppsRepository(this)
+        apps = AppsRepository(this, prefs)
         widgetHost = PainelHost(this)
+        LockController.sync(this)
     }
 
     companion object {

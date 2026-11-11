@@ -52,6 +52,40 @@ class Prefs(ctx: Context) {
         sp.edit().putStringSet("hiddenApps", _hiddenApps).apply()
     }
 
+
+    private var _iconShape by mutableStateOf(sp.getInt("iconShape", 0))
+    /** 0 = círculo (Pixel), 1 = squircle, 2 = quadrado arredondado */
+    var iconShape: Int
+        get() = _iconShape
+        set(v) { _iconShape = v; sp.edit().putInt("iconShape", v).apply() }
+
+    private var _themedIcons by mutableStateOf(sp.getBoolean("themedIcons", false))
+    var themedIcons: Boolean
+        get() = _themedIcons
+        set(v) { _themedIcons = v; sp.edit().putBoolean("themedIcons", v).apply() }
+
+    private var _lockScreen by mutableStateOf(sp.getBoolean("lockScreen", false))
+    var lockScreen: Boolean
+        get() = _lockScreen
+        set(v) { _lockScreen = v; sp.edit().putBoolean("lockScreen", v).apply() }
+
+    private var _clockStyle by mutableStateOf(sp.getInt("clockStyle", 0))
+    /** 0 = grande (duas linhas), 1 = fino, 2 = forte */
+    var clockStyle: Int
+        get() = _clockStyle
+        set(v) { _clockStyle = v; sp.edit().putInt("clockStyle", v).apply() }
+
+    private var _labels by mutableStateOf(readLabels())
+    val labelOverrides: Map<String, String> get() = _labels
+    private fun readLabels(): Map<String, String> = runCatching {
+        val o = org.json.JSONObject(sp.getString("labels", "{}") ?: "{}")
+        o.keys().asSequence().associateWith { o.getString(it) }
+    }.getOrDefault(emptyMap())
+    fun setLabel(key: String, label: String?) {
+        _labels = if (label.isNullOrBlank()) _labels - key else _labels + (key to label)
+        sp.edit().putString("labels", org.json.JSONObject(_labels).toString()).apply()
+    }
+
     var dockSeeded: Boolean
         get() = sp.getBoolean("dockSeeded", false)
         set(v) { sp.edit().putBoolean("dockSeeded", v).apply() }

@@ -3,6 +3,8 @@
 
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
+    <!-- Permite mostrar o ecrã de bloqueio do Painel quando o ecrã se apaga dentro de outra app. -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <!-- Um launcher precisa de ver todas as apps que se podem abrir. -->
     <queries>
@@ -40,6 +42,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.LockScreenActivity"
+            android:exported="false"
+            android:showWhenLocked="true"
+            android:launchMode="singleInstance"
+            android:taskAffinity="pt.carlos.painel.lock"
+            android:excludeFromRecents="true"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
+            android:theme="@style/Theme.Painel.Wallpaper" />
+
+        <activity
+            android:name=".ui.WallpaperActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Painel" />
 
         <activity
             android:name=".ui.SettingsActivity"

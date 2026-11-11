@@ -6,6 +6,7 @@ import android.app.role.RoleManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.net.Uri
 import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -58,6 +59,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import pt.carlos.painel.PainelApp
+import pt.carlos.painel.lock.LockController
 import pt.carlos.painel.theme.PainelTheme
 import kotlin.math.roundToInt
 
@@ -151,7 +153,7 @@ private fun SettingsScreen(onBack: () -> Unit) {
                     colors = rowColors,
                     headlineContent = { Text("Cores do papel de parede") },
                     supportingContent = { Text("Material You: as cores seguem o papel de parede") },
-                    trailingContent = { Switch(checked = prefs.dynamicColor, onCheckedChange = { prefs.dynamicColor = it }) },
+                    trailingContent = { Switch(checked = prefs.dynamicColor, onCheckedChange = { prefs.dynamicColor = it; app.apps.restyle() }) },
                 )
             }
             if (!prefs.dynamicColor) {
@@ -171,7 +173,7 @@ private fun SettingsScreen(onBack: () -> Unit) {
                                                 if (selected) Modifier.border(3.dp, MaterialTheme.colorScheme.onSurface, CircleShape)
                                                 else Modifier
                                             )
-                                            .clickable { prefs.seed = c }
+                                            .clickable { prefs.seed = c; app.apps.restyle() }
                                     )
                                 }
                             }
@@ -183,9 +185,94 @@ private fun SettingsScreen(onBack: () -> Unit) {
                 ListItem(
                     colors = rowColors,
                     headlineContent = { Text("Papel de parede") },
-                    supportingContent = { Text("Escolher imagem do sistema") },
-                    modifier = Modifier.clickable {
-                        runCatching { ctx.startActivity(Intent.createChooser(Intent(Intent.ACTION_SET_WALLPAPER), "Papel de parede")) }
+                    supportingContent = { Text("Coleção ao estilo Pixel ou as tuas fotos") },
+                    modifier = Modifier.clickable { ctx.startActivity(Intent(ctx, WallpaperActivity::class.java)) },
+                )
+            }
+
+
+            item { Section("Ícones") }
+            item {
+                ListItem(
+                    colors = rowColors,
+                    headlineContent = { Text("Forma dos ícones") },
+                    supportingContent = {
+                        SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth().padding(top = 8.dp)) {
+                            val labels = listOf("Círculo", "Squircle", "Quadrado")
+                            labels.forEachIndexed { i, l ->
+                                SegmentedButton(
+                                    selected = prefs.iconShape == i,
+                                    onClick = { prefs.iconShape = i; app.apps.restyle() },
+                                    shape = SegmentedButtonDefaults.itemShape(index = i, count = labels.size),
+                                ) { Text(l) }
+                            }
+                        }
+                    },
+                )
+            }
+            item {
+                ListItem(
+                    colors = rowColors,
+                    headlineContent = { Text("Ícones temáticos") },
+                    supportingContent = { Text("Ícones nas cores do tema, como no Pixel (apps que o suportam)") },
+                    trailingContent = { Switch(checked = prefs.themedIcons, onCheckedChange = { prefs.themedIcons = it; app.apps.restyle() }) },
+                )
+            }
+            item {
+                ListItem(
+                    colors = rowColors,
+                    headlineContent = { Text("Nome e imagem de cada app") },
+                    supportingContent = { Text("Toque longo num ícone › Editar ícone") },
+                )
+            }
+
+            item { Section("Ecrã de bloqueio") }
+            item {
+                var overlayOk by remember { mutableStateOf(Settings.canDrawOverlays(ctx)) }
+                val overlayLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                    overlayOk = Settings.canDrawOverlays(ctx)
+                }
+                ListItem(
+                    colors = rowColors,
+                    headlineContent = { Text("Ecrã de bloqueio do Painel") },
+                    supportingContent = {
+                        Text(
+                            when {
+                                !prefs.lockScreen -> "Relógio grande, data e bateria por cima do bloqueio do Android"
+                                !overlayOk -> "Falta autorizar \"Sobrepor a outras apps\" (toca aqui)"
+                                else -> "Ativo. Deslizar para cima desbloqueia (pede o PIN, se tiveres)"
+                            }
+                        )
+                    },
+                    trailingContent = {
+                        Switch(checked = prefs.lockScreen, onCheckedChange = { on ->
+                            prefs.lockScreen = on
+                            LockController.sync(ctx)
+                            if (on && !Settings.canDrawOverlays(ctx)) {
+                                overlayLauncher.launch(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${ctx.packageName}")))
+                            }
+                        })
+                    },
+                    modifier = Modifier.clickable(enabled = prefs.lockScreen && !overlayOk) {
+                        overlayLauncher.launch(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${ctx.packageName}")))
+                    },
+                )
+            }
+            item {
+                ListItem(
+                    colors = rowColors,
+                    headlineContent = { Text("Estilo do relógio") },
+                    supportingContent = {
+                        SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth().padding(top = 8.dp)) {
+                            val labels = listOf("Grande", "Fino", "Forte")
+                            labels.forEachIndexed { i, l ->
+                                SegmentedButton(
+                                    selected = prefs.clockStyle == i,
+                                    onClick = { prefs.clockStyle = i },
+                                    shape = SegmentedButtonDefaults.itemShape(index = i, count = labels.size),
+                                ) { Text(l) }
+                            }
+                        }
                     },
                 )
             }

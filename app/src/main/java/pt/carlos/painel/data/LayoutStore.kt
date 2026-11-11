@@ -19,10 +19,14 @@ data class Item(
     val h: Int,
     val app: String = "",
     val widgetId: Int = -1,
+    /** Pasta: apps lá dentro e nome. */
+    val folderApps: List<String> = emptyList(),
+    val name: String = "",
 ) {
     companion object {
         const val APP = 0
         const val WIDGET = 1
+        const val FOLDER = 2
     }
 }
 
@@ -50,6 +54,8 @@ class LayoutStore(ctx: Context) {
                         id = j.getLong("id"), kind = j.getInt("kind"), page = j.getInt("page"),
                         x = j.getInt("x"), y = j.getInt("y"), w = j.getInt("w"), h = j.getInt("h"),
                         app = j.optString("app", ""), widgetId = j.optInt("widgetId", -1),
+                        folderApps = j.optJSONArray("apps")?.let { a -> (0 until a.length()).map { a.getString(it) } } ?: emptyList(),
+                        name = j.optString("name", ""),
                     )
                 )
             }
@@ -65,6 +71,7 @@ class LayoutStore(ctx: Context) {
                 JSONObject().put("id", it.id).put("kind", it.kind).put("page", it.page)
                     .put("x", it.x).put("y", it.y).put("w", it.w).put("h", it.h)
                     .put("app", it.app).put("widgetId", it.widgetId)
+                    .put("apps", JSONArray(it.folderApps)).put("name", it.name)
             )
         }
         val o = JSONObject().put("pages", pages).put("items", arr).put("dock", JSONArray(dock.toList()))
@@ -109,6 +116,50 @@ class LayoutStore(ctx: Context) {
     }
 
     fun remove(id: Long) { items.removeAll { it.id == id }; save() }
+
+    /** Elemento que ocupa a célula (x, y) da página, se houver. */
+    fun itemAt(page: Int, x: Int, y: Int, ignore: Long = -1): Item? =
+        items.firstOrNull { it.id != ignore && it.page == page && x >= it.x && x < it.x + it.w && y >= it.y && y < it.y + it.h }
+
+    // ---- Pastas ----
+
+    /** Largar uma app em cima de outra cria uma pasta no lugar da segunda. */
+    fun createFolder(target: Item, dragged: Item) {
+        val i = items.indexOfFirst { it.id == target.id }
+        if (i < 0) return
+        items[i] = target.copy(kind = Item.FOLDER, app = "", folderApps = listOf(target.app, dragged.app), name = "Pasta")
+        items.removeAll { it.id == dragged.id }
+        save()
+    }
+
+    fun addToFolder(folderId: Long, key: String, removeItemId: Long? = null) {
+        val i = items.indexOfFirst { it.id == folderId }
+        if (i < 0) return
+        val f = items[i]
+        if (key !in f.folderApps) items[i] = f.copy(folderApps = f.folderApps + key)
+        if (removeItemId != null) items.removeAll { it.id == removeItemId }
+        save()
+    }
+
+    /** Tirar uma app da pasta: volta ao ecrã; uma pasta com uma só app passa a ser essa app. */
+    fun removeFromFolder(folderId: Long, key: String, cols: Int, rows: Int) {
+        val i = items.indexOfFirst { it.id == folderId }
+        if (i < 0) return
+        val f = items[i]
+        val rest = f.folderApps - key
+        when (rest.size) {
+            0 -> items.removeAt(i)
+            1 -> items[i] = f.copy(kind = Item.APP, app = rest.first(), folderApps = emptyList(), name = "")
+            else -> items[i] = f.copy(folderApps = rest)
+        }
+        save()
+        add(Item.APP, key, -1, 1, 1, f.page, cols, rows)
+    }
+
+    fun renameFolder(folderId: Long, name: String) {
+        val i = items.indexOfFirst { it.id == folderId }
+        if (i >= 0) { items[i] = items[i].copy(name = name.ifBlank { "Pasta" }); save() }
+    }
 
     fun addPage(): Int { pages += 1; save(); return pages - 1 }
 

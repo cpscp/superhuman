@@ -113,6 +113,9 @@ import kotlin.math.roundToInt
 /** Abre o editor de ícone a partir de qualquer menu (ecrã, dock, gaveta). */
 val LocalEditIcon = staticCompositionLocalOf<(AppEntry) -> Unit> { {} }
 
+/** Abre uma pasta do ecrã inicial. */
+val LocalOpenFolder = staticCompositionLocalOf<(Long) -> Unit> { {} }
+
 private val OnWallpaper = Color.White
 private val WallpaperShadow = Shadow(color = Color.Black.copy(alpha = 0.45f), offset = Offset(0f, 1.5f), blurRadius = 6f)
 
@@ -138,6 +141,7 @@ fun HomeScreen(
     var pickerOpen by remember { mutableStateOf(false) }
     var homeMenu by remember { mutableStateOf(false) }
     var iconEdit by remember { mutableStateOf<AppEntry?>(null) }
+    var openFolder by remember { mutableStateOf<Long?>(null) }
     val pager = rememberPagerState { layout.pages }
 
     // Ícones temáticos acompanham o tema claro/escuro.
@@ -147,7 +151,7 @@ fun HomeScreen(
     // Botão Home: fecha tudo e volta à primeira página.
     LaunchedEffect(homeTick) {
         if (homeTick > 0) {
-            drawerOpen = false; pickerOpen = false; homeMenu = false
+            drawerOpen = false; pickerOpen = false; homeMenu = false; openFolder = null
             if (editing) { editing = false; layout.trimPages() }
             pager.animateScrollToPage(0)
         }
@@ -171,6 +175,7 @@ fun HomeScreen(
 
     BackHandler {
         when {
+            openFolder != null -> openFolder = null
             pickerOpen -> pickerOpen = false
             drawerOpen -> drawerOpen = false
             editing -> { editing = false; layout.trimPages() }
@@ -179,7 +184,10 @@ fun HomeScreen(
 
     fun openDrawer(search: Boolean) { drawerSearch = search; drawerOpen = true }
 
-    CompositionLocalProvider(LocalEditIcon provides { e -> iconEdit = e }) {
+    CompositionLocalProvider(
+        LocalEditIcon provides { e -> iconEdit = e },
+        LocalOpenFolder provides { id -> openFolder = id },
+    ) {
     Box(Modifier.fillMaxSize()) {
         Column(
             Modifier
@@ -286,6 +294,12 @@ fun HomeScreen(
             }
         }
 
+        openFolder?.let { id ->
+            val folder = layout.items.firstOrNull { it.id == id && it.kind == Item.FOLDER }
+            LaunchedEffect(folder == null) { if (folder == null) openFolder = null }
+            if (folder != null) FolderDialog(item = folder, app = app, onDismiss = { openFolder = null })
+        }
+
         iconEdit?.let { e -> IconEditDialog(entry = e, app = app, onDismiss = { iconEdit = null }) }
     }
     }
@@ -341,7 +355,10 @@ private fun EditBar(onWidgets: () -> Unit, onNewPage: () -> Unit, onSettings: ()
         modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp).fillMaxWidth(),
     ) {
         Row(Modifier.padding(horizontal = 20.dp, vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text("Editar ecrã inicial", style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
+            Column(Modifier.weight(1f)) {
+                Text("Editar ecrã inicial", style = MaterialTheme.typography.titleMedium)
+                Text("Arrasta uma app para cima de outra para criar uma pasta", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
             TextButton(onClick = onWidgets) { Text("Widgets") }
             TextButton(onClick = onNewPage) { Text("Nova página") }
             TextButton(onClick = onSettings) { Text("Definições") }
@@ -437,8 +454,13 @@ private fun GridItem(
                         onDragEnd = {
                             val nx = ((x * cwPx + drag.x) / cwPx).roundToInt()
                             val ny = ((y * chPx + drag.y) / chPx).roundToInt()
-                            if (app.layout.isFree(item.page, nx, ny, w, h, cols, rows, item.id)) {
-                                app.layout.update(item.copy(x = nx, y = ny))
+                            // Largar uma app em cima de outra app cria uma pasta; em cima de uma pasta, junta-a.
+                            val target = if (item.kind == Item.APP) app.layout.itemAt(item.page, nx, ny, item.id) else null
+                            when {
+                                target != null && target.kind == Item.APP -> app.layout.createFolder(target, item)
+                                target != null && target.kind == Item.FOLDER -> app.layout.addToFolder(target.id, item.app, item.id)
+                                app.layout.isFree(item.page, nx, ny, w, h, cols, rows, item.id) ->
+                                    app.layout.update(item.copy(x = nx, y = ny))
                             }
                             drag = Offset.Zero
                         },
@@ -453,6 +475,10 @@ private fun GridItem(
                 if (entry != null) {
                     HomeAppIcon(entry = entry, app = app, item = item, onEnterEdit = onEnterEdit)
                 }
+            }
+            Item.FOLDER -> {
+                val open = LocalOpenFolder.current
+                FolderIcon(item = item, app = app, onOpen = { open(item.id) }, onLongPress = onEnterEdit)
             }
             else -> WidgetView(
                 widgetId = item.widgetId,

@@ -133,8 +133,8 @@ class HomeActivity : ComponentActivity() {
 
     private fun spanFor(info: AppWidgetProviderInfo): Pair<Int, Int> {
         val d = resources.displayMetrics.density
-        val cols = app.prefs.columns
-        val rows = app.prefs.rows
+        val cols = app.layout.cols
+        val rows = app.layout.rows
         val w = if (info.targetCellWidth > 0) info.targetCellWidth else ceil((info.minWidth / d) / cellW).toInt()
         val h = if (info.targetCellHeight > 0) info.targetCellHeight else ceil((info.minHeight / d) / cellH).toInt()
         return w.coerceIn(1, cols) to h.coerceIn(1, rows)
@@ -143,7 +143,7 @@ class HomeActivity : ComponentActivity() {
     private fun addPending() {
         val info = pendingInfo ?: return
         val (w, h) = spanFor(info)
-        app.layout.add(Item.WIDGET, "", pendingId, w, h, pendingPage, app.prefs.columns, app.prefs.rows)
+        app.layout.add(Item.WIDGET, "", pendingId, w, h, pendingPage, app.layout.cols, app.layout.rows)
         pendingId = -1; pendingInfo = null
     }
 

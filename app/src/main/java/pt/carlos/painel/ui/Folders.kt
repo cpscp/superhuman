@@ -149,7 +149,7 @@ fun FolderDialog(item: Item, app: PainelApp, onDismiss: () -> Unit) {
                                     leadingIcon = { Icon(Icons.Outlined.Logout, null) },
                                     onClick = {
                                         menu = false
-                                        app.layout.removeFromFolder(item.id, e.key, app.prefs.columns, app.prefs.rows)
+                                        app.layout.removeFromFolder(item.id, e.key, app.layout.cols, app.layout.rows)
                                         if (apps.size <= 2) onDismiss()
                                     },
                                 )

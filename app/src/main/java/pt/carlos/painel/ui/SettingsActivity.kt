@@ -418,28 +418,21 @@ private fun SettingsScreen(onBack: () -> Unit) {
             item {
                 ListItem(
                     colors = rowColors,
-                    headlineContent = { Text("Colunas: ${prefs.columns}") },
+                    headlineContent = { Text("Tamanho da grelha") },
                     supportingContent = {
-                        Slider(
-                            value = prefs.columns.toFloat(),
-                            onValueChange = { prefs.columns = it.roundToInt() },
-                            valueRange = 4f..8f,
-                            steps = 3,
-                        )
-                    },
-                )
-            }
-            item {
-                ListItem(
-                    colors = rowColors,
-                    headlineContent = { Text("Linhas: ${prefs.rows}") },
-                    supportingContent = {
-                        Slider(
-                            value = prefs.rows.toFloat(),
-                            onValueChange = { prefs.rows = it.roundToInt() },
-                            valueRange = 3f..6f,
-                            steps = 2,
-                        )
+                        Column {
+                            Text("Colunas e linhas ajustam-se sozinhas ao ecrã, na horizontal e na vertical (cada uma com a sua arrumação).")
+                            SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth().padding(top = 8.dp)) {
+                                val labels = listOf("Grande", "Média", "Compacta")
+                                labels.forEachIndexed { i, l ->
+                                    SegmentedButton(
+                                        selected = prefs.gridDensity == i,
+                                        onClick = { prefs.gridDensity = i },
+                                        shape = SegmentedButtonDefaults.itemShape(index = i, count = labels.size),
+                                    ) { Text(l) }
+                                }
+                            }
+                        }
                     },
                 )
             }

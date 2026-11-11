@@ -93,6 +93,7 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -263,7 +264,7 @@ fun HomeScreen(
                 focusSearch = drawerSearch,
                 onClose = { drawerOpen = false },
                 onAddToHome = { e ->
-                    layout.add(Item.APP, e.key, -1, 1, 1, pager.currentPage, prefs.columns, prefs.rows)
+                    layout.add(Item.APP, e.key, -1, 1, 1, pager.currentPage, layout.cols, layout.rows)
                     drawerOpen = false
                 },
             )
@@ -395,8 +396,7 @@ private fun PageGrid(
     onLongPressEmpty: () -> Unit,
     onCellSize: (Float, Float) -> Unit,
 ) {
-    val cols = app.prefs.columns
-    val rows = app.prefs.rows
+    val landscape = LocalConfiguration.current.let { it.screenWidthDp > it.screenHeightDp }
     val outline = MaterialTheme.colorScheme.outlineVariant
     BoxWithConstraints(
         Modifier
@@ -404,14 +404,17 @@ private fun PageGrid(
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .pointerInput(editing) { detectTapGestures(onLongPress = { if (!editing) onLongPressEmpty() }) }
     ) {
-        // Células quadradas e do mesmo tamanho em horizontal e vertical: os widgets mantêm a proporção
-        // quando o tablet roda. A grelha fica centrada no espaço disponível.
-        val cell = minOf(maxWidth / cols, maxHeight / rows)
-        val cw = cell
-        val ch = cell
-        LaunchedEffect(cell) { onCellSize(cell.value, cell.value) }
+        // Grelha responsiva: colunas e linhas calculadas pelo tamanho do ecrã em cada orientação,
+        // com células quase quadradas que ocupam o ecrã todo (como num tablet normal).
+        val target = app.prefs.cellTargetDp
+        val cols = (maxWidth.value / target).roundToInt().coerceIn(3, 12)
+        val rows = (maxHeight.value / target).roundToInt().coerceIn(3, 12)
+        val cw = maxWidth / cols
+        val ch = maxHeight / rows
+        LaunchedEffect(landscape, cols, rows) { app.layout.setGrid(landscape, cols, rows) }
+        LaunchedEffect(cw, ch) { onCellSize(cw.value, ch.value) }
 
-        Box(Modifier.align(Alignment.TopCenter).size(width = cell * cols, height = cell * rows)) {
+        Box(Modifier.fillMaxSize()) {
             if (editing) {
                 Canvas(Modifier.fillMaxSize()) {
                     val w = size.width / cols
@@ -521,8 +524,8 @@ private fun GridItem(
             )
             Surface(
                 onClick = {
-                    if (item.kind == Item.WIDGET) runCatching { app.widgetHost.deleteAppWidgetId(item.widgetId) }
                     app.layout.remove(item.id)
+                    if (item.kind == Item.WIDGET && !app.layout.usesWidget(item.widgetId)) runCatching { app.widgetHost.deleteAppWidgetId(item.widgetId) }
                 },
                 shape = CircleShape,
                 color = MaterialTheme.colorScheme.errorContainer,

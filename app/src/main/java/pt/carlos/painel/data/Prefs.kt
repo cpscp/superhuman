@@ -35,6 +35,13 @@ class Prefs(ctx: Context) {
         get() = _rows
         set(v) { _rows = v; sp.edit().putInt("rows", v).apply() }
 
+    private var _gridDensity by mutableStateOf(sp.getInt("gridDensity", 1))
+    /** 0 = grande, 1 = média, 2 = compacta (tamanho alvo de cada célula da grelha). */
+    var gridDensity: Int
+        get() = _gridDensity
+        set(v) { _gridDensity = v; sp.edit().putInt("gridDensity", v).apply() }
+    val cellTargetDp: Float get() = when (gridDensity) { 0 -> 150f; 2 -> 100f; else -> 120f }
+
     private var _showLabels by mutableStateOf(sp.getBoolean("showLabels", true))
     var showLabels: Boolean
         get() = _showLabels

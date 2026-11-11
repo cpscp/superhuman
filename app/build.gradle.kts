@@ -12,8 +12,8 @@ android {
         applicationId = "pt.carlos.painel"
         minSdk = 33          // Lenovo Tab M10 Plus Gen 3 corre Android 13
         targetSdk = 35
-        versionCode = 20
-        versionName = "0.20"
+        versionCode = 21
+        versionName = "0.21"
     }
 
     signingConfigs {

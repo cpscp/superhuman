@@ -24,6 +24,7 @@ import com.google.home.matter.standard.LevelControlTrait
 import com.google.home.matter.standard.OnOff
 import com.google.home.matter.standard.OnOffLightDevice
 import com.google.home.matter.standard.OnOffPluginUnitDevice
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -48,7 +49,23 @@ data class HomeDev(
  * ligar/desligar e brilho, com o estado em tempo real.
  */
 object HomeRepo {
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    /** Nenhum erro do Google Home pode fechar o Painel: fica registado e aparece no mosaico. */
+    private val handler = CoroutineExceptionHandler { _, e -> fail("Erro interno", e) }
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main + handler)
+    private var started = false
+    private var appCtx: Context? = null
+
+    private fun fail(where: String, e: Throwable) {
+        error = "$where: ${e.javaClass.simpleName}${e.message?.let { " – $it" } ?: ""}"
+        if (permitted == null) permitted = false
+        appCtx?.let { c ->
+            runCatching {
+                java.io.File(c.filesDir, "ultimo-erro.txt").writeText(
+                    java.time.LocalDateTime.now().toString() + " (Google Home)\n" + android.util.Log.getStackTraceString(e).take(6000)
+                )
+            }
+        }
+    }
     private var client: HomeClient? = null
     private var devicesJob: Job? = null
     private val deviceJobs = HashMap<String, Job>()
@@ -76,14 +93,31 @@ object HomeRepo {
         ),
     )
 
-    fun client(ctx: Context): HomeClient =
-        client ?: Home.getClient(ctx.applicationContext, HomeConfig(coroutineContext = Dispatchers.IO, factoryRegistry = registry))
-            .also { client = it; watchPermission(it) }
+    fun client(ctx: Context): HomeClient? {
+        client?.let { return it }
+        appCtx = ctx.applicationContext
+        if (!started) {
+            started = true
+            // Se nada responder em 8 s, mostra o botão em vez de ficar à espera.
+            scope.launch {
+                delay(8_000)
+                if (permitted == null) {
+                    permitted = false
+                    if (error == null) error = "Sem resposta do Google Home. Toca em Ligar para tentar outra vez."
+                }
+            }
+        }
+        return runCatching {
+            Home.getClient(ctx.applicationContext, HomeConfig(coroutineContext = Dispatchers.IO, factoryRegistry = registry))
+        }.onSuccess { client = it; watchPermission(it) }
+            .onFailure { fail("Não foi possível iniciar o Google Home", it) }
+            .getOrNull()
+    }
 
     /** Tem de ser chamado no onCreate da atividade que vai pedir autorização. */
     fun register(ctx: Context, caller: ActivityResultCaller) {
-        runCatching { client(ctx).registerActivityResultCallerForPermissions(caller) }
-            .onFailure { error = it.message }
+        runCatching { client(ctx)?.registerActivityResultCallerForPermissions(caller) }
+            .onFailure { fail("Registo da autorização", it) }
     }
 
     private fun watchPermission(c: HomeClient) {
@@ -100,21 +134,14 @@ object HomeRepo {
                         else -> Unit
                     }
                 }
-            }.onFailure { error = it.message; permitted = false }
-        }
-        // Se o estado não chegar em 8 s, mostra o botão em vez de ficar à espera.
-        scope.launch {
-            delay(8_000)
-            if (permitted == null) {
-                permitted = false
-                if (error == null) error = "Sem resposta do Google Home. Toca em Ligar para tentar outra vez."
-            }
+            }.onFailure { fail("Estado da autorização", it) }
         }
     }
 
     /** Abre o ecrã da Google para escolheres a casa e os dispositivos que o Painel pode controlar. */
     fun requestPermission(ctx: Context) {
-        val c = client(ctx)
+        val c = client(ctx) ?: return
+        error = null
         scope.launch {
             runCatching {
                 val r = c.requestPermissions(ForcePermissionFlow.FORCE_LAUNCH)
@@ -123,7 +150,7 @@ object HomeRepo {
                     PermissionsResultStatus.CANCELLED -> error = "Autorização cancelada."
                     else -> error = r.errorMessage ?: "Não foi possível autorizar."
                 }
-            }.onFailure { error = it.message }
+            }.onFailure { fail("Pedido de autorização", it) }
         }
     }
 

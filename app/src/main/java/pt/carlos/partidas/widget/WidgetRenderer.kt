@@ -18,7 +18,7 @@ import pt.carlos.partidas.ui.MainActivity
 import pt.carlos.partidas.ui.WidgetConfigActivity
 
 /**
- * Widget = imagem do quadro desenhada pelo [BoardPainter] (Inter, tamanho real do widget)
+ * Widget = imagem do quadro desenhada pelo [BoardPainter] (Google Sans Flex, tamanho real do widget)
  * + área tocável do botão ↻. Tocar no resto abre o quadro na app.
  */
 object WidgetRenderer {

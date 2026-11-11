@@ -31,7 +31,7 @@ import kotlin.math.min
 import kotlin.math.roundToInt
 
 /**
- * Desenha o quadro do Glass TV em Bitmaps, com a Inter
+ * Desenha o quadro do Glass TV em Bitmaps, com a Google Sans Flex
  * (o launcher ignora fontes da app em widgets).
  *  - [background]: quadro + coluna de informação (e a mensagem, se não houver partidas)
  *  - [tile]: um mosaico; os mosaicos vão numa grelha com scroll por cima do fundo
@@ -71,10 +71,10 @@ object BoardPainter {
     @Volatile private var fonts: Fonts? = null
 
     private fun fonts(ctx: Context): Fonts = fonts ?: Fonts(
-        ctx.resources.getFont(R.font.inter_regular),
-        ctx.resources.getFont(R.font.inter_medium),
-        ctx.resources.getFont(R.font.inter_semibold),
-        ctx.resources.getFont(R.font.inter_bold)
+        ctx.resources.getFont(R.font.gsf_regular),
+        ctx.resources.getFont(R.font.gsf_medium),
+        ctx.resources.getFont(R.font.gsf_semibold),
+        ctx.resources.getFont(R.font.gsf_bold)
     ).also { fonts = it }
 
     private fun scale(ctx: Context) = min(ctx.resources.displayMetrics.density, 2.5f)
@@ -102,23 +102,11 @@ object BoardPainter {
         val col = board?.let { BoardLook.colors(it.mode) } ?: BoardLook.CP
         val fg = col.fg
 
-        // ---------- fundo: cor da marca + vidro ----------
-        val outer = RectF(0.5f, 0.5f, wDp - 0.5f, hDp - 0.5f)
-        val clip = Path().apply { addRoundRect(outer, 26f, 26f, Path.Direction.CW) }
-        cv.save()
-        cv.clipPath(clip)
+        // ---------- fundo: cor sólida da marca (Material 3, sem vidro) ----------
+        val outer = RectF(0f, 0f, wDp, hDp)
         val p = Paint(Paint.ANTI_ALIAS_FLAG)
-        p.shader = LinearGradient(0f, 0f, 0f, hDp, col.base, col.deep, Shader.TileMode.CLAMP)
-        cv.drawRect(0f, 0f, wDp, hDp, p)
-        p.shader = LinearGradient(0f, 0f, 0f, hDp * .3f, white(.22f), Color.TRANSPARENT, Shader.TileMode.CLAMP)
-        cv.drawRect(0f, 0f, wDp, hDp * .3f, p)
-        p.shader = RadialGradient(wDp * .1f, 0f, wDp * .5f, white(.10f), Color.TRANSPARENT, Shader.TileMode.CLAMP)
-        cv.drawRect(0f, 0f, wDp, hDp, p)
-        cv.restore()
-        p.shader = LinearGradient(0f, 0f, wDp, hDp, intArrayOf(white(.6f), white(.06f), white(.25f)), null, Shader.TileMode.CLAMP)
-        p.style = Paint.Style.STROKE
-        p.strokeWidth = 1f
-        cv.drawRoundRect(outer, 26f, 26f, p)
+        p.color = col.base
+        cv.drawRoundRect(outer, 28f, 28f, p)
         p.shader = null
         p.style = Paint.Style.FILL
 
@@ -197,9 +185,6 @@ object BoardPainter {
         val p = Paint(Paint.ANTI_ALIAS_FLAG)
         p.color = bg
         cv.drawRoundRect(r, 16f, 16f, p)
-        p.shader = LinearGradient(0f, r.top, 0f, r.top + r.height() * .4f, white(if (hi) .18f else .08f), Color.TRANSPARENT, Shader.TileMode.CLAMP)
-        cv.drawRoundRect(RectF(r.left, r.top, r.right, r.top + r.height() * .4f), 16f, 16f, p)
-        p.shader = null
 
         val pad = 9f
         val x = r.left + pad

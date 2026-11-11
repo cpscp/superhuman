@@ -11,12 +11,12 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import pt.carlos.partidas.R
 
-/** Inter (incluída na app, em res/font). */
-val Inter = FontFamily(
-    Font(R.font.inter_regular, FontWeight.Normal),
-    Font(R.font.inter_medium, FontWeight.Medium),
-    Font(R.font.inter_semibold, FontWeight.SemiBold),
-    Font(R.font.inter_bold, FontWeight.Bold)
+/** Google Sans Flex, a fonte do Pixel (licença OFL, incluída na app em res/font). */
+val GoogleSans = FontFamily(
+    Font(R.font.gsf_regular, FontWeight.Normal),
+    Font(R.font.gsf_medium, FontWeight.Medium),
+    Font(R.font.gsf_semibold, FontWeight.SemiBold),
+    Font(R.font.gsf_bold, FontWeight.Bold)
 )
 
 /** Tema fixo em cinzento escuro (não segue as cores do papel de parede). */
@@ -44,7 +44,7 @@ private val GreyScheme = darkColorScheme(
     outlineVariant = Color(0xFF383838)
 )
 
-private fun TextStyle.inter() = copy(fontFamily = Inter)
+private fun TextStyle.inter() = copy(fontFamily = GoogleSans)
 
 private val InterTypography = Typography().run {
     copy(

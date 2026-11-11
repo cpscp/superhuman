@@ -58,17 +58,17 @@ import pt.carlos.partidas.model.LiveStatus
 import pt.carlos.partidas.model.Mode
 import pt.carlos.partidas.data.Text as T
 
-/** Inter em todo o quadro (mantido para compatibilidade com o resto da app). */
+/** Google Sans Flex em todo o quadro. */
 object PixelFonts {
-    val display: FontFamily get() = Inter
-    val text: FontFamily get() = Inter
+    val display: FontFamily get() = GoogleSans
+    val text: FontFamily get() = GoogleSans
 }
 
-/** Tipografia do Glass TV (Type.*), em Inter. */
+/** Tipografia do Glass TV (Type.*), em Google Sans Flex. */
 private object Type {
     private val white = Color(0xFFF5F5F7)
     private fun s(size: Int, w: FontWeight, track: Float = 0f) =
-        TextStyle(fontFamily = Inter, fontSize = size.sp, fontWeight = w, letterSpacing = track.sp, color = white)
+        TextStyle(fontFamily = GoogleSans, fontSize = size.sp, fontWeight = w, letterSpacing = track.sp, color = white)
     val Headline = s(17, FontWeight.SemiBold)
     val Body = s(15, FontWeight.Normal)
     val Caption = s(13, FontWeight.Medium, 0.1f)
@@ -103,19 +103,14 @@ fun DepartureBoard(
     val fg = c(col.fg)
     val logo = remember(board.mode) { Logos.get(ctx, board.mode) }
     val items = cache?.items?.filter { it.etaMs >= now - 30_000L }.orEmpty()
-    val shape = RoundedCornerShape(26.dp)
+    val shape = RoundedCornerShape(28.dp)
 
     Column(
         modifier
             .height(height)
             .clip(shape)
-            .background(Brush.verticalGradient(listOf(c(col.base), c(col.deep))))
-            .drawBehind {
-                // reflexo de vidro sobre a cor da marca
-                drawRect(Brush.verticalGradient(0f to Color.White.copy(alpha = .22f), .3f to Color.Transparent))
-                drawRect(Brush.radialGradient(listOf(Color.White.copy(alpha = .10f), Color.Transparent), center = Offset(size.width * .1f, 0f), radius = size.width * .5f))
-            }
-            .border(1.dp, Brush.linearGradient(listOf(Color.White.copy(alpha = .6f), Color.White.copy(alpha = .06f), Color.White.copy(alpha = .25f))), shape)
+            // Material 3: cor sólida da marca, sem vidro nem reflexos.
+            .background(c(col.base))
             .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
     ) {
         Row(Modifier.weight(1f).fillMaxWidth().padding(start = 14.dp, end = 10.dp, top = 12.dp, bottom = 10.dp)) {
@@ -196,7 +191,6 @@ private fun Tile(modifier: Modifier, s: Departure?, highlighted: Boolean, col: B
     val fg = c(if (highlighted) col.hiFg else col.tileFg)
     Column(
         modifier.clip(RoundedCornerShape(16.dp)).background(bg)
-            .drawBehind { drawRect(Brush.verticalGradient(0f to Color.White.copy(alpha = if (highlighted) .18f else .08f), .4f to Color.Transparent)) }
             .padding(horizontal = 10.dp, vertical = 9.dp)
     ) {
         if (s == null) {

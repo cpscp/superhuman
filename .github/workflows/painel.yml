@@ -24,7 +24,7 @@ jobs:
         run: |
           if [ -z "$HOMESDK_KEY" ]; then echo "::error::Falta o segredo HOMESDK_KEY (Settings > Secrets and variables > Actions)"; exit 1; fi
           mkdir -p homesdk
-          printf '%s' "$HOMESDK_KEY" > /tmp/k
+          printf '%s' "$HOMESDK_KEY" | tr -d ' \r\n\t"' > /tmp/k; echo "chave: $(wc -c < /tmp/k) caracteres"
           openssl enc -d -aes-256-cbc -pbkdf2 -in third_party/homesdk.tgz.enc -pass file:/tmp/k | tar xz -C homesdk
           rm /tmp/k
       - name: Build APK

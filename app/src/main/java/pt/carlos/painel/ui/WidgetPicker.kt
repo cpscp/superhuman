@@ -27,6 +27,18 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,7 +52,11 @@ import androidx.core.graphics.drawable.toBitmap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-private data class WidgetGroup(val pkg: String, val label: String, val widgets: List<AppWidgetProviderInfo>)
+private data class WidgetItem(val info: AppWidgetProviderInfo, val label: String)
+private data class WidgetGroup(val pkg: String, val label: String, val widgets: List<WidgetItem>)
+
+private fun norm(s: String) =
+    java.text.Normalizer.normalize(s, java.text.Normalizer.Form.NFD).replace(Regex("\\p{M}+"), "").lowercase()
 
 /** Lista de todos os widgets instalados, agrupados por app, com pré-visualização. */
 @Composable
@@ -53,9 +69,20 @@ fun WidgetPicker(onDismiss: () -> Unit, onPick: (AppWidgetProviderInfo) -> Unit)
                 .groupBy { it.provider.packageName }
                 .map { (pkg, list) ->
                     val label = runCatching { pm.getApplicationLabel(pm.getApplicationInfo(pkg, 0)).toString() }.getOrDefault(pkg)
-                    WidgetGroup(pkg, label, list)
+                    WidgetGroup(pkg, label, list.map { WidgetItem(it, it.loadLabel(pm)) })
                 }
                 .sortedBy { it.label.lowercase() }
+        }
+    }
+
+    var query by remember { mutableStateOf("") }
+    // Pesquisa pelo nome do widget ou da app (sem acentos): se a app bate, mostra todos os seus widgets.
+    val shown = remember(groups, query) {
+        val q = norm(query.trim())
+        if (q.isEmpty()) groups
+        else groups.mapNotNull { g ->
+            if (norm(g.label).contains(q)) g
+            else g.widgets.filter { norm(it.label).contains(q) }.takeIf { it.isNotEmpty() }?.let { g.copy(widgets = it) }
         }
     }
 
@@ -65,8 +92,34 @@ fun WidgetPicker(onDismiss: () -> Unit, onPick: (AppWidgetProviderInfo) -> Unit)
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(start = 24.dp, bottom = 8.dp),
         )
+        TextField(
+            value = query,
+            onValueChange = { query = it },
+            placeholder = { Text("Pesquisar widgets ou apps") },
+            leadingIcon = { Icon(Icons.Outlined.Search, null) },
+            trailingIcon = {
+                if (query.isNotEmpty()) IconButton(onClick = { query = "" }) { Icon(Icons.Outlined.Close, "Limpar") }
+            },
+            singleLine = true,
+            shape = RoundedCornerShape(28.dp),
+            colors = TextFieldDefaults.colors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+            ),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 8.dp),
+        )
+        if (groups.isNotEmpty() && shown.isEmpty()) {
+            Text(
+                "Nenhum widget encontrado para \"$query\".",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(24.dp),
+            )
+        }
         LazyColumn(contentPadding = PaddingValues(bottom = 32.dp)) {
-            items(groups, key = { it.pkg }) { g ->
+            items(shown, key = { it.pkg }) { g ->
                 Text(
                     g.label,
                     style = MaterialTheme.typography.titleMedium,
@@ -76,8 +129,8 @@ fun WidgetPicker(onDismiss: () -> Unit, onPick: (AppWidgetProviderInfo) -> Unit)
                     contentPadding = PaddingValues(horizontal = 24.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
-                    items(g.widgets, key = { it.provider.flattenToString() }) { info ->
-                        WidgetCard(ctx, info) { onPick(info) }
+                    items(g.widgets, key = { it.info.provider.flattenToString() }) { w ->
+                        WidgetCard(ctx, w.info, w.label) { onPick(w.info) }
                     }
                 }
             }
@@ -86,7 +139,7 @@ fun WidgetPicker(onDismiss: () -> Unit, onPick: (AppWidgetProviderInfo) -> Unit)
 }
 
 @Composable
-private fun WidgetCard(ctx: Context, info: AppWidgetProviderInfo, onClick: () -> Unit) {
+private fun WidgetCard(ctx: Context, info: AppWidgetProviderInfo, label: String, onClick: () -> Unit) {
     val preview by produceState<ImageBitmap?>(initialValue = null, info) {
         value = withContext(Dispatchers.IO) {
             runCatching {
@@ -97,7 +150,6 @@ private fun WidgetCard(ctx: Context, info: AppWidgetProviderInfo, onClick: () ->
             }.getOrNull()
         }
     }
-    val label = info.loadLabel(ctx.packageManager)
     val size = if (info.targetCellWidth > 0) "${info.targetCellWidth} × ${info.targetCellHeight}" else ""
     Card(
         onClick = onClick,

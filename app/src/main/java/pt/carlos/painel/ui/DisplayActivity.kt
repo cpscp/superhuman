@@ -582,7 +582,18 @@ private fun HomeCard() {
             }
             null -> Text("A ligar ao Google Home…", color = MaterialTheme.colorScheme.onSurfaceVariant)
             true -> if (HomeRepo.devices.isEmpty()) {
-                Text(HomeRepo.error?.let { "Erro: $it" } ?: "A carregar dispositivos…", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                val msg = when {
+                    HomeRepo.error != null -> "Erro: ${HomeRepo.error}"
+                    !HomeRepo.loaded -> "A carregar dispositivos…"
+                    HomeRepo.others.isNotEmpty() -> "Encontrei ${HomeRepo.others.size} dispositivo(s), mas nenhuma luz ou tomada: ${HomeRepo.others.take(4).joinToString()}"
+                    else -> "Não há dispositivos autorizados. Toca em Ligar e escolhe as luzes."
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(msg, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.weight(1f))
+                    if (HomeRepo.loaded || HomeRepo.error != null) {
+                        FilledTonalButton(onClick = { HomeRepo.requestPermission(ctx) }) { Text("Ligar") }
+                    }
+                }
             } else {
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     items(HomeRepo.devices, key = { it.id }) { d -> DeviceTile(d, onLong = { brightnessFor = d }) }

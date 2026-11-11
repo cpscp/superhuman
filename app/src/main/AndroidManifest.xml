@@ -61,7 +61,8 @@
             android:exported="false"
             android:screenOrientation="sensorLandscape"
             android:excludeFromRecents="true"
-            android:launchMode="singleTask"
+            android:taskAffinity=""
+            android:launchMode="singleTop"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
             android:theme="@style/Theme.Painel" />
 

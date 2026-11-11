@@ -28,6 +28,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -61,6 +62,11 @@ object HomeRepo {
         private set
     var error by mutableStateOf<String?>(null)
         private set
+    /** Dispositivos da casa que não são luzes nem tomadas (para diagnóstico). */
+    var others by mutableStateOf<List<String>>(emptyList())
+        private set
+    var loaded by mutableStateOf(false)
+        private set
 
     private val registry = FactoryRegistry(
         traits = listOf(OnOff, LevelControl, ColorControl),
@@ -84,15 +90,25 @@ object HomeRepo {
         scope.launch {
             runCatching {
                 c.hasPermissions().collect { st ->
-                    val ok = st == PermissionsState.GRANTED
-                    permitted = when (st) {
-                        PermissionsState.GRANTED -> true
-                        PermissionsState.NOT_GRANTED -> false
-                        else -> permitted
+                    when (st) {
+                        PermissionsState.GRANTED -> { permitted = true; startDevices(c) }
+                        PermissionsState.NOT_GRANTED -> permitted = false
+                        PermissionsState.PERMISSIONS_STATE_UNAVAILABLE -> {
+                            permitted = false
+                            error = "Google Home indisponível neste tablet. Atualiza os Serviços do Google Play na Play Store."
+                        }
+                        else -> Unit
                     }
-                    if (ok) startDevices(c)
                 }
             }.onFailure { error = it.message; permitted = false }
+        }
+        // Se o estado não chegar em 8 s, mostra o botão em vez de ficar à espera.
+        scope.launch {
+            delay(8_000)
+            if (permitted == null) {
+                permitted = false
+                if (error == null) error = "Sem resposta do Google Home. Toca em Ligar para tentar outra vez."
+            }
         }
     }
 
@@ -102,8 +118,11 @@ object HomeRepo {
         scope.launch {
             runCatching {
                 val r = c.requestPermissions(ForcePermissionFlow.FORCE_LAUNCH)
-                if (r.status == PermissionsResultStatus.ERROR) error = r.errorMessage ?: "Não foi possível autorizar"
-                if (r.status == PermissionsResultStatus.SUCCESS) { permitted = true; startDevices(c) }
+                when (r.status) {
+                    PermissionsResultStatus.SUCCESS -> { error = null; permitted = true; startDevices(c) }
+                    PermissionsResultStatus.CANCELLED -> error = "Autorização cancelada."
+                    else -> error = r.errorMessage ?: "Não foi possível autorizar."
+                }
             }.onFailure { error = it.message }
         }
     }
@@ -128,6 +147,8 @@ object HomeRepo {
     }
 
     private fun sync(set: Set<HomeDevice>) {
+        loaded = true
+        others = set.filter { typeFlow(it) == null }.map { it.name }
         val ids = set.map { it.id.id }.toSet()
         (deviceJobs.keys - ids).forEach { gone -> deviceJobs.remove(gone)?.cancel(); onOffs.remove(gone); levels.remove(gone) }
         devices = devices.filter { it.id in ids }

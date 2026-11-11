@@ -477,6 +477,21 @@ private fun SettingsScreen(onBack: () -> Unit) {
                     supportingContent = { Text("Tipo de letra: Google Sans Flex (SIL Open Font License)") },
                 )
             }
+            item {
+                val f = java.io.File(ctx.filesDir, "ultimo-erro.txt")
+                if (f.exists()) {
+                    val txt = remember { f.readText() }
+                    val clip = androidx.compose.ui.platform.LocalClipboardManager.current
+                    ListItem(
+                        colors = rowColors,
+                        headlineContent = { Text("Último erro registado") },
+                        supportingContent = { Text(txt.lineSequence().take(3).joinToString("\n"), maxLines = 3) },
+                        trailingContent = {
+                            TextButton(onClick = { clip.setText(androidx.compose.ui.text.AnnotatedString(txt)) }) { Text("Copiar") }
+                        },
+                    )
+                }
+            }
             item { Spacer(Modifier.height(32.dp)) }
         }
     }

@@ -33,6 +33,13 @@ jobs:
           set -o pipefail
           ./gradlew assembleRelease --stacktrace 2>&1 | tee build.log
           cp app/build/outputs/apk/release/app-release.apk Painel.apk
+      - name: Verificar corrotinas (Mutex.unlock$default)
+        run: |
+          ./gradlew -q :app:dependencies --configuration releaseRuntimeClasspath | grep -m3 "kotlinx-coroutines-core" || true
+          J=$(find ~/.gradle/caches -name 'kotlinx-coroutines-core-jvm-*.jar' ! -name '*sources*' | sort -V | tail -1)
+          echo "jar: $J"
+          mkdir -p /tmp/kc && unzip -o -q "$J" 'kotlinx/coroutines/sync/Mutex*.class' -d /tmp/kc
+          javap -cp /tmp/kc kotlinx.coroutines.sync.Mutex | grep -i unlock || true
       - name: Publicar APK
         env:
           GH_TOKEN: ${{ github.token }}

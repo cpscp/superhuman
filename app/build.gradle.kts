@@ -12,8 +12,8 @@ android {
         applicationId = "pt.carlos.painel"
         minSdk = 33          // Lenovo Tab M10 Plus Gen 3 corre Android 13
         targetSdk = 35
-        versionCode = 10
-        versionName = "0.10 (Fase 3)"
+        versionCode = 11
+        versionName = "0.11 (Fase 3)"
     }
 
     signingConfigs {
@@ -65,7 +65,9 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.9.3")
     implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.profileinstaller:profileinstaller:1.4.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+    // O SDK do Google Home precisa da versão mais recente das corrotinas (Mutex.unlock$default).
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.+")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.+")
     // Google Home APIs (Casa)
     implementation("com.google.android.gms:play-services-home:17.1.0")
     implementation("com.google.android.gms:play-services-home-types:17.1.0")

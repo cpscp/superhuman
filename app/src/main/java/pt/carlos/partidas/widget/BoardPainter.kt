@@ -211,35 +211,38 @@ object BoardPainter {
         if (BoardLook.showMinSuffix(d, now)) cv.drawText(" min", x + bigW, y - bigP.fontMetrics.ascent, minP)
         y += lineH(bigP)
 
-        // 2) hora (+ hora antiga riscada)
+        // 2) hora + número da carreira/linha (sempre visível) + hora antiga riscada
         val tP = if (d.cancelled) TextPaint(timeP).apply { isStrikeThruText = true } else timeP
         val timeW = drawLine(cv, Text.hhmm(d.etaMs), x, y, w, tP)
-        d.oldTimeMs?.takeIf { !d.cancelled }?.let {
-            drawLine(cv, Text.hhmm(it), x + timeW + 6f, y + (lineH(timeP) - lineH(oldP)) / 2f, w - timeW - 6f, oldP)
+        var cx = x + timeW + 7f
+        val rowH = lineH(timeP)
+        if (d.badge.isNotBlank()) {
+            val bh = lineH(badgeP) + 2f
+            val bw = min(badgeP.measureText(d.badge) + 10f, (x + w - cx).coerceAtLeast(0f))
+            if (bw > 12f) {
+                val by = y + (rowH - bh) / 2f
+                p.color = fg
+                cv.drawRoundRect(RectF(cx, by, cx + bw, by + bh), 5f, 5f, p)
+                drawLine(cv, d.badge, cx + 5f, by + 1f, bw - 10f, badgeP)
+                cx += bw + 6f
+            }
         }
-        y += lineH(timeP)
-
-        // espaço para linha/carreira, destino e detalhe
-        val badgeH = lineH(badgeP) + 2f
+        d.oldTimeMs?.takeIf { !d.cancelled }?.let {
+            drawLine(cv, Text.hhmm(it), cx, y + (rowH - lineH(oldP)) / 2f, x + w - cx, oldP)
+        }
+        y += rowH
+        // espaço para destino e detalhe
         val destH = lineH(destP)
         val detailH = lineH(detailP)
         val left = usable - y
-        val showBadge = d.badge.isNotBlank() && left >= destH + badgeH + 6f
-        val afterBadge = left - (if (showBadge) badgeH + 6f else 2f) - destH
+        val afterDest = left - 4f - destH
         val detailLines = when {
             d.detail.isBlank() -> 0
-            afterBadge >= detailH * 2 -> 2
-            afterBadge >= detailH -> 1
+            afterDest >= detailH * 2 -> 2
+            afterDest >= detailH -> 1
             else -> 0
         }
-        if (showBadge) {
-            y += 5f
-            val bw = min(badgeP.measureText(d.badge) + 10f, w)
-            p.color = fg
-            cv.drawRoundRect(RectF(x, y, x + bw, y + badgeH), 5f, 5f, p)
-            drawLine(cv, d.badge, x + 5f, y + 1f, bw - 10f, badgeP)
-            y += badgeH + 1f
-        } else y += 2f
+        y += 4f
         if (left >= destH) {
             drawLine(cv, d.destination.ifBlank { "—" }, x, y, w, destP)
             y += destH

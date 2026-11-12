@@ -42,7 +42,9 @@ object CarrisApi {
             val eta = minuteNow + left.coerceAtLeast(0) * 60_000L
             Departure(
                 etaMs = eta, scheduledMs = eta,
-                badge = a.optString("routeNumber"),
+                badge = listOf("routeNumber", "routeShortName", "lineNumber", "route", "line", "carreira")
+                    .firstNotNullOfOrNull { k -> a.strOrNull(k)?.trim()?.takeIf { v -> v.isNotBlank() && v != "null" } }
+                    ?: item.strOrNull("routeNumber").orEmpty(),
                 destination = a.strOrNull("destinationFullName") ?: a.optString("destinationName"),
                 detail = "${stop.label} · ${stop.id}".let { if (stop.name.isBlank()) "Paragem ${stop.id}" else it },
                 status = if (a.optBoolean("hasAlert", false)) LiveStatus.ATRASADO else LiveStatus.PREVISTO,

@@ -205,24 +205,25 @@ private fun Tile(modifier: Modifier, s: Departure?, highlighted: Boolean, col: B
             Text(BoardLook.bigNumber(s, now), style = Type.Board.copy(color = fg, fontSize = 30.sp, lineHeight = 30.sp), maxLines = 1)
             if (BoardLook.showMinSuffix(s, now)) Text(" min", style = Type.Caption.copy(color = fg.copy(alpha = .75f)), modifier = Modifier.padding(bottom = 3.dp))
         }
+        // hora + número da carreira/linha, sempre visível
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 T.hhmm(s.etaMs), maxLines = 1,
                 style = Type.Caption.copy(color = fg.copy(alpha = .85f), textDecoration = if (cancelled) TextDecoration.LineThrough else null)
             )
+            if (s.badge.isNotBlank()) {
+                Spacer(Modifier.width(6.dp))
+                Text(
+                    s.badge, maxLines = 1,
+                    style = Type.Tiny.copy(color = c(if (highlighted) col.hiTile else col.base), fontWeight = FontWeight.Bold),
+                    modifier = Modifier.clip(RoundedCornerShape(5.dp)).background(fg).padding(horizontal = 5.dp, vertical = 1.dp)
+                )
+            }
             s.oldTimeMs?.takeIf { !cancelled }?.let {
-                Text("  ${T.hhmm(it)}", style = Type.Tiny.copy(color = fg.copy(alpha = .5f), textDecoration = TextDecoration.LineThrough))
+                Text("  ${T.hhmm(it)}", style = Type.Tiny.copy(color = fg.copy(alpha = .5f), textDecoration = TextDecoration.LineThrough), maxLines = 1)
             }
         }
-        Spacer(Modifier.height(6.dp))
-        if (s.badge.isNotBlank()) {
-            Text(
-                s.badge, maxLines = 1,
-                style = Type.Tiny.copy(color = c(if (highlighted) col.hiTile else col.base), fontWeight = FontWeight.Bold),
-                modifier = Modifier.clip(RoundedCornerShape(5.dp)).background(fg).padding(horizontal = 5.dp, vertical = 1.dp)
-            )
-            Spacer(Modifier.height(3.dp))
-        }
+        Spacer(Modifier.height(4.dp))
         Text(s.destination.ifBlank { "—" }, style = Type.Headline.copy(color = fg, fontWeight = FontWeight.Bold), maxLines = 1, overflow = TextOverflow.Ellipsis)
         Text(s.detail, style = Type.Tiny.copy(color = fg.copy(alpha = .7f), fontWeight = FontWeight.Medium), maxLines = 2, overflow = TextOverflow.Ellipsis)
         Spacer(Modifier.weight(1f))
